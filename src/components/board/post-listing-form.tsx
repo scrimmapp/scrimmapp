@@ -71,10 +71,10 @@ export function PostListingForm() {
       <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-pitch/10 blur-3xl" />
 
       <div className="mb-1.5 text-center">
-        <span className="inline-flex rounded-pill border border-pitch/25 bg-pitch-bg px-2 py-0.5 text-[7px] font-bold uppercase tracking-widest text-pitch-ink">
+        <span className="inline-flex rounded-pill border border-pitch/25 bg-pitch-bg px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-pitch-ink">
           Organize a match
         </span>
-        <h2 className="mt-0.5 font-display text-sm font-extrabold tracking-tight text-ink">
+        <h2 className="mt-0.5 font-display text-base font-extrabold tracking-tight text-ink">
           Post a Scrimmage Request
         </h2>
       </div>
@@ -86,7 +86,7 @@ export function PostListingForm() {
             animate={{ opacity: 1, height: "auto", marginBottom: 12 }}
             exit={{ opacity: 0, height: 0, marginBottom: 0 }}
             transition={{ duration: 0.25 }}
-            className="flex items-center gap-2 overflow-hidden rounded-control border border-good/30 bg-good-bg px-3 py-1.5 text-[11px] font-semibold text-good"
+            className="flex items-center gap-2 overflow-hidden rounded-control border border-good/30 bg-good-bg px-3 py-1.5 text-[13px] font-semibold text-good"
           >
             <motion.span
               initial={{ scale: 0, rotate: -20 }}
@@ -176,11 +176,11 @@ export function PostListingForm() {
             <Textarea id="notes" name="notes" rows={2} placeholder="Match format, expectations, anything else opposing coaches should know..." />
           </Field>
           <div className="flex flex-col justify-center gap-2 rounded-control border border-rule bg-paper p-2.5">
-            <label className="flex cursor-pointer items-center gap-2 text-[10px] font-semibold text-ink-2">
+            <label className="flex cursor-pointer items-center gap-2 text-[12px] font-semibold text-ink-2">
               <Checkbox name="isHosting" defaultChecked />
               We have field time secured (hosting)
             </label>
-            <label className="flex cursor-pointer items-center gap-2 text-[10px] font-semibold text-ink-2">
+            <label className="flex cursor-pointer items-center gap-2 text-[12px] font-semibold text-ink-2">
               <Checkbox name="hasFieldFee" />
               Requires field rental fee share
             </label>

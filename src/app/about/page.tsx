@@ -12,15 +12,15 @@ export default function AboutPage() {
             <Image src={brandLogo} alt="ScrimmApp" className="h-auto w-full" priority />
           </div>
         </div>
-        <h1 className="font-display text-base font-extrabold tracking-tight text-ink md:text-lg">About ScrimmApp</h1>
-        <p className="text-[11px] leading-relaxed text-ink-2">
+        <h1 className="font-display text-lg font-extrabold tracking-tight text-ink md:text-xl">About ScrimmApp</h1>
+        <p className="text-[13px] leading-relaxed text-ink-2">
           ScrimmApp was built by soccer coaches to eliminate the frustrating scramble for pre-season
           friendlies. Instead of endless text threads and Facebook groups, ScrimmApp is a dedicated
           classifieds marketplace where coaches can match, verify pitch time, and lock in games seamlessly.
         </p>
         <Link
           href="/board"
-          className="inline-block rounded-control bg-pitch px-4 py-1.5 text-[10px] font-black uppercase tracking-widest text-pitch-contrast hover:brightness-105"
+          className="inline-block rounded-control bg-pitch px-4 py-1.5 text-[12px] font-black uppercase tracking-widest text-pitch-contrast hover:brightness-105"
         >
           Return to the board
         </Link>

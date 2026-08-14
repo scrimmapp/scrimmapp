@@ -2,7 +2,7 @@ import { type InputHTMLAttributes, type SelectHTMLAttributes, type TextareaHTMLA
 import { cn } from "@/lib/cn";
 
 const controlClasses =
-  "w-full rounded-control border border-rule-2 bg-surface px-2 py-1 text-[11px] text-ink placeholder:text-muted transition-colors focus:border-pitch focus:outline-none focus:ring-2 focus:ring-pitch/15";
+  "w-full rounded-control border border-rule-2 bg-surface px-2 py-1 text-[13px] text-ink placeholder:text-muted transition-colors focus:border-pitch focus:outline-none focus:ring-2 focus:ring-pitch/15";
 
 export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(
   ({ className, ...props }, ref) => (

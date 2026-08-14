@@ -96,26 +96,26 @@ export function CalendarView() {
     <div className="mx-auto w-full max-w-6xl space-y-3 px-4 py-4">
       <div className="flex flex-col gap-2.5 border-b border-rule pb-2.5 md:flex-row md:items-center md:justify-between">
         <div>
-          <span className="inline-flex rounded-pill border border-pitch/25 bg-pitch-bg px-2 py-0.5 text-[8px] font-bold uppercase tracking-widest text-pitch-ink">
+          <span className="inline-flex rounded-pill border border-pitch/25 bg-pitch-bg px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-pitch-ink">
             Season planning tool
           </span>
-          <h1 className="mt-1 font-display text-base font-extrabold tracking-tight text-ink md:text-lg">
+          <h1 className="mt-1 font-display text-lg font-extrabold tracking-tight text-ink md:text-xl">
             {monthNames[month]} {year}
           </h1>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-1 rounded-control border border-rule-2 bg-surface p-1">
-            <button onClick={() => changeMonth(-1)} className="rounded-[0.4rem] px-2 py-0.5 text-[10px] font-bold text-ink-2 transition-colors hover:bg-surface-2 hover:text-ink">
+            <button onClick={() => changeMonth(-1)} className="rounded-[0.4rem] px-2 py-0.5 text-[12px] font-bold text-ink-2 transition-colors hover:bg-surface-2 hover:text-ink">
               ← Prev
             </button>
             <button
               onClick={() => { setMonth(today.getMonth()); setYear(today.getFullYear()); }}
-              className="rounded-[0.4rem] px-2 py-0.5 text-[10px] font-bold text-pitch transition-colors hover:bg-pitch-bg"
+              className="rounded-[0.4rem] px-2 py-0.5 text-[12px] font-bold text-pitch transition-colors hover:bg-pitch-bg"
             >
               Today
             </button>
-            <button onClick={() => changeMonth(1)} className="rounded-[0.4rem] px-2 py-0.5 text-[10px] font-bold text-ink-2 transition-colors hover:bg-surface-2 hover:text-ink">
+            <button onClick={() => changeMonth(1)} className="rounded-[0.4rem] px-2 py-0.5 text-[12px] font-bold text-ink-2 transition-colors hover:bg-surface-2 hover:text-ink">
               Next →
             </button>
           </div>
@@ -125,7 +125,7 @@ export function CalendarView() {
         </div>
       </div>
 
-      <div className="grid grid-cols-7 gap-1 text-center text-[8px] font-bold uppercase tracking-wider text-muted">
+      <div className="grid grid-cols-7 gap-1 text-center text-[10px] font-bold uppercase tracking-wider text-muted">
         {weekdayLabels.map((d) => <div key={d}>{d}</div>)}
       </div>
 
@@ -178,7 +178,7 @@ export function CalendarView() {
               )}
               <span
                 className={cn(
-                  "flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold",
+                  "flex h-5 w-5 items-center justify-center rounded-full text-[12px] font-bold",
                   isToday ? "bg-pitch text-pitch-contrast" : "text-ink-2",
                 )}
               >
@@ -190,7 +190,7 @@ export function CalendarView() {
                     <span key={ev.id} className={cn("h-1 w-1 rounded-full", kindDot[ev.kind])} />
                   ))}
                   {dayEvents.length > 4 && (
-                    <span className="text-[7px] font-bold text-muted">+{dayEvents.length - 4}</span>
+                    <span className="text-[9px] font-bold text-muted">+{dayEvents.length - 4}</span>
                   )}
                 </span>
               )}
@@ -199,7 +199,7 @@ export function CalendarView() {
         })}
       </motion.div>
 
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pt-1 text-[9px] font-semibold text-muted">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pt-1 text-[11px] font-semibold text-muted">
         {(Object.keys(kindLabel) as Array<keyof typeof kindLabel>).map((k) => (
           <span key={k} className="flex items-center gap-1">
             <span className={cn("h-1.5 w-1.5 rounded-full", kindDot[k])} />
@@ -217,7 +217,7 @@ export function CalendarView() {
       >
         <div className="space-y-3">
           {selectedEvents.length === 0 ? (
-            <p className="text-[11px] text-muted">Nothing scheduled yet.</p>
+            <p className="text-[13px] text-muted">Nothing scheduled yet.</p>
           ) : (
             <div className="space-y-1.5">
               {selectedEvents.map((ev) =>
@@ -226,21 +226,21 @@ export function CalendarView() {
                     key={ev.id}
                     href={`/listings/${ev.listingId}`}
                     onClick={() => setSelectedDate(null)}
-                    className="flex items-center justify-between gap-2 rounded-control border border-rule bg-paper px-3 py-2 text-[11px] font-bold text-pitch-ink transition-colors hover:bg-pitch-bg"
+                    className="flex items-center justify-between gap-2 rounded-control border border-rule bg-paper px-3 py-2 text-[13px] font-bold text-pitch-ink transition-colors hover:bg-pitch-bg"
                   >
                     <span className="flex items-center gap-2">
                       <span className={cn("h-1.5 w-1.5 shrink-0 rounded-full", kindDot[ev.kind])} />
                       {ev.title}
                     </span>
-                    <span className="text-[9px] font-semibold text-muted">{ev.time}</span>
+                    <span className="text-[11px] font-semibold text-muted">{ev.time}</span>
                   </Link>
                 ) : (
-                  <div key={ev.id} className="flex items-center justify-between gap-2 rounded-control border border-rule bg-paper px-3 py-2 text-[11px] font-bold text-ink-2">
+                  <div key={ev.id} className="flex items-center justify-between gap-2 rounded-control border border-rule bg-paper px-3 py-2 text-[13px] font-bold text-ink-2">
                     <span className="flex items-center gap-2">
                       <span className={cn("h-1.5 w-1.5 shrink-0 rounded-full", kindDot[ev.kind])} />
                       {ev.title}
                     </span>
-                    <span className="text-[9px] font-semibold text-muted">{ev.time}</span>
+                    <span className="text-[11px] font-semibold text-muted">{ev.time}</span>
                   </div>
                 ),
               )}

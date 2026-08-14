@@ -33,7 +33,7 @@ export function AuthShell({
   footerLinkHref: string;
 }) {
   return (
-    <div className="relative flex items-center justify-center overflow-hidden px-4 py-5">
+    <div className="relative flex min-h-[calc(100dvh-2.75rem)] items-center justify-center overflow-hidden px-4 py-5">
       <AmbientBlobs />
 
       <motion.div
@@ -66,18 +66,18 @@ export function AuthShell({
                   />
                 </svg>
               </motion.div>
-              <p className="font-display text-base font-bold text-ink">You&rsquo;re in!</p>
-              <p className="text-[11px] text-ink-2">Taking you to your coach profile…</p>
+              <p className="font-display text-lg font-bold text-ink">You&rsquo;re in!</p>
+              <p className="text-[13px] text-ink-2">Taking you to your coach profile…</p>
             </motion.div>
           ) : (
             <motion.div key="form" initial={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <div className="mb-3.5 flex flex-col items-center text-center">
                 <Logo size="md" showWordmark={false} className="mb-2" />
-                <span className="inline-flex rounded-pill border border-pitch/25 bg-pitch-bg px-2 py-0.5 text-[8px] font-bold uppercase tracking-widest text-pitch-ink">
+                <span className="inline-flex rounded-pill border border-pitch/25 bg-pitch-bg px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-pitch-ink">
                   {eyebrow}
                 </span>
-                <h1 className="mt-1.5 font-display text-base font-extrabold tracking-tight text-ink">{title}</h1>
-                <p className="mt-0.5 text-[11px] text-ink-2">{subtitle}</p>
+                <h1 className="mt-1.5 font-display text-lg font-extrabold tracking-tight text-ink">{title}</h1>
+                <p className="mt-0.5 text-[13px] text-ink-2">{subtitle}</p>
               </div>
 
               <form onSubmit={onSubmit} className="space-y-2.5">
@@ -104,13 +104,13 @@ export function AuthShell({
                 </Button>
               </form>
 
-              <p className="mt-3 text-center text-[11px] text-ink-2">
+              <p className="mt-3 text-center text-[13px] text-ink-2">
                 {footerText}{" "}
                 <Link href={footerLinkHref} className="font-bold text-pitch hover:underline">
                   {footerLinkLabel}
                 </Link>
               </p>
-              <p className="mt-2 text-center text-[9px] uppercase tracking-wider text-muted">
+              <p className="mt-2 text-center text-[11px] uppercase tracking-wider text-muted">
                 Preview only. Real accounts arrive in Sprint 2
               </p>
             </motion.div>

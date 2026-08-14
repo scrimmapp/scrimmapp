@@ -49,11 +49,11 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-rule bg-paper/85 backdrop-blur-md">
       <div className="mx-auto flex h-11 w-full max-w-6xl items-center justify-between gap-4 px-4">
-        <Link href="/board" onClick={() => setOpen(false)}>
+        <Link href="/board" onClick={() => setOpen(false)} className="flex items-center">
           <Logo />
         </Link>
 
-        <nav className="hidden items-center gap-1 text-[10px] font-bold uppercase tracking-wider lg:flex">
+        <nav className="hidden items-center gap-1 text-[12px] font-bold uppercase tracking-wider lg:flex">
           {links.map((link) => (
             <span key={link.href} className="group relative">
               <NavItem href={link.href} label={link.label} active={pathname === link.href} />
@@ -79,7 +79,7 @@ export function Navbar() {
               )}
               <span className="relative">Inbox</span>
               {unreadCount > 0 && (
-                <span className="relative flex h-3.5 min-w-3.5 items-center justify-center rounded-pill bg-crit px-1 text-[8px] font-black text-white">
+                <span className="relative flex h-3.5 min-w-3.5 items-center justify-center rounded-pill bg-crit px-1 text-[10px] font-black text-white">
                   {unreadCount}
                 </span>
               )}
@@ -91,13 +91,13 @@ export function Navbar() {
           <ThemeToggle />
           <Link
             href="/login"
-            className="hidden text-[10px] font-bold uppercase tracking-wider text-ink-2 transition-colors hover:text-ink sm:inline-flex"
+            className="hidden text-[12px] font-bold uppercase tracking-wider text-ink-2 transition-colors hover:text-ink sm:inline-flex"
           >
             Log In
           </Link>
           <Link
             href="/signup"
-            className="hidden rounded-pill bg-pitch px-3 py-1 text-[9px] font-extrabold uppercase tracking-wider text-pitch-contrast shadow-sm transition-transform hover:scale-[1.04] active:scale-95 sm:inline-flex"
+            className="hidden rounded-pill bg-pitch px-3 py-1 text-[11px] font-extrabold uppercase tracking-wider text-pitch-contrast shadow-sm transition-transform hover:scale-[1.04] active:scale-95 sm:inline-flex"
           >
             Sign Up
           </Link>
@@ -122,7 +122,7 @@ export function Navbar() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="overflow-hidden border-t border-rule bg-paper text-[11px] font-bold uppercase tracking-wide text-ink-2 lg:hidden"
+            className="overflow-hidden border-t border-rule bg-paper text-[13px] font-bold uppercase tracking-wide text-ink-2 lg:hidden"
           >
             <div className="flex flex-col gap-1 px-4 py-2">
               {[...links, { href: "/inbox", label: "Inbox" }].map((link) => (
@@ -137,7 +137,7 @@ export function Navbar() {
                 >
                   {link.label}
                   {link.href === "/inbox" && unreadCount > 0 && (
-                    <span className="ml-2 rounded-pill bg-crit px-1.5 py-0.5 text-[9px] text-white">{unreadCount}</span>
+                    <span className="ml-2 rounded-pill bg-crit px-1.5 py-0.5 text-[11px] text-white">{unreadCount}</span>
                   )}
                 </Link>
               ))}

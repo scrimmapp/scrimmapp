@@ -28,7 +28,7 @@ export default function FAQPage() {
 
   return (
     <div className="mx-auto w-full max-w-2xl space-y-2 px-4 py-4">
-      <h1 className="mb-0.5 text-center font-display text-base font-extrabold tracking-tight text-ink md:text-lg">
+      <h1 className="mb-0.5 text-center font-display text-lg font-extrabold tracking-tight text-ink md:text-xl">
         Frequently Asked Questions
       </h1>
       {faqs.map((f, i) => {
@@ -41,7 +41,7 @@ export default function FAQPage() {
                 onClick={() => setOpenIndex(open ? null : i)}
                 className="flex w-full items-center justify-between gap-3 p-3 text-left"
               >
-                <span className="font-display text-[11px] font-bold text-ink">{f.q}</span>
+                <span className="font-display text-[13px] font-bold text-ink">{f.q}</span>
                 <motion.span
                   animate={{ rotate: open ? 45 : 0 }}
                   transition={{ type: "spring", stiffness: 400, damping: 26 }}
@@ -61,7 +61,7 @@ export default function FAQPage() {
                     transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
                     className="overflow-hidden"
                   >
-                    <p className="px-3 pb-3 text-[10px] leading-relaxed text-ink-2">{f.a}</p>
+                    <p className="px-3 pb-3 text-[12px] leading-relaxed text-ink-2">{f.a}</p>
                   </motion.div>
                 )}
               </AnimatePresence>

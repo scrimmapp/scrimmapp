@@ -31,7 +31,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.15 } }}
               transition={{ type: "spring", stiffness: 420, damping: 28 }}
-              className="pointer-events-auto flex items-center gap-2 rounded-pill border border-pitch/25 bg-surface px-4 py-2 text-[11px] font-bold text-ink shadow-lg"
+              className="pointer-events-auto flex items-center gap-2 rounded-pill border border-pitch/25 bg-surface px-4 py-2 text-[13px] font-bold text-ink shadow-lg"
             >
               <span className="flex h-4 w-4 items-center justify-center rounded-full bg-good-bg text-good">
                 <svg viewBox="0 0 12 12" width="8" height="8" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

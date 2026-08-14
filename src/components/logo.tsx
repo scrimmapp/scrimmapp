@@ -3,9 +3,9 @@ import { cn } from "@/lib/cn";
 import brandMark from "../../public/brand/scrimmapp-mark.png";
 
 const sizes = {
-  sm: { box: "h-7", radius: "rounded-lg", text: "text-base", gap: "gap-1.5", pad: "p-1" },
-  md: { box: "h-8", radius: "rounded-lg", text: "text-base", gap: "gap-2", pad: "p-1" },
-  lg: { box: "h-12", radius: "rounded-2xl", text: "text-xl", gap: "gap-2.5", pad: "p-1.5" },
+  sm: { box: "h-7", radius: "rounded-lg", text: "text-lg", gap: "gap-1.5", pad: "p-1" },
+  md: { box: "h-8", radius: "rounded-lg", text: "text-lg", gap: "gap-2", pad: "p-1" },
+  lg: { box: "h-12", radius: "rounded-2xl", text: "text-2xl", gap: "gap-2.5", pad: "p-1.5" },
 };
 
 export function Logo({

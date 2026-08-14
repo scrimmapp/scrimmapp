@@ -31,8 +31,8 @@ export function BoardSection() {
     <section className="space-y-3">
       <div className="flex flex-col gap-2.5 border-b border-rule pb-2.5 md:flex-row md:items-center md:justify-between">
         <div>
-          <h3 className="font-display text-sm font-bold text-ink">Active Scrimmage Board</h3>
-          <p className="text-[10px] text-ink-2">Connect directly with coaches looking for matches.</p>
+          <h3 className="font-display text-base font-bold text-ink">Active Scrimmage Board</h3>
+          <p className="text-[12px] text-ink-2">Connect directly with coaches looking for matches.</p>
         </div>
 
         <div className="flex w-full flex-wrap items-center gap-2 md:w-auto">
@@ -83,7 +83,7 @@ export function BoardSection() {
             exit={{ opacity: 0 }}
             className="rounded-card border border-dashed border-rule-2 bg-surface py-16 text-center"
           >
-            <p className="text-sm font-semibold text-ink-2">No scrimmages match your filter criteria.</p>
+            <p className="text-base font-semibold text-ink-2">No scrimmages match your filter criteria.</p>
             <Button variant="secondary" size="sm" className="mt-3 normal-case" onClick={() => setFilters(defaultFilters)}>
               Clear all filters
             </Button>
@@ -95,7 +95,7 @@ export function BoardSection() {
             whileInView="show"
             viewport={{ once: true, amount: 0.1 }}
             variants={{ show: { transition: { staggerChildren: 0.07 } } }}
-            className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
+            className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3"
           >
             {filtered.map((listing) => (
               <ListingCard key={listing.id} listing={listing} />

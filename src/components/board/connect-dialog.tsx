@@ -49,7 +49,7 @@ export function ConnectDialog({
               <path d="M4 10.5l4 4L16 6" />
             </svg>
           </div>
-          <p className="text-[11px] text-ink-2">
+          <p className="text-[13px] text-ink-2">
             Your message <em className="text-ink">&ldquo;{sent}&rdquo;</em> was sent to{" "}
             <strong className="text-ink">{listing.teamName}</strong>. They&apos;ll see it in their inbox.
           </p>
@@ -59,7 +59,7 @@ export function ConnectDialog({
         </div>
       ) : (
         <div className="space-y-3">
-          <p className="text-[11px] text-ink-2">
+          <p className="text-[13px] text-ink-2">
             Tap a quick phrase to message <strong className="text-ink">{listing.teamName}</strong> instantly:
           </p>
           <motion.div
@@ -76,7 +76,7 @@ export function ConnectDialog({
                 variants={{ hidden: { opacity: 0, x: -10 }, show: { opacity: 1, x: 0 } }}
                 whileHover={{ x: 3 }}
                 whileTap={{ scale: 0.98 }}
-                className="group flex items-center justify-between rounded-control border border-rule-2 bg-paper px-3 py-2 text-left text-[11px] font-semibold text-ink-2 transition-colors hover:border-pitch/50 hover:bg-pitch-bg hover:text-pitch-ink"
+                className="group flex items-center justify-between rounded-control border border-rule-2 bg-paper px-3 py-2 text-left text-[13px] font-semibold text-ink-2 transition-colors hover:border-pitch/50 hover:bg-pitch-bg hover:text-pitch-ink"
               >
                 <span>{phrase}</span>
                 <span className="opacity-0 transition-opacity group-hover:opacity-100">→</span>
@@ -85,7 +85,7 @@ export function ConnectDialog({
           </motion.div>
 
           <div className="border-t border-rule pt-3">
-            <p className="mb-1 text-[9px] font-bold uppercase tracking-wider text-muted">
+            <p className="mb-1 text-[11px] font-bold uppercase tracking-wider text-muted">
               Or write a custom message
             </p>
             <Textarea

@@ -28,10 +28,10 @@ export function ListingCard({ listing }: { listing: Listing }) {
         <Link href={`/listings/${listing.id}`} className="flex flex-1 flex-col">
           <div className="mb-2 flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <h3 className="truncate font-display text-sm font-bold leading-tight text-ink transition-colors group-hover:text-pitch">
+              <h3 className="truncate font-display text-base font-bold leading-tight text-ink transition-colors group-hover:text-pitch">
                 {listing.teamName}
               </h3>
-              <p className="mt-0.5 flex items-center gap-0.5 truncate text-[10px] font-semibold text-muted">
+              <p className="mt-0.5 flex items-center gap-0.5 truncate text-[12px] font-semibold text-muted">
                 <MapPin size={10} className="shrink-0" strokeWidth={2.5} />
                 <span className="truncate">{listing.location}</span>
               </p>
@@ -48,7 +48,7 @@ export function ListingCard({ listing }: { listing: Listing }) {
             <Badge tone="pitch">{listing.travelRadius}</Badge>
           </div>
 
-          <div className="space-y-1 rounded-control border border-rule bg-paper p-2 text-[10px]">
+          <div className="space-y-1 rounded-control border border-rule bg-paper p-2 text-[12px]">
             <Row label="Kickoff" value={`${formatDate(listing.date)} · ${listing.time}`} />
             <Row
               label="Field time"

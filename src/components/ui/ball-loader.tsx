@@ -34,7 +34,7 @@ export function BallLoader({ label = "Loading" }: { label?: string }) {
         />
       </div>
 
-      <div className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-widest text-muted">
+      <div className="flex items-center gap-1 text-[13px] font-bold uppercase tracking-widest text-muted">
         <span>{label}</span>
         <span className="flex gap-0.5">
           {[0, 1, 2].map((i) => (
