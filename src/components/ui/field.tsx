@@ -13,7 +13,7 @@ export function Field({
     <div className="flex flex-col gap-1">
       <label
         htmlFor={htmlFor}
-        className="text-[9px] font-bold uppercase tracking-wider text-muted"
+        className="text-[8px] font-bold uppercase tracking-wider text-muted"
       >
         {label}
       </label>

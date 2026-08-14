@@ -2,40 +2,53 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Card } from "@/components/ui/card";
+import { motion } from "motion/react";
+import { MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ConnectDialog } from "@/components/board/connect-dialog";
 import type { Listing } from "@/lib/types";
 import { formatDate } from "@/lib/format";
 
+const cardVariants = {
+  hidden: { opacity: 0, y: 14 },
+  show: { opacity: 1, y: 0 },
+};
+
 export function ListingCard({ listing }: { listing: Listing }) {
   const [connectOpen, setConnectOpen] = useState(false);
 
   return (
     <>
-      <Card className="group flex flex-col justify-between p-4 transition-all hover:-translate-y-0.5 hover:border-pitch/40 hover:shadow-md">
+      <motion.div
+        variants={cardVariants}
+        whileHover={{ y: -3, transition: { type: "spring", stiffness: 400, damping: 24 } }}
+        className="group flex flex-col justify-between rounded-card border border-rule bg-surface p-3.5 shadow-sm transition-[border-color,box-shadow] duration-200 hover:border-pitch/35 hover:shadow-md"
+      >
         <Link href={`/listings/${listing.id}`} className="flex flex-1 flex-col">
-          <div className="mb-2.5 flex items-start justify-between gap-3">
+          <div className="mb-2 flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <h3 className="truncate font-display text-base font-bold leading-tight text-ink transition-colors group-hover:text-pitch">
+              <h3 className="truncate font-display text-sm font-bold leading-tight text-ink transition-colors group-hover:text-pitch">
                 {listing.teamName}
               </h3>
-              <p className="mt-0.5 truncate text-[11px] font-semibold text-muted">📍 {listing.location}</p>
+              <p className="mt-0.5 flex items-center gap-0.5 truncate text-[10px] font-semibold text-muted">
+                <MapPin size={10} className="shrink-0" strokeWidth={2.5} />
+                <span className="truncate">{listing.location}</span>
+              </p>
             </div>
             <Badge tone={listing.gender === "Girls" ? "gold" : "pitch"} className="shrink-0">
               {listing.gender} {listing.age}
             </Badge>
           </div>
 
-          <div className="mb-3 flex flex-wrap gap-1.5">
+          <div className="mb-2.5 flex flex-wrap gap-1">
             <Badge tone="muted">
               {listing.level} · {listing.subLevel}
             </Badge>
             <Badge tone="pitch">{listing.travelRadius}</Badge>
           </div>
 
-          <div className="space-y-1 rounded-control border border-rule bg-paper p-2.5 text-[11px]">
+          <div className="space-y-1 rounded-control border border-rule bg-paper p-2 text-[10px]">
             <Row label="Kickoff" value={`${formatDate(listing.date)} · ${listing.time}`} />
             <Row
               label="Field time"
@@ -57,7 +70,7 @@ export function ListingCard({ listing }: { listing: Listing }) {
         >
           Connect / Inquire
         </Button>
-      </Card>
+      </motion.div>
 
       <ConnectDialog listing={listing} open={connectOpen} onClose={() => setConnectOpen(false)} />
     </>

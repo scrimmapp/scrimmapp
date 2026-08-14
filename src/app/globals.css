@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --paper: #f6f8f3;
+  --paper: #f6f8fb;
   --surface: #ffffff;
-  --surface-2: #edf2e9;
-  --surface-hover: #e4ebde;
-  --ink: #16211a;
-  --ink-2: #43523e;
-  --muted: #6e7c68;
-  --rule: #dce3d6;
-  --rule-2: #c4cfbc;
+  --surface-2: #ecf0f5;
+  --surface-hover: #e2e7ef;
+  --ink: #111827;
+  --ink-2: #44506a;
+  --muted: #71809b;
+  --rule: #dde3ec;
+  --rule-2: #c5cede;
 
   --pitch: #1e7a45;
   --pitch-strong: #175e37;
@@ -37,9 +37,9 @@
   --crit: #a5372c;
   --crit-bg: #fbe6e3;
 
-  --shadow-sm: 0 1px 2px rgba(16, 28, 20, 0.06);
-  --shadow-md: 0 4px 16px -4px rgba(16, 28, 20, 0.14);
-  --shadow-lg: 0 16px 40px -12px rgba(16, 28, 20, 0.28);
+  --shadow-sm: 0 1px 2px rgba(17, 24, 39, 0.06);
+  --shadow-md: 0 4px 16px -4px rgba(17, 24, 39, 0.14);
+  --shadow-lg: 0 16px 40px -12px rgba(17, 24, 39, 0.28);
 
   --radius-control: 0.625rem;
   --radius-card: 1rem;
@@ -48,15 +48,15 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --paper: #0a120d;
-    --surface: #101c15;
-    --surface-2: #17251c;
-    --surface-hover: #1e2d22;
-    --ink: #eaf1e7;
-    --ink-2: #b9c6b3;
-    --muted: #82927b;
-    --rule: #22322a;
-    --rule-2: #314538;
+    --paper: #0a0f18;
+    --surface: #141b28;
+    --surface-2: #1d2636;
+    --surface-hover: #222d40;
+    --ink: #e6ebf2;
+    --ink-2: #b0bccd;
+    --muted: #7d8b9f;
+    --rule: #253044;
+    --rule-2: #334158;
 
     --pitch: #3fbb75;
     --pitch-strong: #59d18d;
@@ -91,15 +91,15 @@
 }
 
 :root[data-theme="dark"] {
-  --paper: #0a120d;
-  --surface: #101c15;
-  --surface-2: #17251c;
-  --surface-hover: #1e2d22;
-  --ink: #eaf1e7;
-  --ink-2: #b9c6b3;
-  --muted: #82927b;
-  --rule: #22322a;
-  --rule-2: #314538;
+  --paper: #0a0f18;
+  --surface: #141b28;
+  --surface-2: #1d2636;
+  --surface-hover: #222d40;
+  --ink: #e6ebf2;
+  --ink-2: #b0bccd;
+  --muted: #7d8b9f;
+  --rule: #253044;
+  --rule-2: #334158;
 
   --pitch: #3fbb75;
   --pitch-strong: #59d18d;
@@ -193,6 +193,19 @@ body {
   color: var(--ink);
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/*
+ * Smooth light/dark theme switching. :where() carries zero specificity,
+ * so any element that already declares its own transition-property or
+ * -duration (e.g. Tailwind's transition-colors/duration-* utilities on
+ * buttons, links, hover states) keeps that exact timing untouched.
+ * This only fills in a default for elements that currently snap.
+ */
+:where(body, header, footer, main, [class*="bg-surface"], [class*="bg-paper"], [class*="border-rule"]) {
+  transition-property: background-color, border-color, color, box-shadow;
+  transition-duration: 320ms;
+  transition-timing-function: ease;
 }
 
 ::selection {

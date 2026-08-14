@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { CheckCircle2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Field } from "@/components/ui/field";
 import { Input, Select, Textarea, Checkbox } from "@/components/ui/input";
@@ -60,27 +62,47 @@ export function PostListingForm() {
   }
 
   return (
-    <Card className="relative mx-auto max-w-3xl overflow-hidden p-4 md:p-5">
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+    >
+    <Card className="relative mx-auto max-w-3xl overflow-hidden p-3 md:p-3.5">
       <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-pitch/10 blur-3xl" />
 
-      <div className="mb-3 text-center">
-        <span className="inline-flex rounded-pill border border-pitch/25 bg-pitch-bg px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-widest text-pitch-ink">
+      <div className="mb-1.5 text-center">
+        <span className="inline-flex rounded-pill border border-pitch/25 bg-pitch-bg px-2 py-0.5 text-[7px] font-bold uppercase tracking-widest text-pitch-ink">
           Organize a match
         </span>
-        <h2 className="mt-1.5 font-display text-xl font-extrabold tracking-tight text-ink md:text-2xl">
+        <h2 className="mt-0.5 font-display text-sm font-extrabold tracking-tight text-ink">
           Post a Scrimmage Request
         </h2>
-        <p className="mt-0.5 text-xs text-ink-2">List an open match window and let opposing coaches find you.</p>
       </div>
 
-      {justPosted && (
-        <div className="mb-4 flex items-center gap-2 rounded-control border border-good/30 bg-good-bg px-3.5 py-2 text-xs font-semibold text-good">
-          ✓ Published — {justPosted} is now live on the board.
-        </div>
-      )}
+      <AnimatePresence>
+        {justPosted && (
+          <motion.div
+            initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+            animate={{ opacity: 1, height: "auto", marginBottom: 12 }}
+            exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+            transition={{ duration: 0.25 }}
+            className="flex items-center gap-2 overflow-hidden rounded-control border border-good/30 bg-good-bg px-3 py-1.5 text-[11px] font-semibold text-good"
+          >
+            <motion.span
+              initial={{ scale: 0, rotate: -20 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ type: "spring", stiffness: 500, damping: 20, delay: 0.1 }}
+              className="flex shrink-0"
+            >
+              <CheckCircle2 size={14} strokeWidth={2.5} />
+            </motion.span>
+            Published. {justPosted} is now live on the board.
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <form onSubmit={handleSubmit} className="space-y-3">
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+      <form onSubmit={handleSubmit} className="space-y-2.5">
+        <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
           <Field label="Team name & club" htmlFor="teamName">
             <Input id="teamName" name="teamName" placeholder="e.g. Irvine Strikers FC" required />
           </Field>
@@ -93,7 +115,7 @@ export function PostListingForm() {
           </Field>
         </div>
 
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-2.5 md:grid-cols-3">
           <Field label="Gender" htmlFor="gender">
             <Select id="gender" name="gender" defaultValue="Boys">
               <option value="Boys">Boys</option>
@@ -116,7 +138,7 @@ export function PostListingForm() {
           </Field>
         </div>
 
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-2.5 md:grid-cols-3">
           <Field label="Preferred date" htmlFor="date">
             <Input id="date" name="date" type="date" defaultValue={tomorrowISO()} required />
           </Field>
@@ -136,7 +158,7 @@ export function PostListingForm() {
           </Field>
         </div>
 
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
           <Field label="Pitch location / city" htmlFor="location">
             <Input id="location" name="location" placeholder="e.g. Great Park Field 3, Irvine CA" required />
           </Field>
@@ -149,19 +171,20 @@ export function PostListingForm() {
           </Field>
         </div>
 
-        <Field label="Notes (optional)" htmlFor="notes">
-          <Textarea id="notes" name="notes" rows={2} placeholder="Match format, expectations, anything else opposing coaches should know..." />
-        </Field>
-
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-control border border-rule bg-paper p-2.5">
-          <label className="flex cursor-pointer items-center gap-2 text-[11px] font-semibold text-ink-2">
-            <Checkbox name="isHosting" defaultChecked />
-            We have field time secured (hosting)
-          </label>
-          <label className="flex cursor-pointer items-center gap-2 text-[11px] font-semibold text-ink-2">
-            <Checkbox name="hasFieldFee" />
-            Requires field rental fee share
-          </label>
+        <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
+          <Field label="Notes (optional)" htmlFor="notes">
+            <Textarea id="notes" name="notes" rows={2} placeholder="Match format, expectations, anything else opposing coaches should know..." />
+          </Field>
+          <div className="flex flex-col justify-center gap-2 rounded-control border border-rule bg-paper p-2.5">
+            <label className="flex cursor-pointer items-center gap-2 text-[10px] font-semibold text-ink-2">
+              <Checkbox name="isHosting" defaultChecked />
+              We have field time secured (hosting)
+            </label>
+            <label className="flex cursor-pointer items-center gap-2 text-[10px] font-semibold text-ink-2">
+              <Checkbox name="hasFieldFee" />
+              Requires field rental fee share
+            </label>
+          </div>
         </div>
 
         <Button type="submit" variant="accent" size="lg" className="w-full">
@@ -169,5 +192,6 @@ export function PostListingForm() {
         </Button>
       </form>
     </Card>
+    </motion.div>
   );
 }

@@ -47,7 +47,7 @@ export function AddEventDialog({
 
   return (
     <Dialog open={open} onClose={onClose} title="Log Calendar Entry">
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-3">
         <Field label="Title / opponent" htmlFor="cal-title">
           <Input id="cal-title" name="title" placeholder="e.g. League fixture vs Mission Viejo" required />
         </Field>

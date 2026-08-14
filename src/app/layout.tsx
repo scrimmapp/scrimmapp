@@ -3,6 +3,10 @@ import { Baloo_2, Public_Sans } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { PageTransition } from "@/components/page-transition";
+import { RouteProgress } from "@/components/route-progress";
+import { SiteBackground } from "@/components/ui/site-background";
+import { ToastProvider } from "@/components/ui/toast";
 import { AppDataProvider } from "@/lib/app-data";
 import "./globals.css";
 
@@ -32,12 +36,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${baloo.variable} ${publicSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-paper text-ink">
-        <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem>
-          <AppDataProvider>
-            <Navbar />
-            <main className="flex-1 w-full">{children}</main>
-            <Footer />
-          </AppDataProvider>
+        <ThemeProvider attribute="data-theme" defaultTheme="dark" enableSystem={false}>
+          <SiteBackground />
+          <RouteProgress />
+          <ToastProvider>
+            <AppDataProvider>
+              <Navbar />
+              <main className="flex-1 w-full">
+                <PageTransition>{children}</PageTransition>
+              </main>
+              <Footer />
+            </AppDataProvider>
+          </ToastProvider>
         </ThemeProvider>
       </body>
     </html>

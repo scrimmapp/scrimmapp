@@ -111,7 +111,7 @@ export const seedCalendarEvents: CalendarEvent[] = [
   },
   {
     id: "cal-2",
-    title: "Fields closed — city maintenance",
+    title: "Fields closed for city maintenance",
     date: "2026-08-29",
     time: "Afternoon",
     kind: "blackout",

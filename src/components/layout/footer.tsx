@@ -5,7 +5,7 @@ const columns = [
   {
     heading: "Platform",
     links: [
-      { href: "/", label: "Scrimmage Board" },
+      { href: "/board", label: "Scrimmage Board" },
       { href: "/calendar", label: "Season Calendar" },
       { href: "/venues", label: "Venue Directory" },
     ],
@@ -29,19 +29,19 @@ const columns = [
 export function Footer() {
   return (
     <footer className="w-full border-t border-rule bg-surface">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-10 sm:flex-row sm:justify-between">
-        <div className="max-w-xs space-y-3">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-6 sm:flex-row sm:justify-between">
+        <div className="max-w-xs space-y-2">
           <Logo />
-          <p className="text-sm text-ink-2">
+          <p className="text-[11px] text-ink-2">
             The scrimmage marketplace and season planner for Rec, Club, and High School soccer programs.
           </p>
         </div>
 
-        <div className="grid grid-cols-3 gap-8">
+        <div className="grid grid-cols-3 gap-6">
           {columns.map((col) => (
-            <div key={col.heading} className="space-y-3">
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted">{col.heading}</p>
-              <ul className="space-y-2 text-sm text-ink-2">
+            <div key={col.heading} className="space-y-2">
+              <p className="text-[9px] font-bold uppercase tracking-wider text-muted">{col.heading}</p>
+              <ul className="space-y-1.5 text-[11px] text-ink-2">
                 {col.links.map((link) => (
                   <li key={link.href}>
                     <Link href={link.href} className="transition-colors hover:text-pitch">
@@ -54,7 +54,7 @@ export function Footer() {
           ))}
         </div>
       </div>
-      <div className="border-t border-rule px-4 py-4 text-center text-[11px] text-muted">
+      <div className="border-t border-rule px-4 py-3 text-center text-[10px] text-muted">
         © {new Date().getFullYear()} ScrimmApp. Built for coaches, by coaches.
       </div>
     </footer>
