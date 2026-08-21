@@ -6,6 +6,7 @@ import { Mail } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { AmbientBlobs } from "@/components/ui/ambient-blobs";
 import { Button } from "@/components/ui/button";
+import { GoogleSignInButton } from "@/components/auth/google-signin-button";
 import type { ReactNode } from "react";
 
 export function AuthShell({
@@ -145,6 +146,14 @@ export function AuthShell({
                   )}
                 </Button>
               </form>
+
+              <div className="my-3 flex items-center gap-2">
+                <div className="h-px flex-1 bg-rule" />
+                <span className="text-[11px] font-semibold uppercase tracking-wide text-ink-2">or</span>
+                <div className="h-px flex-1 bg-rule" />
+              </div>
+
+              <GoogleSignInButton />
 
               <p className="mt-3 text-center text-[13px] text-ink-2">
                 {footerText}{" "}
