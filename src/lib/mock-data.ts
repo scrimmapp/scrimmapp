@@ -2,7 +2,9 @@ import type { CalendarEvent, InboxMessage, Listing, Venue } from "@/lib/types";
 
 const HOUR = 3_600_000;
 
-export const seedListings: Listing[] = [
+// ownerId is a real DB profile reference the mock has no natural value for; the seed script
+// computes it separately per listing (src/db/seed/from-mock-data.ts's ownerByListingId).
+export const seedListings: Omit<Listing, "ownerId">[] = [
   {
     id: "scrim-1",
     createdAt: Date.now() - HOUR * 4,

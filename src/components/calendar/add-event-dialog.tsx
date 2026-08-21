@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import { Dialog } from "@/components/ui/dialog";
 import { Field } from "@/components/ui/field";
 import { Input, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useAppData } from "@/lib/app-data";
+import { createCalendarEventAction, updateCalendarEventAction } from "@/lib/actions/calendar-events";
 import { timeWindowOptions } from "@/lib/taxonomy";
-import type { CalendarEvent, TimeWindow } from "@/lib/types";
+import type { CalendarEvent } from "@/lib/types";
 
 const kindOptions: { value: CalendarEvent["kind"]; label: string }[] = [
   { value: "league", label: "League fixture" },
@@ -16,47 +17,69 @@ const kindOptions: { value: CalendarEvent["kind"]; label: string }[] = [
   { value: "blackout", label: "Blackout / fields closed" },
 ];
 
+export type EditableCalendarEvent = {
+  id: string;
+  title: string;
+  date: string;
+  time: CalendarEvent["time"];
+  kind: CalendarEvent["kind"];
+  location?: string;
+};
+
 export function AddEventDialog({
   open,
   onClose,
   defaultDate,
+  event,
 }: {
   open: boolean;
   onClose: () => void;
   defaultDate: string;
+  event?: EditableCalendarEvent | null;
 }) {
-  const { addCalendarEvent } = useAppData();
-  const [kind, setKind] = useState<CalendarEvent["kind"]>("league");
+  const router = useRouter();
+  const isEditing = !!event;
+  const [kind, setKind] = useState<CalendarEvent["kind"]>(event?.kind ?? "league");
+  const [error, setError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const form = new FormData(e.currentTarget);
-    const title = String(form.get("title") || "").trim();
-    const date = String(form.get("date") || "");
-    if (!title || !date) return;
+    if (saving) return;
+    setSaving(true);
+    setError(null);
 
-    addCalendarEvent({
-      title,
-      date,
-      time: form.get("time") as TimeWindow,
-      kind,
-      location: String(form.get("location") || "").trim() || undefined,
-    });
+    const formData = new FormData(e.currentTarget);
+    const result = isEditing
+      ? await updateCalendarEventAction(event.id, formData)
+      : await createCalendarEventAction(formData);
+    setSaving(false);
+
+    if (result.error) {
+      setError(result.error);
+      return;
+    }
+    router.refresh();
     onClose();
   }
 
   return (
-    <Dialog open={open} onClose={onClose} title="Log Calendar Entry">
-      <form onSubmit={handleSubmit} className="space-y-3">
+    <Dialog open={open} onClose={onClose} title={isEditing ? "Edit Calendar Entry" : "Log Calendar Entry"}>
+      <form key={event?.id ?? "new"} onSubmit={handleSubmit} className="space-y-3">
+        {error && (
+          <p className="rounded-control border border-crit/30 bg-crit-bg px-3 py-2 text-[12px] font-semibold text-crit">
+            {error}
+          </p>
+        )}
         <Field label="Title / opponent" htmlFor="cal-title">
-          <Input id="cal-title" name="title" placeholder="e.g. League fixture vs Mission Viejo" required />
+          <Input id="cal-title" name="title" placeholder="e.g. League fixture vs Mission Viejo" defaultValue={event?.title} required />
         </Field>
         <div className="grid grid-cols-2 gap-3">
           <Field label="Date" htmlFor="cal-date">
-            <Input id="cal-date" name="date" type="date" defaultValue={defaultDate} required />
+            <Input id="cal-date" name="date" type="date" defaultValue={event?.date ?? defaultDate} required />
           </Field>
           <Field label="Time slot" htmlFor="cal-time">
-            <Select id="cal-time" name="time" defaultValue="Morning">
+            <Select id="cal-time" name="time" defaultValue={event?.time ?? "Morning"}>
               {timeWindowOptions.map((t) => (
                 <option key={t} value={t}>{t}</option>
               ))}
@@ -64,21 +87,21 @@ export function AddEventDialog({
           </Field>
         </div>
         <Field label="Type" htmlFor="cal-kind">
-          <Select id="cal-kind" value={kind} onChange={(e) => setKind(e.target.value as CalendarEvent["kind"])}>
+          <Select id="cal-kind" name="kind" value={kind} onChange={(e) => setKind(e.target.value as CalendarEvent["kind"])}>
             {kindOptions.map((k) => (
               <option key={k.value} value={k.value}>{k.label}</option>
             ))}
           </Select>
         </Field>
         <Field label="Location (optional)" htmlFor="cal-location">
-          <Input id="cal-location" name="location" placeholder="Home pitch" />
+          <Input id="cal-location" name="location" placeholder="Home pitch" defaultValue={event?.location} />
         </Field>
         <div className="flex gap-2 pt-1">
           <Button type="button" variant="secondary" className="flex-1 normal-case" onClick={onClose}>
             Cancel
           </Button>
-          <Button type="submit" variant="accent" className="flex-[2]">
-            Save to Planner
+          <Button type="submit" variant="accent" className="flex-[2]" disabled={saving}>
+            {saving ? "Saving…" : isEditing ? "Save Changes" : "Save to Planner"}
           </Button>
         </div>
       </form>

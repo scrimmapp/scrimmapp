@@ -7,7 +7,9 @@ import { PageTransition } from "@/components/page-transition";
 import { RouteProgress } from "@/components/route-progress";
 import { SiteBackground } from "@/components/ui/site-background";
 import { ToastProvider } from "@/components/ui/toast";
-import { AppDataProvider } from "@/lib/app-data";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getProfileById, listUnreadConnectionIds } from "@/db/queries";
+import { initialsFrom } from "@/lib/format";
 import "./globals.css";
 
 const baloo = Baloo_2({
@@ -28,7 +30,21 @@ export const metadata: Metadata = {
     "The scrimmage marketplace and season planner for Rec, Club, and High School soccer programs.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const supabase = await createSupabaseServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  let coach: { name: string; initials: string; teamName: string } | null = null;
+  let unreadCount = 0;
+
+  if (user) {
+    const profile = await getProfileById(user.id);
+    if (profile) {
+      coach = { name: profile.coachName, initials: initialsFrom(profile.coachName), teamName: profile.teamName };
+    }
+    unreadCount = (await listUnreadConnectionIds(user.id)).length;
+  }
+
   return (
     <html
       lang="en"
@@ -40,13 +56,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <SiteBackground />
           <RouteProgress />
           <ToastProvider>
-            <AppDataProvider>
-              <Navbar />
-              <main className="flex-1 w-full">
-                <PageTransition>{children}</PageTransition>
-              </main>
-              <Footer />
-            </AppDataProvider>
+            <Navbar coach={coach} unreadCount={unreadCount} />
+            <main className="flex-1 w-full">
+              <PageTransition>{children}</PageTransition>
+            </main>
+            <Footer />
           </ToastProvider>
         </ThemeProvider>
       </body>

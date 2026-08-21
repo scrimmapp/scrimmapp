@@ -7,6 +7,8 @@ import { MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ConnectDialog } from "@/components/board/connect-dialog";
+import { EditListingDialog } from "@/components/board/edit-listing-dialog";
+import { CancelListingDialog } from "@/components/board/cancel-listing-dialog";
 import type { Listing } from "@/lib/types";
 import { formatDate } from "@/lib/format";
 
@@ -15,8 +17,11 @@ const cardVariants = {
   show: { opacity: 1, y: 0 },
 };
 
-export function ListingCard({ listing }: { listing: Listing }) {
+export function ListingCard({ listing, currentUserId }: { listing: Listing; currentUserId?: string | null }) {
   const [connectOpen, setConnectOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [cancelOpen, setCancelOpen] = useState(false);
+  const isOwner = currentUserId != null && listing.ownerId === currentUserId;
 
   return (
     <>
@@ -42,6 +47,7 @@ export function ListingCard({ listing }: { listing: Listing }) {
           </div>
 
           <div className="mb-2.5 flex flex-wrap gap-1">
+            {isOwner && <Badge tone="good">Your listing</Badge>}
             <Badge tone="muted">
               {listing.level} · {listing.subLevel}
             </Badge>
@@ -59,20 +65,53 @@ export function ListingCard({ listing }: { listing: Listing }) {
           </div>
         </Link>
 
-        <Button
-          variant="primary"
-          size="sm"
-          className="mt-3 w-full"
-          onClick={(e) => {
-            e.preventDefault();
-            setConnectOpen(true);
-          }}
-        >
-          Connect / Inquire
-        </Button>
+        {isOwner ? (
+          <div className="mt-3 flex gap-1.5">
+            <Button
+              variant="secondary"
+              size="sm"
+              className="flex-1"
+              onClick={(e) => {
+                e.preventDefault();
+                setEditOpen(true);
+              }}
+            >
+              Edit
+            </Button>
+            <Button
+              variant="danger"
+              size="sm"
+              className="flex-1"
+              onClick={(e) => {
+                e.preventDefault();
+                setCancelOpen(true);
+              }}
+            >
+              Cancel
+            </Button>
+          </div>
+        ) : (
+          <Button
+            variant="primary"
+            size="sm"
+            className="mt-3 w-full"
+            onClick={(e) => {
+              e.preventDefault();
+              setConnectOpen(true);
+            }}
+          >
+            Connect / Inquire
+          </Button>
+        )}
       </motion.div>
 
       <ConnectDialog listing={listing} open={connectOpen} onClose={() => setConnectOpen(false)} />
+      {isOwner && (
+        <>
+          <EditListingDialog listing={listing} open={editOpen} onClose={() => setEditOpen(false)} />
+          <CancelListingDialog listingId={listing.id} open={cancelOpen} onClose={() => setCancelOpen(false)} />
+        </>
+      )}
     </>
   );
 }

@@ -1,19 +1,53 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Select, Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ListingCard } from "@/components/board/listing-card";
-import { useAppData } from "@/lib/app-data";
+import { useRealtimeInsert } from "@/lib/supabase/use-realtime-insert";
+import { useRealtimeUpdate } from "@/lib/supabase/use-realtime-update";
+import { camelizeKeys, listingToDisplay } from "@/db/mappers";
 import { travelRadiusOptions } from "@/lib/taxonomy";
+import type { Listing } from "@/lib/types";
+import type { listings as listingsTable } from "@/db/schema";
 
 type Filters = { gender: string; level: string; radius: string; search: string };
 const defaultFilters: Filters = { gender: "All", level: "All", radius: "All", search: "" };
 
-export function BoardSection() {
-  const { listings } = useAppData();
+export function BoardSection({
+  initialListings,
+  currentUserId,
+}: {
+  initialListings: Listing[];
+  currentUserId?: string | null;
+}) {
+  const [listings, setListings] = useState<Listing[]>(initialListings);
   const [filters, setFilters] = useState<Filters>(defaultFilters);
+
+  const onInsert = useCallback((raw: Record<string, unknown>) => {
+    if (raw.status !== "open") return;
+    const row = camelizeKeys<typeof listingsTable.$inferSelect>(raw);
+    row.createdAt = new Date(row.createdAt as unknown as string);
+    const mapped = listingToDisplay(row);
+    setListings((prev) => (prev.some((l) => l.id === mapped.id) ? prev : [mapped, ...prev]));
+  }, []);
+  useRealtimeInsert<Record<string, unknown>>("listings", undefined, onInsert);
+
+  // A cancel (status -> cancelled) drops the card for every viewer; an edit patches it in
+  // place. Covers both the actor's own tab and everyone else's, no manual local bookkeeping
+  // needed on top of what post/cancel/edit already trigger server-side.
+  const onUpdate = useCallback((raw: Record<string, unknown>) => {
+    const row = camelizeKeys<typeof listingsTable.$inferSelect>(raw);
+    row.createdAt = new Date(row.createdAt as unknown as string);
+    const mapped = listingToDisplay(row);
+    setListings((prev) => {
+      if (mapped.status !== "open") return prev.filter((l) => l.id !== mapped.id);
+      const exists = prev.some((l) => l.id === mapped.id);
+      return exists ? prev.map((l) => (l.id === mapped.id ? mapped : l)) : [mapped, ...prev];
+    });
+  }, []);
+  useRealtimeUpdate<Record<string, unknown>>("listings", undefined, onUpdate);
 
   const filtered = useMemo(() => {
     return listings.filter((s) => {
@@ -98,7 +132,7 @@ export function BoardSection() {
             className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3"
           >
             {filtered.map((listing) => (
-              <ListingCard key={listing.id} listing={listing} />
+              <ListingCard key={listing.id} listing={listing} currentUserId={currentUserId} />
             ))}
           </motion.div>
         )}

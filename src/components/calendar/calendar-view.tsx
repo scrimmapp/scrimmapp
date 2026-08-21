@@ -2,15 +2,16 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Dialog } from "@/components/ui/dialog";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { AddEventDialog } from "@/components/calendar/add-event-dialog";
-import { useAppData } from "@/lib/app-data";
+import { deleteCalendarEventAction } from "@/lib/actions/calendar-events";
 import { buildMonthCells, isoDate, monthNames, weekdayLabels } from "@/lib/calendar";
 import { cn } from "@/lib/cn";
-import type { CalendarEvent, TimeWindow } from "@/lib/types";
+import type { CalendarEvent, Listing, TimeWindow } from "@/lib/types";
 
 interface UnifiedEvent {
   id: string;
@@ -38,13 +39,24 @@ const kindDot: Record<UnifiedEvent["kind"], string> = {
   blackout: "bg-crit",
 };
 
-export function CalendarView() {
-  const { calendarEvents, listings } = useAppData();
+export function CalendarView({
+  initialEvents,
+  initialListings,
+}: {
+  initialEvents: CalendarEvent[];
+  initialListings: Listing[];
+}) {
+  const router = useRouter();
+  const calendarEvents = initialEvents;
+  const listings = initialListings;
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth());
   const [addDate, setAddDate] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [editingEvent, setEditingEvent] = useState<UnifiedEvent | null>(null);
+  const [deletingEvent, setDeletingEvent] = useState<UnifiedEvent | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const events: UnifiedEvent[] = useMemo(() => {
     const fromListings: UnifiedEvent[] = listings
@@ -92,6 +104,21 @@ export function CalendarView() {
     setYear(y);
   }
 
+  function openEditEvent(ev: UnifiedEvent) {
+    setSelectedDate(null);
+    setEditingEvent(ev);
+  }
+
+  async function confirmDeleteEvent() {
+    if (!deletingEvent) return;
+    setDeleting(true);
+    await deleteCalendarEventAction(deletingEvent.id);
+    setDeleting(false);
+    setDeletingEvent(null);
+    setSelectedDate(null);
+    router.refresh();
+  }
+
   return (
     <div className="mx-auto w-full max-w-6xl space-y-3 px-4 py-4">
       <div className="flex flex-col gap-2.5 border-b border-rule pb-2.5 md:flex-row md:items-center md:justify-between">
@@ -106,7 +133,7 @@ export function CalendarView() {
 
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-1 rounded-control border border-rule-2 bg-surface p-1">
-            <button onClick={() => changeMonth(-1)} className="rounded-[0.4rem] px-2 py-0.5 text-[12px] font-bold text-ink-2 transition-colors hover:bg-surface-2 hover:text-ink">
+            <button onClick={() => changeMonth(-1)} className="rounded-[0.4rem] px-2 py-0.5 text-[12px] font-bold text-ink transition-colors hover:bg-surface-2">
               ← Prev
             </button>
             <button
@@ -115,7 +142,7 @@ export function CalendarView() {
             >
               Today
             </button>
-            <button onClick={() => changeMonth(1)} className="rounded-[0.4rem] px-2 py-0.5 text-[12px] font-bold text-ink-2 transition-colors hover:bg-surface-2 hover:text-ink">
+            <button onClick={() => changeMonth(1)} className="rounded-[0.4rem] px-2 py-0.5 text-[12px] font-bold text-ink transition-colors hover:bg-surface-2">
               Next →
             </button>
           </div>
@@ -125,7 +152,7 @@ export function CalendarView() {
         </div>
       </div>
 
-      <div className="grid grid-cols-7 gap-1 text-center text-[10px] font-bold uppercase tracking-wider text-muted">
+      <div className="grid grid-cols-7 gap-1 text-center text-[10px] font-bold uppercase tracking-wider text-ink">
         {weekdayLabels.map((d) => <div key={d}>{d}</div>)}
       </div>
 
@@ -179,7 +206,7 @@ export function CalendarView() {
               <span
                 className={cn(
                   "flex h-5 w-5 items-center justify-center rounded-full text-[12px] font-bold",
-                  isToday ? "bg-pitch text-pitch-contrast" : "text-ink-2",
+                  isToday ? "bg-pitch text-pitch-contrast" : "text-ink",
                 )}
               >
                 {cell.day}
@@ -190,7 +217,7 @@ export function CalendarView() {
                     <span key={ev.id} className={cn("h-1 w-1 rounded-full", kindDot[ev.kind])} />
                   ))}
                   {dayEvents.length > 4 && (
-                    <span className="text-[9px] font-bold text-muted">+{dayEvents.length - 4}</span>
+                    <span className="text-[9px] font-bold text-ink">+{dayEvents.length - 4}</span>
                   )}
                 </span>
               )}
@@ -199,7 +226,7 @@ export function CalendarView() {
         })}
       </motion.div>
 
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pt-1 text-[11px] font-semibold text-muted">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pt-1 text-[11px] font-semibold text-ink">
         {(Object.keys(kindLabel) as Array<keyof typeof kindLabel>).map((k) => (
           <span key={k} className="flex items-center gap-1">
             <span className={cn("h-1.5 w-1.5 rounded-full", kindDot[k])} />
@@ -208,7 +235,27 @@ export function CalendarView() {
         ))}
       </div>
 
-      <AddEventDialog open={addDate !== null} onClose={() => setAddDate(null)} defaultDate={addDate ?? todayIso} />
+      <AddEventDialog
+        key={editingEvent?.id ?? addDate ?? "new"}
+        open={addDate !== null || editingEvent !== null}
+        onClose={() => {
+          setAddDate(null);
+          setEditingEvent(null);
+        }}
+        defaultDate={addDate ?? todayIso}
+        event={
+          editingEvent
+            ? {
+                id: editingEvent.id,
+                title: editingEvent.title,
+                date: editingEvent.date,
+                time: editingEvent.time,
+                kind: editingEvent.kind as CalendarEvent["kind"],
+                location: editingEvent.location,
+              }
+            : null
+        }
+      />
 
       <Dialog
         open={selectedDate !== null}
@@ -217,7 +264,7 @@ export function CalendarView() {
       >
         <div className="space-y-3">
           {selectedEvents.length === 0 ? (
-            <p className="text-[13px] text-muted">Nothing scheduled yet.</p>
+            <p className="text-[13px] text-ink">Nothing scheduled yet.</p>
           ) : (
             <div className="space-y-1.5">
               {selectedEvents.map((ev) =>
@@ -226,21 +273,37 @@ export function CalendarView() {
                     key={ev.id}
                     href={`/listings/${ev.listingId}`}
                     onClick={() => setSelectedDate(null)}
-                    className="flex items-center justify-between gap-2 rounded-control border border-rule bg-paper px-3 py-2 text-[13px] font-bold text-pitch-ink transition-colors hover:bg-pitch-bg"
+                    className="flex items-center justify-between gap-2 rounded-control border border-rule bg-paper px-3 py-2 text-[13px] font-bold text-ink transition-colors hover:bg-pitch-bg"
                   >
                     <span className="flex items-center gap-2">
                       <span className={cn("h-1.5 w-1.5 shrink-0 rounded-full", kindDot[ev.kind])} />
                       {ev.title}
                     </span>
-                    <span className="text-[11px] font-semibold text-muted">{ev.time}</span>
+                    <span className="text-[11px] font-semibold text-ink">{ev.time}</span>
                   </Link>
                 ) : (
-                  <div key={ev.id} className="flex items-center justify-between gap-2 rounded-control border border-rule bg-paper px-3 py-2 text-[13px] font-bold text-ink-2">
-                    <span className="flex items-center gap-2">
+                  <div key={ev.id} className="flex items-center justify-between gap-2 rounded-control border border-rule bg-paper px-3 py-2 text-[13px] font-bold text-ink">
+                    <span className="flex min-w-0 items-center gap-2">
                       <span className={cn("h-1.5 w-1.5 shrink-0 rounded-full", kindDot[ev.kind])} />
-                      {ev.title}
+                      <span className="truncate">{ev.title}</span>
                     </span>
-                    <span className="text-[11px] font-semibold text-muted">{ev.time}</span>
+                    <span className="flex shrink-0 items-center gap-2">
+                      <span className="text-[11px] font-semibold text-ink">{ev.time}</span>
+                      <button
+                        type="button"
+                        onClick={() => openEditEvent(ev)}
+                        className="text-[11px] font-bold text-pitch hover:underline"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setDeletingEvent(ev)}
+                        className="text-[11px] font-bold text-crit hover:underline"
+                      >
+                        Delete
+                      </button>
+                    </span>
                   </div>
                 ),
               )}
@@ -259,6 +322,16 @@ export function CalendarView() {
           </Button>
         </div>
       </Dialog>
+
+      <ConfirmDialog
+        open={deletingEvent !== null}
+        onClose={() => setDeletingEvent(null)}
+        onConfirm={confirmDeleteEvent}
+        confirming={deleting}
+        title="Delete calendar entry?"
+        description={deletingEvent ? `Remove "${deletingEvent.title}" from your planner. This can't be undone.` : ""}
+        confirmLabel="Delete"
+      />
     </div>
   );
 }

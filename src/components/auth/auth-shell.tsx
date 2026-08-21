@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
+import { Mail } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { AmbientBlobs } from "@/components/ui/ambient-blobs";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ export function AuthShell({
   subtitle,
   children,
   status,
+  errorMessage,
   onSubmit,
   submitLabel,
   submittingLabel,
@@ -24,8 +26,9 @@ export function AuthShell({
   title: string;
   subtitle: string;
   children: ReactNode;
-  status: "idle" | "submitting" | "success";
-  onSubmit: (e: React.FormEvent) => void;
+  status: "idle" | "submitting" | "success" | "check-email" | "error";
+  errorMessage?: string | null;
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void | Promise<void>;
   submitLabel: string;
   submittingLabel: string;
   footerText: string;
@@ -69,6 +72,32 @@ export function AuthShell({
               <p className="font-display text-lg font-bold text-ink">You&rsquo;re in!</p>
               <p className="text-[13px] text-ink-2">Taking you to your coach profile…</p>
             </motion.div>
+          ) : status === "check-email" ? (
+            <motion.div
+              key="check-email"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="flex flex-col items-center gap-3 py-8 text-center"
+            >
+              <motion.div
+                initial={{ scale: 0, rotate: -20 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ type: "spring", stiffness: 320, damping: 16 }}
+                className="flex h-14 w-14 items-center justify-center rounded-full bg-gold-bg text-gold-ink"
+              >
+                <Mail size={24} strokeWidth={2.2} />
+              </motion.div>
+              <p className="font-display text-lg font-bold text-ink">Check your email</p>
+              <p className="max-w-xs text-[13px] text-ink-2">
+                We sent a confirmation link to finish creating your account. Once confirmed, log in to get started.
+              </p>
+              <Link href="/login">
+                <Button variant="secondary" className="mt-1 normal-case">
+                  Back to log in
+                </Button>
+              </Link>
+            </motion.div>
           ) : (
             <motion.div key="form" initial={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <div className="mb-3.5 flex flex-col items-center text-center">
@@ -79,6 +108,19 @@ export function AuthShell({
                 <h1 className="mt-1.5 font-display text-lg font-extrabold tracking-tight text-ink">{title}</h1>
                 <p className="mt-0.5 text-[13px] text-ink-2">{subtitle}</p>
               </div>
+
+              <AnimatePresence>
+                {status === "error" && errorMessage && (
+                  <motion.p
+                    initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+                    animate={{ opacity: 1, height: "auto", marginBottom: 10 }}
+                    exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+                    className="overflow-hidden rounded-control border border-crit/30 bg-crit-bg px-3 py-2 text-[12px] font-semibold text-crit"
+                  >
+                    {errorMessage}
+                  </motion.p>
+                )}
+              </AnimatePresence>
 
               <form onSubmit={onSubmit} className="space-y-2.5">
                 {children}
@@ -109,9 +151,6 @@ export function AuthShell({
                 <Link href={footerLinkHref} className="font-bold text-pitch hover:underline">
                   {footerLinkLabel}
                 </Link>
-              </p>
-              <p className="mt-2 text-center text-[11px] uppercase tracking-wider text-muted">
-                Preview only. Real accounts arrive in Sprint 2
               </p>
             </motion.div>
           )}

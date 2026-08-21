@@ -11,6 +11,7 @@ export type TravelRadius =
 
 export interface Listing {
   id: string;
+  ownerId: string;
   createdAt: number;
   teamName: string;
   gender: Gender;
@@ -26,12 +27,13 @@ export interface Listing {
   refFee: RefFee;
   hasFieldFee: boolean;
   notes?: string;
-  status: "open" | "matched" | "cancelled";
+  status: "open" | "matched" | "cancelled" | "completed";
 }
 
 export interface Comment {
   id: string;
   listingId: string;
+  authorId: string;
   text: string;
   timestamp: number;
 }

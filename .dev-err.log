@@ -1,0 +1,146 @@
+[browser] Uncaught Error: cannot add `postgres_changes` callbacks for realtime:realtime:listings:all after `subscribe()`.
+    at useRealtimeInsert.useEffect (src/lib/supabase/use-realtime-insert.ts:17:8)
+    at BoardPage (src\app\board\page.tsx:23:9)
+  15 |     const channel = supabase
+  16 |       .channel(`realtime:${table}:${filter ?? "all"}`)
+> 17 |       .on(
+     |        ^
+  18 |         "postgres_changes",
+  19 |         { event: "INSERT", schema: "public", table, filter },
+  20 |         (payload) => {
+[browser] Uncaught Error: cannot add `postgres_changes` callbacks for realtime:realtime:listings:all after `subscribe()`.
+    at useRealtimeInsert.useEffect (src/lib/supabase/use-realtime-insert.ts:17:8)
+    at BoardPage (src\app\board\page.tsx:23:9)
+  15 |     const channel = supabase
+  16 |       .channel(`realtime:${table}:${filter ?? "all"}`)
+> 17 |       .on(
+     |        ^
+  18 |         "postgres_changes",
+  19 |         { event: "INSERT", schema: "public", table, filter },
+  20 |         (payload) => {
+[browser] Uncaught TypeError: Cannot read properties of undefined (reading 'getTime')
+    at listingToDisplay (src/db/mappers/listing-display.ts:16:30)
+    at BoardSection.useCallback[onInsert] (src/components/board/board-section.tsx:23:36)
+    at useRealtimeInsert.useEffect.channel [as callback] (src/lib/supabase/use-realtime-insert.ts:23:11)
+  14 |     id: row.id,
+  15 |     ownerId: row.ownerId,
+> 16 |     createdAt: row.createdAt.getTime(),
+     |                              ^
+  17 |     teamName: row.teamName,
+  18 |     gender: genderToDisplay(row.gender),
+  19 |     age: row.ageGroup,
+[browser] Uncaught TypeError: Cannot read properties of undefined (reading 'getTime')
+    at listingToDisplay (src/db/mappers/listing-display.ts:16:30)
+    at BoardSection.useCallback[onInsert] (src/components/board/board-section.tsx:23:36)
+    at useRealtimeInsert.useEffect.channel [as callback] (src/lib/supabase/use-realtime-insert.ts:23:11)
+  14 |     id: row.id,
+  15 |     ownerId: row.ownerId,
+> 16 |     createdAt: row.createdAt.getTime(),
+     |                              ^
+  17 |     teamName: row.teamName,
+  18 |     gender: genderToDisplay(row.gender),
+  19 |     age: row.ageGroup,
+[browser] Uncaught Error: cannot add `postgres_changes` callbacks for realtime:realtime:listings:all after `subscribe()`.
+    at useRealtimeInsert.useEffect (src/lib/supabase/use-realtime-insert.ts:17:8)
+    at BoardPage (src\app\board\page.tsx:23:9)
+  15 |     const channel = supabase
+  16 |       .channel(`realtime:${table}:${filter ?? "all"}`)
+> 17 |       .on(
+     |        ^
+  18 |         "postgres_changes",
+  19 |         { event: "INSERT", schema: "public", table, filter },
+  20 |         (payload) => {
+[browser] Uncaught Error: cannot add `postgres_changes` callbacks for realtime:realtime:listings:all after `subscribe()`.
+    at useRealtimeInsert.useEffect (src/lib/supabase/use-realtime-insert.ts:17:8)
+    at BoardPage (src\app\board\page.tsx:23:9)
+  15 |     const channel = supabase
+  16 |       .channel(`realtime:${table}:${filter ?? "all"}`)
+> 17 |       .on(
+     |        ^
+  18 |         "postgres_changes",
+  19 |         { event: "INSERT", schema: "public", table, filter },
+  20 |         (payload) => {
+[browser] Uncaught TypeError: Cannot read properties of undefined (reading 'getTime')
+    at listingToDisplay (src/db/mappers/listing-display.ts:16:30)
+    at BoardSection.useCallback[onInsert] (src/components/board/board-section.tsx:23:36)
+    at useRealtimeInsert.useEffect.channel [as callback] (src/lib/supabase/use-realtime-insert.ts:23:11)
+  14 |     id: row.id,
+  15 |     ownerId: row.ownerId,
+> 16 |     createdAt: row.createdAt.getTime(),
+     |                              ^
+  17 |     teamName: row.teamName,
+  18 |     gender: genderToDisplay(row.gender),
+  19 |     age: row.ageGroup,
+[browser] Uncaught TypeError: Cannot read properties of undefined (reading 'getTime')
+    at listingToDisplay (src/db/mappers/listing-display.ts:16:30)
+    at BoardSection.useCallback[onInsert] (src/components/board/board-section.tsx:23:36)
+    at useRealtimeInsert.useEffect.channel [as callback] (src/lib/supabase/use-realtime-insert.ts:23:11)
+  14 |     id: row.id,
+  15 |     ownerId: row.ownerId,
+> 16 |     createdAt: row.createdAt.getTime(),
+     |                              ^
+  17 |     teamName: row.teamName,
+  18 |     gender: genderToDisplay(row.gender),
+  19 |     age: row.ageGroup,
+[browser] Uncaught Error: cannot add `postgres_changes` callbacks for realtime:realtime:listings:all after `subscribe()`.
+    at useRealtimeInsert.useEffect (src/lib/supabase/use-realtime-insert.ts:18:8)
+    at BoardPage (src\app\board\page.tsx:23:9)
+  16 |     const channel = supabase
+  17 |       .channel(`realtime:${table}:${filter ?? "all"}`)
+> 18 |       .on(
+     |        ^
+  19 |         "postgres_changes",
+  20 |         { event: "INSERT", schema: "public", table, filter },
+  21 |         (payload) => onInsert(payload.new as T),
+[browser] Uncaught Error: cannot add `postgres_changes` callbacks for realtime:realtime:listings:all after `subscribe()`.
+    at useRealtimeInsert.useEffect (src/lib/supabase/use-realtime-insert.ts:18:8)
+    at BoardPage (src\app\board\page.tsx:23:9)
+  16 |     const channel = supabase
+  17 |       .channel(`realtime:${table}:${filter ?? "all"}`)
+> 18 |       .on(
+     |        ^
+  19 |         "postgres_changes",
+  20 |         { event: "INSERT", schema: "public", table, filter },
+  21 |         (payload) => onInsert(payload.new as T),
+[browser] Uncaught Error: cannot add `postgres_changes` callbacks for realtime:realtime:listings:all after `subscribe()`.
+    at useRealtimeInsert.useEffect (src/lib/supabase/use-realtime-insert.ts:18:8)
+    at BoardPage (src\app\board\page.tsx:23:9)
+  16 |     const channel = supabase
+  17 |       .channel(`realtime:${table}:${filter ?? "all"}`)
+> 18 |       .on(
+     |        ^
+  19 |         "postgres_changes",
+  20 |         { event: "INSERT", schema: "public", table, filter },
+  21 |         (payload) => onInsert(payload.new as T),
+[browser] Uncaught Error: cannot add `postgres_changes` callbacks for realtime:realtime:listings:all after `subscribe()`.
+    at useRealtimeInsert.useEffect (src/lib/supabase/use-realtime-insert.ts:18:8)
+    at BoardPage (src\app\board\page.tsx:23:9)
+  16 |     const channel = supabase
+  17 |       .channel(`realtime:${table}:${filter ?? "all"}`)
+> 18 |       .on(
+     |        ^
+  19 |         "postgres_changes",
+  20 |         { event: "INSERT", schema: "public", table, filter },
+  21 |         (payload) => onInsert(payload.new as T),
+[browser] Uncaught Error: cannot add `postgres_changes` callbacks for realtime:realtime:listings:all after `subscribe()`.
+    at useRealtimeInsert.useEffect (src/lib/supabase/use-realtime-insert.ts:18:8)
+    at BoardPage (src\app\board\page.tsx:23:9)
+  16 |     const channel = supabase
+  17 |       .channel(`realtime:${table}:${filter ?? "all"}`)
+> 18 |       .on(
+     |        ^
+  19 |         "postgres_changes",
+  20 |         { event: "INSERT", schema: "public", table, filter },
+  21 |         (payload) => onInsert(payload.new as T),
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '3324451902'
+}
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '3324451902'
+}
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '3324451902'
+}

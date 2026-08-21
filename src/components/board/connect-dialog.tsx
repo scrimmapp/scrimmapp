@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 import { Dialog } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/input";
-import { useAppData } from "@/lib/app-data";
+import { sendConnectionAction } from "@/lib/actions/connections";
 import type { Listing } from "@/lib/types";
 
 const quickPhrases = [
@@ -24,18 +24,27 @@ export function ConnectDialog({
   open: boolean;
   onClose: () => void;
 }) {
-  const { sendInquiry } = useAppData();
   const [customMessage, setCustomMessage] = useState("");
   const [sent, setSent] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [sending, setSending] = useState(false);
 
-  function handleSend(message: string) {
-    if (!message.trim()) return;
-    sendInquiry(listing, message.trim());
+  async function handleSend(message: string) {
+    if (!message.trim() || sending) return;
+    setSending(true);
+    setError(null);
+    const result = await sendConnectionAction(listing.id, message.trim());
+    setSending(false);
+    if (result.error) {
+      setError(result.error);
+      return;
+    }
     setSent(message.trim());
   }
 
   function handleClose() {
     setSent(null);
+    setError(null);
     setCustomMessage("");
     onClose();
   }
@@ -59,6 +68,11 @@ export function ConnectDialog({
         </div>
       ) : (
         <div className="space-y-3">
+          {error && (
+            <p className="rounded-control border border-crit/30 bg-crit-bg px-3 py-2 text-[12px] font-semibold text-crit">
+              {error}
+            </p>
+          )}
           <p className="text-[13px] text-ink-2">
             Tap a quick phrase to message <strong className="text-ink">{listing.teamName}</strong> instantly:
           </p>
@@ -73,10 +87,11 @@ export function ConnectDialog({
                 key={phrase}
                 type="button"
                 onClick={() => handleSend(phrase)}
+                disabled={sending}
                 variants={{ hidden: { opacity: 0, x: -10 }, show: { opacity: 1, x: 0 } }}
                 whileHover={{ x: 3 }}
                 whileTap={{ scale: 0.98 }}
-                className="group flex items-center justify-between rounded-control border border-rule-2 bg-paper px-3 py-2 text-left text-[13px] font-semibold text-ink-2 transition-colors hover:border-pitch/50 hover:bg-pitch-bg hover:text-pitch-ink"
+                className="group flex items-center justify-between rounded-control border border-rule-2 bg-paper px-3 py-2 text-left text-[13px] font-semibold text-ink-2 transition-colors hover:border-pitch/50 hover:bg-pitch-bg hover:text-pitch-ink disabled:opacity-50"
               >
                 <span>{phrase}</span>
                 <span className="opacity-0 transition-opacity group-hover:opacity-100">→</span>
@@ -98,9 +113,9 @@ export function ConnectDialog({
               variant="accent"
               className="mt-2 w-full"
               onClick={() => handleSend(customMessage)}
-              disabled={!customMessage.trim()}
+              disabled={!customMessage.trim() || sending}
             >
-              Send Message
+              {sending ? "Sending…" : "Send Message"}
             </Button>
           </div>
         </div>

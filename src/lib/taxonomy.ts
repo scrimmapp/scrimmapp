@@ -22,3 +22,12 @@ export const travelRadiusOptions = [
 export const timeWindowOptions = ["Morning", "Afternoon", "Evening"] as const;
 
 export const refFeeOptions = ["50/50 Split", "Host Pays Ref", "Visitor Pays"] as const;
+
+export const cancellationReasonOptions: { value: string; label: string }[] = [
+  { value: "field_revoked", label: "Field access revoked" },
+  { value: "player_availability", label: "Player availability" },
+  { value: "weather", label: "Weather" },
+  { value: "opponent_backed_out", label: "Opponent backed out" },
+  { value: "schedule_conflict", label: "Schedule conflict" },
+  { value: "other", label: "Other" },
+];

@@ -1,0 +1,197 @@
+
+> scrimmapp@0.1.0 dev
+> next dev
+
+▲ Next.js 16.3.0 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.10:3000
+- Environments: .env.local
+✓ Ready in 1112ms
+✓ Running next.config.ts took 69ms
+
+◇ injected env (0) from .env.local // tip: ⌘ enable debugging { debug: true }
+ GET /signup 200 in 863ms (next.js: 398ms, application-code: 465ms)
+ GET /board 200 in 1403ms (next.js: 74ms, application-code: 1329ms)
+ GET /signup 200 in 2.2s (next.js: 21ms, application-code: 2.2s)
+ GET /signup 200 in 134ms (next.js: 22ms, application-code: 112ms)
+ GET /signup 200 in 1011ms (next.js: 14ms, application-code: 997ms)
+ GET /board 200 in 407ms (next.js: 10ms, application-code: 397ms)
+ GET /board 200 in 1191ms (next.js: 57ms, application-code: 1134ms)
+ GET /board 200 in 1195ms (next.js: 17ms, application-code: 1178ms)
+ POST /board 200 in 1558ms (next.js: 11ms, application-code: 1547ms)
+  └─ ƒ createListingAction({}) in 567ms src/lib/actions/listings.ts
+ GET /signup 200 in 94ms (next.js: 12ms, application-code: 82ms)
+ GET /board 200 in 450ms (next.js: 10ms, application-code: 439ms)
+ GET /signup 200 in 1161ms (next.js: 15ms, application-code: 1146ms)
+ GET /signup 200 in 209ms (next.js: 67ms, application-code: 142ms)
+ GET /signup 200 in 1016ms (next.js: 18ms, application-code: 998ms)
+ GET /board 200 in 464ms (next.js: 15ms, application-code: 449ms)
+ GET /board 200 in 1127ms (next.js: 12ms, application-code: 1115ms)
+ GET /board 200 in 1198ms (next.js: 13ms, application-code: 1185ms)
+ POST /board 200 in 1630ms (next.js: 15ms, application-code: 1615ms)
+  └─ ƒ createListingAction({}) in 587ms src/lib/actions/listings.ts
+ GET /signup 200 in 106ms (next.js: 14ms, application-code: 92ms)
+ GET /board 200 in 448ms (next.js: 21ms, application-code: 427ms)
+ GET /signup 200 in 1298ms (next.js: 14ms, application-code: 1285ms)
+ GET /signup 200 in 113ms (next.js: 17ms, application-code: 97ms)
+ GET /signup 200 in 1037ms (next.js: 10ms, application-code: 1027ms)
+ GET /board 200 in 397ms (next.js: 12ms, application-code: 385ms)
+ GET /board 200 in 1172ms (next.js: 13ms, application-code: 1159ms)
+ GET /board 200 in 1178ms (next.js: 18ms, application-code: 1160ms)
+ POST /board 200 in 1598ms (next.js: 9ms, application-code: 1589ms)
+  └─ ƒ createListingAction({}) in 595ms src/lib/actions/listings.ts
+ GET /signup 200 in 102ms (next.js: 11ms, application-code: 91ms)
+ GET /board 200 in 449ms (next.js: 15ms, application-code: 435ms)
+ GET /signup 200 in 1184ms (next.js: 12ms, application-code: 1171ms)
+ GET /signup 200 in 90ms (next.js: 8ms, application-code: 82ms)
+ GET /board 200 in 414ms (next.js: 11ms, application-code: 403ms)
+ GET /signup 200 in 1148ms (next.js: 11ms, application-code: 1138ms)
+ GET /signup 200 in 94ms (next.js: 8ms, application-code: 86ms)
+ GET /board 200 in 451ms (next.js: 8ms, application-code: 443ms)
+ GET /signup 200 in 1367ms (next.js: 109ms, application-code: 1258ms)
+ GET /signup 200 in 104ms (next.js: 17ms, application-code: 87ms)
+ GET /board 200 in 1353ms (next.js: 14ms, application-code: 1339ms)
+ GET /login 200 in 276ms (next.js: 117ms, application-code: 158ms)
+ POST /board 200 in 606ms (next.js: 10ms, application-code: 596ms)
+  └─ ƒ signOutAction() in 231ms src/lib/actions/auth.ts
+ GET /profile 200 in 322ms (next.js: 69ms, application-code: 253ms)
+ GET /login 200 in 122ms (next.js: 11ms, application-code: 110ms)
+ GET /login 200 in 109ms (next.js: 11ms, application-code: 98ms)
+ GET /board 200 in 1560ms (next.js: 11ms, application-code: 1549ms)
+ GET /profile 200 in 1148ms (next.js: 12ms, application-code: 1136ms)
+ GET /signup 200 in 113ms (next.js: 32ms, application-code: 82ms)
+ GET /board 200 in 1305ms (next.js: 16ms, application-code: 1289ms)
+ GET /login 200 in 115ms (next.js: 19ms, application-code: 96ms)
+ POST /board 200 in 448ms (next.js: 10ms, application-code: 438ms)
+  └─ ƒ signOutAction() in 230ms src/lib/actions/auth.ts
+ GET /profile 200 in 130ms (next.js: 18ms, application-code: 112ms)
+ GET /login 200 in 115ms (next.js: 14ms, application-code: 102ms)
+ GET /login 200 in 120ms (next.js: 9ms, application-code: 111ms)
+ GET /board 200 in 1179ms (next.js: 10ms, application-code: 1169ms)
+ GET /profile 200 in 1218ms (next.js: 13ms, application-code: 1206ms)
+ GET /signup 200 in 90ms (next.js: 10ms, application-code: 80ms)
+ GET /board 200 in 1387ms (next.js: 9ms, application-code: 1379ms)
+ GET /login 200 in 183ms (next.js: 10ms, application-code: 173ms)
+ POST /board 200 in 519ms (next.js: 13ms, application-code: 506ms)
+  └─ ƒ signOutAction() in 220ms src/lib/actions/auth.ts
+ GET /profile 200 in 233ms (next.js: 18ms, application-code: 215ms)
+ GET /login 200 in 135ms (next.js: 15ms, application-code: 121ms)
+ GET /login 200 in 166ms (next.js: 9ms, application-code: 157ms)
+ GET /board 200 in 1118ms (next.js: 12ms, application-code: 1106ms)
+ GET /profile 200 in 1155ms (next.js: 9ms, application-code: 1146ms)
+ GET /signup 200 in 86ms (next.js: 10ms, application-code: 76ms)
+ GET /board 200 in 1371ms (next.js: 14ms, application-code: 1357ms)
+ GET /signup 200 in 172ms (next.js: 12ms, application-code: 160ms)
+ GET /board 200 in 1239ms (next.js: 18ms, application-code: 1221ms)
+ GET /board 200 in 1265ms (next.js: 12ms, application-code: 1253ms)
+ GET /board 200 in 1191ms (next.js: 9ms, application-code: 1182ms)
+ POST /board 200 in 1818ms (next.js: 9ms, application-code: 1809ms)
+  └─ ƒ createListingAction({}) in 667ms src/lib/actions/listings.ts
+ GET /board 200 in 1556ms (next.js: 94ms, application-code: 1462ms)
+ GET / 200 in 445ms (next.js: 308ms, application-code: 137ms)
+ GET /login 200 in 156ms (next.js: 48ms, application-code: 108ms)
+ GET / 200 in 133ms (next.js: 25ms, application-code: 108ms)
+ GET /login 200 in 332ms (next.js: 24ms, application-code: 308ms)
+ GET /signup 200 in 168ms (next.js: 86ms, application-code: 82ms)
+✓ Compiled in 1715ms
+◇ injected env (0) from .env.local // tip: ⌘ suppress logs { quiet: true }
+ GET /signup 200 in 3.4s (next.js: 3.0s, application-code: 381ms)
+ GET /signup 200 in 273ms (next.js: 20ms, application-code: 252ms)
+ GET /signup 200 in 256ms (next.js: 19ms, application-code: 237ms)
+ GET /signup 200 in 229ms (next.js: 18ms, application-code: 211ms)
+ GET /signup 200 in 220ms (next.js: 13ms, application-code: 207ms)
+ GET /signup 200 in 235ms (next.js: 13ms, application-code: 223ms)
+ GET /signup 200 in 248ms (next.js: 18ms, application-code: 231ms)
+ GET /signup 200 in 246ms (next.js: 25ms, application-code: 221ms)
+ GET /signup 200 in 234ms (next.js: 18ms, application-code: 216ms)
+ GET /signup 200 in 239ms (next.js: 18ms, application-code: 220ms)
+ GET /signup 200 in 224ms (next.js: 18ms, application-code: 206ms)
+ GET /signup 200 in 219ms (next.js: 14ms, application-code: 205ms)
+ GET /signup 200 in 229ms (next.js: 18ms, application-code: 211ms)
+ GET /signup 200 in 238ms (next.js: 15ms, application-code: 222ms)
+ GET /signup 200 in 244ms (next.js: 15ms, application-code: 228ms)
+ GET /signup 200 in 229ms (next.js: 15ms, application-code: 214ms)
+ GET /signup 200 in 231ms (next.js: 17ms, application-code: 214ms)
+ GET /signup 200 in 238ms (next.js: 14ms, application-code: 223ms)
+ GET /signup 200 in 223ms (next.js: 17ms, application-code: 206ms)
+ GET /signup 200 in 226ms (next.js: 17ms, application-code: 209ms)
+ GET /signup 200 in 248ms (next.js: 14ms, application-code: 234ms)
+ GET /signup 200 in 279ms (next.js: 19ms, application-code: 260ms)
+ GET /signup 200 in 284ms (next.js: 17ms, application-code: 267ms)
+ GET /signup 200 in 296ms (next.js: 18ms, application-code: 278ms)
+ GET /signup 200 in 315ms (next.js: 16ms, application-code: 300ms)
+ GET /signup 200 in 326ms (next.js: 24ms, application-code: 302ms)
+ GET /signup 200 in 299ms (next.js: 16ms, application-code: 283ms)
+ GET /signup 200 in 292ms (next.js: 22ms, application-code: 270ms)
+ GET /signup 200 in 311ms (next.js: 21ms, application-code: 290ms)
+ GET /signup 200 in 225ms (next.js: 18ms, application-code: 207ms)
+ GET /signup 200 in 108ms (next.js: 19ms, application-code: 89ms)
+✓ Compiled in 429ms
+ GET /signup 200 in 122ms (next.js: 48ms, application-code: 74ms)
+✓ Compiled in 526ms
+ GET /signup 200 in 100ms (next.js: 22ms, application-code: 78ms)
+✓ Compiled in 438ms
+ GET /signup 200 in 88ms (next.js: 25ms, application-code: 63ms)
+✓ Compiled in 267ms
+ GET / 200 in 933ms (next.js: 32ms, application-code: 901ms)
+ GET /login 200 in 642ms (next.js: 185ms, application-code: 457ms)
+ GET /signup 200 in 67ms (next.js: 17ms, application-code: 50ms)
+✓ Compiled in 206ms
+ GET /signup 200 in 125ms (next.js: 33ms, application-code: 92ms)
+ GET /board 200 in 3.5s (next.js: 353ms, application-code: 3.1s)
+ POST /board 200 in 2.7s (next.js: 17ms, application-code: 2.6s)
+  └─ ƒ createListingAction({}) in 1360ms src/lib/actions/listings.ts
+ POST /board 200 in 1230ms (next.js: 21ms, application-code: 1208ms)
+  └─ ƒ sendConnectionAction("437a9c99-64a7-4225-af17-c4eff171a118", "Is this match still available?") in 1171ms src/lib/actions/connections.ts
+ POST /board 200 in 1155ms (next.js: 18ms, application-code: 1137ms)
+  └─ ƒ sendConnectionAction("437a9c99-64a7-4225-af17-c4eff171a118", "sssss") in 1106ms src/lib/actions/connections.ts
+ GET /calendar 200 in 1996ms (next.js: 813ms, application-code: 1183ms)
+◇ injected env (0) from .env.local // tip: ⌘ override existing { override: true }
+ GET /listings/437a9c99-64a7-4225-af17-c4eff171a118 200 in 7.2s (next.js: 6.2s, application-code: 1006ms)
+ GET /inbox 200 in 1758ms (next.js: 493ms, application-code: 1265ms)
+ GET /board 200 in 544ms (next.js: 23ms, application-code: 521ms)
+ POST /inbox 200 in 752ms (next.js: 17ms, application-code: 734ms)
+  └─ ƒ markAllInboxReadAction() in 694ms src/lib/actions/connections.ts
+ POST /inbox 200 in 803ms (next.js: 18ms, application-code: 785ms)
+  └─ ƒ markAllInboxReadAction() in 743ms src/lib/actions/connections.ts
+ POST /board 200 in 874ms (next.js: 21ms, application-code: 853ms)
+ GET /listings/437a9c99-64a7-4225-af17-c4eff171a118 200 in 1062ms (next.js: 48ms, application-code: 1014ms)
+◇ injected env (0) from .env.local // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+ GET /board 200 in 644ms (next.js: 53ms, application-code: 591ms)
+ GET /listings/437a9c99-64a7-4225-af17-c4eff171a118 200 in 939ms (next.js: 46ms, application-code: 893ms)
+◇ injected env (0) from .env.local // tip: ⌁ auth for agents [www.vestauth.com]
+◇ injected env (0) from .env.local // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+ POST /listings/437a9c99-64a7-4225-af17-c4eff171a118 200 in 2.6s (next.js: 32ms, application-code: 2.6s)
+  └─ ƒ addCommentAction("437a9c99-64a7-4225-af17-c4eff171a118", "eeeee") in 1012ms src/lib/actions/comments.ts
+ GET /board 200 in 705ms (next.js: 19ms, application-code: 686ms)
+ GET /listings/437a9c99-64a7-4225-af17-c4eff171a118 200 in 987ms (next.js: 30ms, application-code: 957ms)
+◇ injected env (0) from .env.local // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+ GET /inbox 200 in 1634ms (next.js: 20ms, application-code: 1613ms)
+ POST /inbox 200 in 905ms (next.js: 9ms, application-code: 896ms)
+  └─ ƒ markAllInboxReadAction() in 879ms src/lib/actions/connections.ts
+ POST /inbox 200 in 1171ms (next.js: 10ms, application-code: 1161ms)
+  └─ ƒ markAllInboxReadAction() in 1143ms src/lib/actions/connections.ts
+ GET /calendar 200 in 931ms (next.js: 22ms, application-code: 909ms)
+ POST /calendar 200 in 3.3s (next.js: 17ms, application-code: 3.3s)
+  └─ ƒ createCalendarEventAction({}) in 1143ms src/lib/actions/calendar-events.ts
+ GET /calendar 200 in 2.6s (next.js: 14ms, application-code: 2.6s)
+ POST /calendar 200 in 2.1s (next.js: 18ms, application-code: 2.1s)
+  └─ ƒ createCalendarEventAction({}) in 850ms src/lib/actions/calendar-events.ts
+ GET /calendar 200 in 1415ms (next.js: 30ms, application-code: 1385ms)
+ GET /board 200 in 585ms (next.js: 26ms, application-code: 559ms)
+ POST /board 200 in 2.9s (next.js: 31ms, application-code: 2.8s)
+  └─ ƒ createListingAction({}) in 1575ms src/lib/actions/listings.ts
+ GET /calendar 200 in 1317ms (next.js: 14ms, application-code: 1304ms)
+ GET /listings/9aa101df-2356-465b-b6ee-7bc65411d0d0 200 in 1243ms (next.js: 27ms, application-code: 1216ms)
+◇ injected env (0) from .env.local // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+ GET /board 200 in 654ms (next.js: 14ms, application-code: 640ms)
+ GET /calendar 200 in 1493ms (next.js: 15ms, application-code: 1478ms)
+ GET /profile 200 in 2.1s (next.js: 233ms, application-code: 1887ms)
+ POST /profile 200 in 850ms (next.js: 10ms, application-code: 840ms)
+  └─ ƒ signOutAction() in 777ms src/lib/actions/auth.ts
+ GET /login 200 in 121ms (next.js: 16ms, application-code: 106ms)
+ GET /login 200 in 325ms (next.js: 31ms, application-code: 294ms)
+ GET /login 200 in 139ms (next.js: 30ms, application-code: 109ms)
+ GET /signup 200 in 56ms (next.js: 18ms, application-code: 37ms)
+ GET /login 200 in 64ms (next.js: 24ms, application-code: 41ms)
+[?25h

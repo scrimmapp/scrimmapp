@@ -2,14 +2,14 @@
 
 import { useState, type FormEvent } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, AlertCircle } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Field } from "@/components/ui/field";
 import { Input, Select, Textarea, Checkbox } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useAppData } from "@/lib/app-data";
+import { createListingAction } from "@/lib/actions/listings";
 import { ageGroups, refFeeOptions, subLevelsByLevel, timeWindowOptions, travelRadiusOptions } from "@/lib/taxonomy";
-import type { Gender, Level, RefFee, TimeWindow, TravelRadius } from "@/lib/types";
+import type { Level } from "@/lib/types";
 
 function tomorrowISO() {
   const d = new Date();
@@ -18,44 +18,37 @@ function tomorrowISO() {
 }
 
 export function PostListingForm() {
-  const { addListing } = useAppData();
   const [level, setLevel] = useState<Level>("Club");
   const [subLevel, setSubLevel] = useState(subLevelsByLevel.Club[0]);
   const [justPosted, setJustPosted] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   function handleLevelChange(next: Level) {
     setLevel(next);
     setSubLevel(subLevelsByLevel[next][0]);
   }
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const form = new FormData(e.currentTarget);
-    const teamName = String(form.get("teamName") || "").trim();
-    const location = String(form.get("location") || "").trim();
-    const date = String(form.get("date") || "");
+    if (submitting) return;
 
-    if (!teamName || !location || !date) return;
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const teamName = String(formData.get("teamName") || "").trim();
 
-    addListing({
-      teamName,
-      location,
-      date,
-      level,
-      subLevel,
-      gender: form.get("gender") as Gender,
-      age: String(form.get("age")),
-      time: form.get("time") as TimeWindow,
-      travelRadius: form.get("travelRadius") as TravelRadius,
-      refFee: form.get("refFee") as RefFee,
-      isHosting: form.get("isHosting") === "on",
-      hasRef: true,
-      hasFieldFee: form.get("hasFieldFee") === "on",
-      notes: String(form.get("notes") || "").trim() || undefined,
-    });
+    setSubmitting(true);
+    setError(null);
+    const result = await createListingAction(formData);
+    setSubmitting(false);
+
+    if (result.error) {
+      setError(result.error);
+      return;
+    }
 
     setJustPosted(teamName);
-    e.currentTarget.reset();
+    form.reset();
     setLevel("Club");
     setSubLevel(subLevelsByLevel.Club[0]);
     setTimeout(() => setJustPosted(null), 5000);
@@ -67,14 +60,14 @@ export function PostListingForm() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
     >
-    <Card className="relative mx-auto max-w-3xl overflow-hidden p-3 md:p-3.5">
+    <Card className="relative mx-auto max-w-3xl overflow-hidden p-3.5 md:p-4">
       <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-pitch/10 blur-3xl" />
 
       <div className="mb-1.5 text-center">
-        <span className="inline-flex rounded-pill border border-pitch/25 bg-pitch-bg px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-pitch-ink">
+        <span className="inline-flex rounded-pill border border-pitch/25 bg-pitch-bg px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-pitch-ink">
           Organize a match
         </span>
-        <h2 className="mt-0.5 font-display text-base font-extrabold tracking-tight text-ink">
+        <h2 className="mt-1 font-display text-lg font-extrabold tracking-tight text-ink">
           Post a Scrimmage Request
         </h2>
       </div>
@@ -97,6 +90,18 @@ export function PostListingForm() {
               <CheckCircle2 size={14} strokeWidth={2.5} />
             </motion.span>
             Published. {justPosted} is now live on the board.
+          </motion.div>
+        )}
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+            animate={{ opacity: 1, height: "auto", marginBottom: 12 }}
+            exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+            transition={{ duration: 0.25 }}
+            className="flex items-center gap-2 overflow-hidden rounded-control border border-crit/30 bg-crit-bg px-3 py-1.5 text-[13px] font-semibold text-crit"
+          >
+            <AlertCircle size={14} strokeWidth={2.5} className="shrink-0" />
+            {error}
           </motion.div>
         )}
       </AnimatePresence>
@@ -187,8 +192,8 @@ export function PostListingForm() {
           </div>
         </div>
 
-        <Button type="submit" variant="accent" size="lg" className="w-full">
-          Publish Marketplace Listing
+        <Button type="submit" variant="accent" size="lg" className="w-full" disabled={submitting}>
+          {submitting ? "Publishing…" : "Publish Marketplace Listing"}
         </Button>
       </form>
     </Card>
