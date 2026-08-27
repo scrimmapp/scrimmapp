@@ -23,8 +23,9 @@ jobs:
 
       - run: npm run lint
 
-      - run: npx tsc --noEmit
-
+      # next build runs its own full TypeScript check, so a separate `tsc --noEmit` step
+      # is redundant and would fail anyway: Next.js generates route param types (PageProps,
+      # LayoutProps) into .next/types only as part of this build.
       - name: Build (placeholder env, no real secrets needed for a build check)
         env:
           DATABASE_URL: postgres://placeholder:placeholder@localhost:5432/placeholder
