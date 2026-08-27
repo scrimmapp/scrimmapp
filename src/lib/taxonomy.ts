@@ -1,15 +1,36 @@
-import type { Level } from "@/lib/types";
+import type { Gender, Level } from "@/lib/types";
 
 export const ageGroups = [
   "U8", "U9", "U10", "U11", "U12", "U13", "U14", "U15", "U16", "U17", "U18",
   "Varsity", "JV", "Frosh",
 ];
 
-export const subLevelsByLevel: Record<Level, string[]> = {
-  Club: ["Premier (ECNL / RL)", "Elite (MLS Next / GA)", "EA / DPL", "SoCal Flight 1/2/3"],
-  "High School": ["CIF Division 1", "CIF Division 2", "CIF Division 3", "CIF Division 4"],
-  Rec: ["AYSO Select", "AYSO Extra", "Signature League"],
+// Club pathways diverge by gender (per Javi, Aug 2026): boys and girls run separate league
+// systems, not just separate divisions within one shared list. High school (CIF-SS) divisions
+// and the rec sub-levels are the same regardless of gender.
+const clubSubLevelsByGender: Record<Gender, string[]> = {
+  Boys: ["MLS Next", "ECNL", "MLS Next 2", "ECRL", "EA", "EA2", "N1", "Flight 1", "Flight 2", "Flight 3"],
+  Girls: ["ECNL", "GA", "ECRL", "GA Aspire", "DPL", "N1", "DPL Open", "Flight 1", "Flight 2", "Flight 3"],
 };
+
+const highSchoolSubLevels = [
+  "Open Division",
+  "Division 1",
+  "Division 2",
+  "Division 3",
+  "Division 4",
+  "Division 5",
+  "Division 6",
+  "Division 7",
+];
+
+const recSubLevels = ["AYSO Select", "AYSO Extra", "Signature League"];
+
+export function subLevelsFor(level: Level, gender: Gender): string[] {
+  if (level === "Club") return clubSubLevelsByGender[gender];
+  if (level === "High School") return highSchoolSubLevels;
+  return recSubLevels;
+}
 
 export const travelRadiusOptions = [
   "Host Pitch Only (0 mi)",

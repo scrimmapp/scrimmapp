@@ -8,8 +8,8 @@ import { Field } from "@/components/ui/field";
 import { Input, Select, Textarea, Checkbox } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { createListingAction } from "@/lib/actions/listings";
-import { ageGroups, refFeeOptions, subLevelsByLevel, timeWindowOptions, travelRadiusOptions } from "@/lib/taxonomy";
-import type { Level } from "@/lib/types";
+import { ageGroups, refFeeOptions, subLevelsFor, timeWindowOptions, travelRadiusOptions } from "@/lib/taxonomy";
+import type { Gender, Level } from "@/lib/types";
 
 function tomorrowISO() {
   const d = new Date();
@@ -19,14 +19,20 @@ function tomorrowISO() {
 
 export function PostListingForm() {
   const [level, setLevel] = useState<Level>("Club");
-  const [subLevel, setSubLevel] = useState(subLevelsByLevel.Club[0]);
+  const [gender, setGender] = useState<Gender>("Boys");
+  const [subLevel, setSubLevel] = useState(subLevelsFor("Club", "Boys")[0]);
   const [justPosted, setJustPosted] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   function handleLevelChange(next: Level) {
     setLevel(next);
-    setSubLevel(subLevelsByLevel[next][0]);
+    setSubLevel(subLevelsFor(next, gender)[0]);
+  }
+
+  function handleGenderChange(next: Gender) {
+    setGender(next);
+    setSubLevel(subLevelsFor(level, next)[0]);
   }
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -50,7 +56,8 @@ export function PostListingForm() {
     setJustPosted(teamName);
     form.reset();
     setLevel("Club");
-    setSubLevel(subLevelsByLevel.Club[0]);
+    setGender("Boys");
+    setSubLevel(subLevelsFor("Club", "Boys")[0]);
     setTimeout(() => setJustPosted(null), 5000);
   }
 
@@ -122,7 +129,7 @@ export function PostListingForm() {
 
         <div className="grid grid-cols-1 gap-2.5 md:grid-cols-3">
           <Field label="Gender" htmlFor="gender">
-            <Select id="gender" name="gender" defaultValue="Boys">
+            <Select id="gender" name="gender" value={gender} onChange={(e) => handleGenderChange(e.target.value as Gender)}>
               <option value="Boys">Boys</option>
               <option value="Girls">Girls</option>
             </Select>
@@ -136,7 +143,7 @@ export function PostListingForm() {
           </Field>
           <Field label="Sub-tier / division" htmlFor="subLevel">
             <Select id="subLevel" name="subLevel" value={subLevel} onChange={(e) => setSubLevel(e.target.value)}>
-              {subLevelsByLevel[level].map((s) => (
+              {subLevelsFor(level, gender).map((s) => (
                 <option key={s} value={s}>{s}</option>
               ))}
             </Select>

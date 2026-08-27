@@ -7,8 +7,8 @@ import { Field } from "@/components/ui/field";
 import { Input, Select, Textarea, Checkbox } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { updateListingAction } from "@/lib/actions/listings";
-import { ageGroups, refFeeOptions, subLevelsByLevel, timeWindowOptions, travelRadiusOptions } from "@/lib/taxonomy";
-import type { Level, Listing } from "@/lib/types";
+import { ageGroups, refFeeOptions, subLevelsFor, timeWindowOptions, travelRadiusOptions } from "@/lib/taxonomy";
+import type { Gender, Level, Listing } from "@/lib/types";
 
 export function EditListingDialog({
   listing,
@@ -21,13 +21,19 @@ export function EditListingDialog({
 }) {
   const router = useRouter();
   const [level, setLevel] = useState<Level>(listing.level);
+  const [gender, setGender] = useState<Gender>(listing.gender);
   const [subLevel, setSubLevel] = useState(listing.subLevel);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
   function handleLevelChange(next: Level) {
     setLevel(next);
-    setSubLevel(subLevelsByLevel[next][0]);
+    setSubLevel(subLevelsFor(next, gender)[0]);
+  }
+
+  function handleGenderChange(next: Gender) {
+    setGender(next);
+    setSubLevel(subLevelsFor(level, next)[0]);
   }
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -71,7 +77,7 @@ export function EditListingDialog({
 
         <div className="grid grid-cols-1 gap-2.5 md:grid-cols-3">
           <Field label="Gender" htmlFor="edit-gender">
-            <Select id="edit-gender" name="gender" defaultValue={listing.gender}>
+            <Select id="edit-gender" name="gender" value={gender} onChange={(e) => handleGenderChange(e.target.value as Gender)}>
               <option value="Boys">Boys</option>
               <option value="Girls">Girls</option>
             </Select>
@@ -85,7 +91,7 @@ export function EditListingDialog({
           </Field>
           <Field label="Sub-tier / division" htmlFor="edit-subLevel">
             <Select id="edit-subLevel" name="subLevel" value={subLevel} onChange={(e) => setSubLevel(e.target.value)}>
-              {subLevelsByLevel[level].map((s) => (
+              {subLevelsFor(level, gender).map((s) => (
                 <option key={s} value={s}>{s}</option>
               ))}
             </Select>
