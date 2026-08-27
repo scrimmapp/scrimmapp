@@ -5,7 +5,8 @@ import { and, eq, inArray, isNull } from "drizzle-orm";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { db } from "@/db/client";
 import { connections, messages } from "@/db/schema";
-import { getListingById } from "@/db/queries";
+import { getListingById, getProfileById } from "@/db/queries";
+import { sendInquiryNotificationEmail } from "@/lib/email/inquiry-notification";
 
 export async function sendConnectionAction(listingId: string, message: string): Promise<{ error?: string }> {
   if (!message.trim()) return { error: "Message can't be empty." };
@@ -34,6 +35,24 @@ export async function sendConnectionAction(listingId: string, message: string): 
     senderId: user.id,
     body: message.trim(),
   });
+
+  // Best-effort: a coach shouldn't miss an inquiry just because they haven't opened the app.
+  // sendInquiryNotificationEmail never throws, so a delivery failure can't undo the inquiry
+  // above; it's logged to email_log instead.
+  const [senderProfile, ownerProfile] = await Promise.all([
+    getProfileById(user.id),
+    getProfileById(listing.ownerId),
+  ]);
+  if (ownerProfile) {
+    await sendInquiryNotificationEmail({
+      to: ownerProfile.contactEmail,
+      ownerCoachName: ownerProfile.coachName,
+      fromTeamName: senderProfile?.teamName ?? "A coach",
+      listingTeamName: listing.teamName,
+      listingId,
+      message: message.trim(),
+    });
+  }
 
   revalidatePath("/inbox");
   return {};
