@@ -7,6 +7,15 @@ FROM node:22-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+# Placeholder only: needed to satisfy the DB client's constructor during static analysis.
+# The real value is injected at runtime by Cloud Run via Secret Manager.
+ENV DATABASE_URL="postgres://placeholder:placeholder@localhost:5432/placeholder"
+# NEXT_PUBLIC_* vars are inlined into the client bundle at build time, so they must be
+# real values here, unlike server-only secrets which are injected at Cloud Run runtime.
+ARG NEXT_PUBLIC_SUPABASE_URL
+ARG NEXT_PUBLIC_SUPABASE_ANON_KEY
+ENV NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
 RUN npm run build
 
 FROM node:22-alpine AS runner

@@ -1,0 +1,4 @@
+name: projects/weighty-purpose-505511-s1/policies/iam.allowedPolicyMemberDomains
+spec:
+  rules:
+    - allowAll: true
