@@ -61,5 +61,5 @@ jobs:
             --min-instances=0 \
             --concurrency=80 \
             --port=8080 \
-            --set-secrets=DATABASE_URL=database-url:latest,DIRECT_URL=direct-url:latest \
+            --set-secrets=DATABASE_URL=database-url:latest,DIRECT_URL=direct-url:latest,RESEND_API_KEY=resend-api-key:latest \
             --project=$PROJECT_ID
