@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run check:dashes
+
+      - run: npm run lint
+
+      # next build runs its own full TypeScript check, so a separate `tsc --noEmit` step
+      # is redundant and would fail anyway: Next.js generates route param types (PageProps,
+      # LayoutProps) into .next/types only as part of this build.
+      - name: Build (placeholder env, no real secrets needed for a build check)
+        env:
+          DATABASE_URL: postgres://placeholder:placeholder@localhost:5432/placeholder
+          NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder
+        run: npm run build

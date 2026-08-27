@@ -1,0 +1,15 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '--build-arg'
+      - 'NEXT_PUBLIC_SUPABASE_URL=${_SUPABASE_URL}'
+      - '--build-arg'
+      - 'NEXT_PUBLIC_SUPABASE_ANON_KEY=${_SUPABASE_ANON_KEY}'
+      - '-t'
+      - 'us-west1-docker.pkg.dev/weighty-purpose-505511-s1/scrimmapp/app:latest'
+      - '.'
+images:
+  - 'us-west1-docker.pkg.dev/weighty-purpose-505511-s1/scrimmapp/app:latest'
+options:
+  logging: CLOUD_LOGGING_ONLY
