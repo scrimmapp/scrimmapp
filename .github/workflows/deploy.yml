@@ -1,0 +1,65 @@
+name: Deploy to Cloud Run
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  PROJECT_ID: weighty-purpose-505511-s1
+  REGION: us-west1
+  REPOSITORY: scrimmapp
+  SERVICE: scrimmapp
+  IMAGE: us-west1-docker.pkg.dev/weighty-purpose-505511-s1/scrimmapp/app
+
+jobs:
+  # Waits for the CI job on this same commit to succeed before deploying, so a build/lint
+  # failure on main never ships. (Not a duplicate check: this workflow runs independently
+  # and Actions doesn't let one workflow "depend on" another by default.)
+  wait-for-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for CI workflow
+        uses: lewagon/wait-on-check-action@v1.3.4
+        with:
+          ref: ${{ github.sha }}
+          check-name: check
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+
+  deploy:
+    needs: wait-for-ci
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/437021880368/locations/global/workloadIdentityPools/github-pool/providers/github-provider
+          service_account: scrimmapp-dev@weighty-purpose-505511-s1.iam.gserviceaccount.com
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Build and push image
+        run: |
+          gcloud builds submit \
+            --config cloudbuild.yaml \
+            --substitutions="_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }},_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" \
+            --project=$PROJECT_ID
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy $SERVICE \
+            --image=$IMAGE:latest \
+            --region=$REGION \
+            --platform=managed \
+            --max-instances=3 \
+            --min-instances=0 \
+            --concurrency=80 \
+            --port=8080 \
+            --set-secrets=DATABASE_URL=database-url:latest,DIRECT_URL=direct-url:latest \
+            --project=$PROJECT_ID
