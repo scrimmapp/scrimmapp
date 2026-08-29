@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getThreadForProfile } from "@/db/queries";
 import { formatMessageTimestamp } from "@/lib/format";
+import { genderToDisplay, levelToDisplay } from "@/db/mappers";
 import { MarkThreadReadOnMount } from "@/components/inbox/mark-thread-read-on-mount";
 import { ReplyForm } from "@/components/inbox/reply-form";
 import { cn } from "@/lib/cn";
@@ -30,10 +31,27 @@ export default async function ThreadPage({ params }: PageProps<"/inbox/[connecti
             {thread.otherProfile?.teamName ?? "Unknown team"}
           </h1>
           <p className="text-[12px] text-ink-2">
+            {thread.otherProfile?.coachName}
+            {thread.otherProfile?.clubName ? ` · ${thread.otherProfile.clubName}` : ""}
+          </p>
+          <p className="text-[12px] text-ink-2">
             {thread.listing ? `Re: ${thread.listing.teamName} listing` : "Listing no longer available"}
           </p>
         </div>
       </div>
+
+      {thread.otherTeams.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 border-b border-rule py-2">
+          {thread.otherTeams.map((t) => (
+            <span
+              key={t.id}
+              className="rounded-pill border border-rule-2 bg-surface-2 px-2 py-0.5 text-[11px] font-semibold text-ink-2"
+            >
+              {t.teamName} · {genderToDisplay(t.gender)} {t.ageGroup} · {levelToDisplay(t.level)} {t.subLevel}
+            </span>
+          ))}
+        </div>
+      )}
 
       <div className="flex-1 space-y-3 overflow-y-auto py-4">
         {thread.messages.map((m) => {

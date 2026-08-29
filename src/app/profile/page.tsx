@@ -3,8 +3,9 @@ import { Star } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { EditProfileButton } from "@/components/profile/edit-profile-button";
+import { TeamsManager } from "@/components/profile/teams-manager";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { getProfileById, countListingsForProfile } from "@/db/queries";
+import { getProfileById, countListingsForProfile, listTeamsForProfile } from "@/db/queries";
 import { genderToDisplay, levelToDisplay } from "@/db/mappers";
 import { initialsFrom } from "@/lib/format";
 
@@ -17,6 +18,7 @@ export default async function ProfilePage() {
   if (!profile) redirect("/login");
 
   const listingCount = await countListingsForProfile(user.id);
+  const teams = await listTeamsForProfile(user.id);
   const hasRatings = profile.ratingsCount > 0;
 
   return (
@@ -91,6 +93,8 @@ export default async function ProfilePage() {
           </div>
         )}
       </Card>
+
+      <TeamsManager teams={teams} />
     </div>
   );
 }

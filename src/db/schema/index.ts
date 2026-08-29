@@ -1,5 +1,6 @@
 export * from "./enums";
 export * from "./profiles";
+export * from "./coach-teams";
 export * from "./venues";
 export * from "./listings";
 export * from "./connections";
