@@ -28,3 +28,8 @@ export async function countListingsForProfile(profileId: string) {
   const [row] = await db.select({ count: count() }).from(listings).where(eq(listings.ownerId, profileId));
   return row?.count ?? 0;
 }
+
+// The "My Posts" tab: every listing this coach has posted, any status, newest first.
+export function listOwnedListings(profileId: string) {
+  return db.select().from(listings).where(eq(listings.ownerId, profileId)).orderBy(desc(listings.createdAt));
+}

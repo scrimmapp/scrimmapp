@@ -14,6 +14,7 @@ type Coach = { name: string; initials: string; teamName: string };
 
 const links = [
   { href: "/board", label: "Board" },
+  { href: "/posts", label: "My Posts" },
   { href: "/calendar", label: "Season Calendar" },
   { href: "/venues", label: "Venues" },
   { href: "/about", label: "About" },

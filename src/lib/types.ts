@@ -28,6 +28,7 @@ export interface Listing {
   hasFieldFee: boolean;
   notes?: string;
   status: "open" | "matched" | "cancelled" | "completed";
+  matchedProfileId?: string;
 }
 
 export interface Comment {
