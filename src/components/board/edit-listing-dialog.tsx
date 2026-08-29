@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Dialog } from "@/components/ui/dialog";
 import { Field } from "@/components/ui/field";
 import { Input, Select, Textarea, Checkbox } from "@/components/ui/input";
+import { LocationAutocomplete } from "@/components/ui/location-autocomplete";
 import { Button } from "@/components/ui/button";
 import { updateListingAction } from "@/lib/actions/listings";
 import { ageGroups, refFeeOptions, subLevelsFor, timeWindowOptions, travelRadiusOptions } from "@/lib/taxonomy";
@@ -120,7 +121,7 @@ export function EditListingDialog({
 
         <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
           <Field label="Pitch location / city" htmlFor="edit-location">
-            <Input id="edit-location" name="location" defaultValue={listing.location} required />
+            <LocationAutocomplete name="location" defaultValue={listing.location} required />
           </Field>
           <Field label="Referee fee allocation" htmlFor="edit-refFee">
             <Select id="edit-refFee" name="refFee" defaultValue={listing.refFee}>
@@ -134,7 +135,7 @@ export function EditListingDialog({
         </div>
 
         <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
-          <Field label="Notes (optional)" htmlFor="edit-notes">
+          <Field label="Field # / Notes (optional)" htmlFor="edit-notes">
             <Textarea id="edit-notes" name="notes" rows={2} defaultValue={listing.notes} />
           </Field>
           <div className="flex flex-col justify-center gap-2 rounded-control border border-rule bg-paper p-2.5">
