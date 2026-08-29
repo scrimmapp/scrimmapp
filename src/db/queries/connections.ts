@@ -1,7 +1,7 @@
-import { and, desc, eq, isNull, ne, or } from "drizzle-orm";
+import { and, asc, desc, eq, isNull, ne, or } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { db } from "../client";
-import { connections, listings, messages, profiles } from "../schema";
+import { coachTeams, connections, listings, messages, profiles } from "../schema";
 
 // Unified thread list for a coach's inbox: every connection they're a party to, either side
 // (received an inquiry, or sent one), each annotated with the other coach's identity, the
@@ -108,6 +108,14 @@ export async function getThreadForProfile(connectionId: string, profileId: strin
     .where(eq(profiles.id, otherProfileId))
     .limit(1);
 
+  // Item 3 of Javi's feedback: Person A needs to know who Person B actually is before
+  // deciding to play them, so the thread surfaces the other coach's full roster of teams.
+  const otherTeams = await db
+    .select()
+    .from(coachTeams)
+    .where(eq(coachTeams.profileId, otherProfileId))
+    .orderBy(asc(coachTeams.createdAt));
+
   const threadMessages = await db
     .select({
       id: messages.id,
@@ -120,7 +128,7 @@ export async function getThreadForProfile(connectionId: string, profileId: strin
     .where(eq(messages.connectionId, connectionId))
     .orderBy(messages.createdAt);
 
-  return { connection, listing, otherProfile, messages: threadMessages };
+  return { connection, listing, otherProfile, otherTeams, messages: threadMessages };
 }
 
 // The connection between two coaches for a given listing, whichever direction the inquiry
