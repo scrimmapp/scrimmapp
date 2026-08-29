@@ -9,7 +9,7 @@ import { Input, Select, Textarea, Checkbox } from "@/components/ui/input";
 import { LocationAutocomplete } from "@/components/ui/location-autocomplete";
 import { Button } from "@/components/ui/button";
 import { createListingAction } from "@/lib/actions/listings";
-import { ageGroups, refFeeOptions, subLevelsFor, timeWindowOptions, travelRadiusOptions } from "@/lib/taxonomy";
+import { ageGroupsFor, refFeeOptions, subLevelsFor, timeWindowOptions, travelRadiusOptions } from "@/lib/taxonomy";
 import type { Gender, Level } from "@/lib/types";
 
 function tomorrowISO() {
@@ -22,6 +22,7 @@ export function PostListingForm() {
   const [level, setLevel] = useState<Level>("Club");
   const [gender, setGender] = useState<Gender>("Boys");
   const [subLevel, setSubLevel] = useState(subLevelsFor("Club", "Boys")[0]);
+  const [age, setAge] = useState(ageGroupsFor("Club")[6]);
   const [justPosted, setJustPosted] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -29,6 +30,7 @@ export function PostListingForm() {
   function handleLevelChange(next: Level) {
     setLevel(next);
     setSubLevel(subLevelsFor(next, gender)[0]);
+    setAge(ageGroupsFor(next)[0]);
   }
 
   function handleGenderChange(next: Gender) {
@@ -59,6 +61,7 @@ export function PostListingForm() {
     setLevel("Club");
     setGender("Boys");
     setSubLevel(subLevelsFor("Club", "Boys")[0]);
+    setAge(ageGroupsFor("Club")[6]);
     setTimeout(() => setJustPosted(null), 5000);
   }
 
@@ -136,8 +139,8 @@ export function PostListingForm() {
             </Select>
           </Field>
           <Field label="Age group" htmlFor="age">
-            <Select id="age" name="age" defaultValue="U14">
-              {ageGroups.map((a) => (
+            <Select id="age" name="age" value={age} onChange={(e) => setAge(e.target.value)}>
+              {ageGroupsFor(level).map((a) => (
                 <option key={a} value={a}>{a}</option>
               ))}
             </Select>

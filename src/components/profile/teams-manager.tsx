@@ -7,7 +7,7 @@ import { Field } from "@/components/ui/field";
 import { Input, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { addTeamAction, deleteTeamAction } from "@/lib/actions/coach-teams";
-import { ageGroups, subLevelsFor } from "@/lib/taxonomy";
+import { ageGroupsFor, subLevelsFor } from "@/lib/taxonomy";
 import { genderToDisplay, levelToDisplay } from "@/db/mappers";
 import type { Gender, Level } from "@/lib/types";
 import type { coachTeams } from "@/db/schema";
@@ -22,6 +22,7 @@ export function TeamsManager({ teams }: { teams: TeamRow[] }) {
   const [level, setLevel] = useState<Level>("Club");
   const [gender, setGender] = useState<Gender>("Boys");
   const [subLevel, setSubLevel] = useState(subLevelsFor("Club", "Boys")[0]);
+  const [ageGroup, setAgeGroup] = useState(ageGroupsFor("Club")[0]);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [removingId, setRemovingId] = useState<string | null>(null);
@@ -29,6 +30,7 @@ export function TeamsManager({ teams }: { teams: TeamRow[] }) {
   function handleLevelChange(next: Level) {
     setLevel(next);
     setSubLevel(subLevelsFor(next, gender)[0]);
+    setAgeGroup(ageGroupsFor(next)[0]);
   }
 
   function handleGenderChange(next: Gender) {
@@ -104,8 +106,8 @@ export function TeamsManager({ teams }: { teams: TeamRow[] }) {
               </Select>
             </Field>
             <Field label="Age group" htmlFor="team-ageGroup">
-              <Select id="team-ageGroup" name="ageGroup" defaultValue={ageGroups[0]}>
-                {ageGroups.map((a) => (
+              <Select id="team-ageGroup" name="ageGroup" value={ageGroup} onChange={(e) => setAgeGroup(e.target.value)}>
+                {ageGroupsFor(level).map((a) => (
                   <option key={a} value={a}>{a}</option>
                 ))}
               </Select>
