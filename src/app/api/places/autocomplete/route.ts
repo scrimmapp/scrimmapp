@@ -24,10 +24,12 @@ export async function GET(request: NextRequest) {
         input,
         // Southern California only, per the plan's scope (§11): no need to suggest venues
         // outside the region this app actually serves.
+        // Google caps circle radius at 50,000m; Southern California is wider than that, so
+        // this biases toward Orange County/LA rather than covering the whole region exactly.
         locationBias: {
           circle: {
             center: { latitude: 33.9, longitude: -117.9 },
-            radius: 160000,
+            radius: 50000,
           },
         },
         includedRegionCodes: ["us"],
@@ -48,7 +50,8 @@ export async function GET(request: NextRequest) {
       }));
 
     return NextResponse.json({ suggestions });
-  } catch {
+  } catch (err) {
+    console.error("[places/autocomplete] request failed:", err);
     return NextResponse.json({ suggestions: [] });
   }
 }
