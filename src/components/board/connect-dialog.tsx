@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { motion } from "motion/react";
 import { Dialog } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -26,6 +27,7 @@ export function ConnectDialog({
 }) {
   const [customMessage, setCustomMessage] = useState("");
   const [sent, setSent] = useState<string | null>(null);
+  const [sentConnectionId, setSentConnectionId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
 
@@ -40,10 +42,12 @@ export function ConnectDialog({
       return;
     }
     setSent(message.trim());
+    setSentConnectionId(result.connectionId ?? null);
   }
 
   function handleClose() {
     setSent(null);
+    setSentConnectionId(null);
     setError(null);
     setCustomMessage("");
     onClose();
@@ -62,6 +66,13 @@ export function ConnectDialog({
             Your message <em className="text-ink">&ldquo;{sent}&rdquo;</em> was sent to{" "}
             <strong className="text-ink">{listing.teamName}</strong>. They&apos;ll see it in their inbox.
           </p>
+          {sentConnectionId && (
+            <Link href={`/inbox/${sentConnectionId}`} onClick={handleClose}>
+              <Button variant="accent" className="w-full normal-case">
+                View conversation
+              </Button>
+            </Link>
+          )}
           <Button variant="secondary" className="w-full normal-case" onClick={handleClose}>
             Close
           </Button>
