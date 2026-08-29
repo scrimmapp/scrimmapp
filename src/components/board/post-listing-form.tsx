@@ -6,6 +6,7 @@ import { CheckCircle2, AlertCircle } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Field } from "@/components/ui/field";
 import { Input, Select, Textarea, Checkbox } from "@/components/ui/input";
+import { LocationAutocomplete } from "@/components/ui/location-autocomplete";
 import { Button } from "@/components/ui/button";
 import { createListingAction } from "@/lib/actions/listings";
 import { ageGroups, refFeeOptions, subLevelsFor, timeWindowOptions, travelRadiusOptions } from "@/lib/taxonomy";
@@ -172,7 +173,7 @@ export function PostListingForm() {
 
         <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
           <Field label="Pitch location / city" htmlFor="location">
-            <Input id="location" name="location" placeholder="e.g. Great Park Field 3, Irvine CA" required />
+            <LocationAutocomplete name="location" placeholder="Start typing an address, e.g. Great Park, Irvine CA" required />
           </Field>
           <Field label="Referee fee allocation" htmlFor="refFee">
             <Select id="refFee" name="refFee" defaultValue="50/50 Split">
@@ -184,8 +185,8 @@ export function PostListingForm() {
         </div>
 
         <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
-          <Field label="Notes (optional)" htmlFor="notes">
-            <Textarea id="notes" name="notes" rows={2} placeholder="Match format, expectations, anything else opposing coaches should know..." />
+          <Field label="Field # / Notes (optional)" htmlFor="notes">
+            <Textarea id="notes" name="notes" rows={2} placeholder="e.g. Field 14, park in Lot 4. Match format, expectations, etc." />
           </Field>
           <div className="flex flex-col justify-center gap-2 rounded-control border border-rule bg-paper p-2.5">
             <label className="flex cursor-pointer items-center gap-2 text-[12px] font-semibold text-ink-2">
