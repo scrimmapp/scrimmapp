@@ -8,7 +8,7 @@ import { Input, Select, Textarea, Checkbox } from "@/components/ui/input";
 import { LocationAutocomplete } from "@/components/ui/location-autocomplete";
 import { Button } from "@/components/ui/button";
 import { updateListingAction } from "@/lib/actions/listings";
-import { ageGroups, refFeeOptions, subLevelsFor, timeWindowOptions, travelRadiusOptions } from "@/lib/taxonomy";
+import { ageGroupsFor, refFeeOptions, subLevelsFor, timeWindowOptions, travelRadiusOptions } from "@/lib/taxonomy";
 import type { Gender, Level, Listing } from "@/lib/types";
 
 export function EditListingDialog({
@@ -24,12 +24,14 @@ export function EditListingDialog({
   const [level, setLevel] = useState<Level>(listing.level);
   const [gender, setGender] = useState<Gender>(listing.gender);
   const [subLevel, setSubLevel] = useState(listing.subLevel);
+  const [age, setAge] = useState(listing.age);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
   function handleLevelChange(next: Level) {
     setLevel(next);
     setSubLevel(subLevelsFor(next, gender)[0]);
+    setAge(ageGroupsFor(next)[0]);
   }
 
   function handleGenderChange(next: Gender) {
@@ -84,8 +86,8 @@ export function EditListingDialog({
             </Select>
           </Field>
           <Field label="Age group" htmlFor="edit-age">
-            <Select id="edit-age" name="age" defaultValue={listing.age}>
-              {ageGroups.map((a) => (
+            <Select id="edit-age" name="age" value={age} onChange={(e) => setAge(e.target.value)}>
+              {ageGroupsFor(level).map((a) => (
                 <option key={a} value={a}>{a}</option>
               ))}
             </Select>
