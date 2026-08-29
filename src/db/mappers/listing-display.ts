@@ -30,5 +30,6 @@ export function listingToDisplay(row: ListingRow): Listing {
     notes: row.notes ?? undefined,
     // DB status values are already the lowercase strings the frontend type uses directly.
     status: row.status,
+    matchedProfileId: row.matchedProfileId ?? undefined,
   };
 }

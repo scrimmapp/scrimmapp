@@ -123,6 +123,45 @@ export async function getThreadForProfile(connectionId: string, profileId: strin
   return { connection, listing, otherProfile, messages: threadMessages };
 }
 
+// The connection between two coaches for a given listing, whichever direction the inquiry
+// went. Used to find which conversation to attach a post-match rating to.
+export async function getConnectionForListingAndProfiles(listingId: string, profileA: string, profileB: string) {
+  const rows = await db
+    .select({ id: connections.id })
+    .from(connections)
+    .where(
+      and(
+        eq(connections.listingId, listingId),
+        or(
+          and(eq(connections.fromProfileId, profileA), eq(connections.toProfileId, profileB)),
+          and(eq(connections.fromProfileId, profileB), eq(connections.toProfileId, profileA)),
+        ),
+      ),
+    )
+    .orderBy(desc(connections.createdAt))
+    .limit(1);
+
+  return rows[0];
+}
+
+// The coaches who inquired about a listing, so the owner can pick who to confirm as the
+// matched opponent when booking it.
+export async function listInquirersForListing(listingId: string) {
+  const rows = await db
+    .select({
+      connectionId: connections.id,
+      profileId: connections.fromProfileId,
+      teamName: profiles.teamName,
+      coachName: profiles.coachName,
+    })
+    .from(connections)
+    .innerJoin(profiles, eq(profiles.id, connections.fromProfileId))
+    .where(eq(connections.listingId, listingId))
+    .orderBy(desc(connections.createdAt));
+
+  return rows;
+}
+
 // A connection counts as unread for this profile if it holds a message from the other party
 // that hasn't been read yet, regardless of which side started the conversation.
 export async function listUnreadConnectionIds(profileId: string) {
