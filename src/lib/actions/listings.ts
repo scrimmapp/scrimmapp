@@ -114,3 +114,43 @@ export async function cancelListingAction(
   revalidatePath("/calendar");
   return {};
 }
+
+export async function confirmListingMatchAction(id: string, opponentProfileId: string): Promise<{ error?: string }> {
+  const supabase = await createSupabaseServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "You need to be signed in." };
+
+  const existing = await getListingById(id);
+  if (!existing) return { error: "That listing no longer exists." };
+  if (existing.ownerId !== user.id) return { error: "You can only confirm your own listings." };
+  if (existing.status !== "open") return { error: "This listing isn't open to confirm anymore." };
+
+  await db
+    .update(listings)
+    .set({ status: "matched", matchedProfileId: opponentProfileId })
+    .where(eq(listings.id, id));
+
+  revalidatePath("/board");
+  revalidatePath("/posts");
+  revalidatePath(`/listings/${id}`);
+  revalidatePath("/calendar");
+  return {};
+}
+
+export async function completeListingAction(id: string): Promise<{ error?: string }> {
+  const supabase = await createSupabaseServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "You need to be signed in." };
+
+  const existing = await getListingById(id);
+  if (!existing) return { error: "That listing no longer exists." };
+  if (existing.ownerId !== user.id) return { error: "You can only complete your own listings." };
+  if (existing.status !== "matched") return { error: "Only a confirmed match can be marked completed." };
+
+  await db.update(listings).set({ status: "completed" }).where(eq(listings.id, id));
+
+  revalidatePath("/board");
+  revalidatePath("/posts");
+  revalidatePath(`/listings/${id}`);
+  return {};
+}
