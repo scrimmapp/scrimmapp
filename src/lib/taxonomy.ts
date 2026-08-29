@@ -1,9 +1,18 @@
 import type { Gender, Level } from "@/lib/types";
 
-export const ageGroups = [
-  "U8", "U9", "U10", "U11", "U12", "U13", "U14", "U15", "U16", "U17", "U18",
-  "Varsity", "JV", "Frosh",
-];
+// Club and Rec run age-bracket seasons (U8-U18); High School runs by roster tier instead
+// (Varsity/JV/Frosh), never by age. Keeping one combined list let a Club listing show
+// "Varsity" as an age group, which isn't a real thing outside a high school program.
+const clubAndRecAgeGroups = ["U8", "U9", "U10", "U11", "U12", "U13", "U14", "U15", "U16", "U17", "U18"];
+const highSchoolAgeGroups = ["Varsity", "JV", "Frosh"];
+
+export function ageGroupsFor(level: Level): string[] {
+  return level === "High School" ? highSchoolAgeGroups : clubAndRecAgeGroups;
+}
+
+// Full combined list, for the one spot (a coach's general profile default) with no single
+// level context to key off of.
+export const ageGroups = [...clubAndRecAgeGroups, ...highSchoolAgeGroups];
 
 // Club pathways diverge by gender (per Javi, Aug 2026): boys and girls run separate league
 // systems, not just separate divisions within one shared list. High school (CIF-SS) divisions
