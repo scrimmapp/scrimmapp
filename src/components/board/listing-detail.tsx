@@ -141,6 +141,8 @@ export function ListingDetail({
             <Stat label="Travel radius" value={listing.travelRadius} accent />
             <Stat label="Referee fee" value={listing.refFee} />
             <Stat label="Pitch status" value={listing.isHosting ? "Host pitch secured" : "Open to location"} />
+            {listing.homeColor && <Stat label="Home uniform" value={listing.homeColor} />}
+            {listing.awayColor && <Stat label="Away uniform" value={listing.awayColor} />}
           </div>
 
           {listing.notes && (

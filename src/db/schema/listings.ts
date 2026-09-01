@@ -22,6 +22,11 @@ export const listings = pgTable("listings", {
   refFeeSplit: refFeeSplitEnum("ref_fee_split").notNull(),
   fieldFeeShare: boolean("field_fee_share").notNull().default(false),
   matchFormat: text("match_format"),
+  // Simple free-text rather than a color picker/enum, per Javi: "Home (light colors) / Away
+  // (dark colors)" is meant as a quick heads-up so two teams don't both show up in white, not
+  // a precise jersey-color registry.
+  homeColor: text("home_color"),
+  awayColor: text("away_color"),
   notes: text("notes"),
   status: listingStatusEnum("status").notNull().default("open"),
   matchedProfileId: uuid("matched_profile_id").references(() => profiles.id),

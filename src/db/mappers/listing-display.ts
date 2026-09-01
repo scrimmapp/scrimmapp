@@ -27,6 +27,8 @@ export function listingToDisplay(row: ListingRow): Listing {
     hasRef: row.hasRef,
     refFee: refFeeToDisplay(row.refFeeSplit),
     hasFieldFee: row.fieldFeeShare,
+    homeColor: row.homeColor ?? undefined,
+    awayColor: row.awayColor ?? undefined,
     notes: row.notes ?? undefined,
     // DB status values are already the lowercase strings the frontend type uses directly.
     status: row.status,
