@@ -137,6 +137,15 @@ export function EditListingDialog({
         </div>
 
         <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
+          <Field label="Home uniform color (optional)" htmlFor="edit-homeColor">
+            <Input id="edit-homeColor" name="homeColor" defaultValue={listing.homeColor} placeholder="e.g. White (light colors)" />
+          </Field>
+          <Field label="Away uniform color (optional)" htmlFor="edit-awayColor">
+            <Input id="edit-awayColor" name="awayColor" defaultValue={listing.awayColor} placeholder="e.g. Navy (dark colors)" />
+          </Field>
+        </div>
+
+        <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
           <Field label="Field # / Notes (optional)" htmlFor="edit-notes">
             <Textarea id="edit-notes" name="notes" rows={2} defaultValue={listing.notes} />
           </Field>

@@ -26,6 +26,8 @@ export interface Listing {
   hasRef: boolean;
   refFee: RefFee;
   hasFieldFee: boolean;
+  homeColor?: string;
+  awayColor?: string;
   notes?: string;
   status: "open" | "matched" | "cancelled" | "completed";
   matchedProfileId?: string;
