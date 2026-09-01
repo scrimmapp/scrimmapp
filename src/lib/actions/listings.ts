@@ -42,6 +42,8 @@ export async function createListingAction(formData: FormData): Promise<{ error?:
     hasRef: true,
     refFeeSplit: refFeeToDb(formData.get("refFee") as RefFee),
     fieldFeeShare: formData.get("hasFieldFee") === "on",
+    homeColor: String(formData.get("homeColor") || "").trim() || null,
+    awayColor: String(formData.get("awayColor") || "").trim() || null,
     notes: String(formData.get("notes") || "").trim() || null,
     status: "open",
   });
@@ -79,6 +81,8 @@ export async function updateListingAction(id: string, formData: FormData): Promi
       isHosting: formData.get("isHosting") === "on",
       refFeeSplit: refFeeToDb(formData.get("refFee") as RefFee),
       fieldFeeShare: formData.get("hasFieldFee") === "on",
+      homeColor: String(formData.get("homeColor") || "").trim() || null,
+      awayColor: String(formData.get("awayColor") || "").trim() || null,
       notes: String(formData.get("notes") || "").trim() || null,
     })
     .where(eq(listings.id, id));

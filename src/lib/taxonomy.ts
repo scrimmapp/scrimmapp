@@ -17,9 +17,11 @@ export const ageGroups = [...clubAndRecAgeGroups, ...highSchoolAgeGroups];
 // Club pathways diverge by gender (per Javi, Aug 2026): boys and girls run separate league
 // systems, not just separate divisions within one shared list. High school (CIF-SS) divisions
 // and the rec sub-levels are the same regardless of gender.
+// "Futsal" sits alongside the outdoor sub-levels per Javi (Sep 2026), rather than as a
+// separate format field: a coach picks it the same way they'd pick Flight 1 or MLS Next.
 const clubSubLevelsByGender: Record<Gender, string[]> = {
-  Boys: ["MLS Next", "ECNL", "MLS Next 2", "ECRL", "EA", "EA2", "N1", "Flight 1", "Flight 2", "Flight 3"],
-  Girls: ["ECNL", "GA", "ECRL", "GA Aspire", "DPL", "N1", "DPL Open", "Flight 1", "Flight 2", "Flight 3"],
+  Boys: ["MLS Next", "ECNL", "MLS Next 2", "ECRL", "EA", "EA2", "N1", "Flight 1", "Flight 2", "Flight 3", "Futsal"],
+  Girls: ["ECNL", "GA", "ECRL", "GA Aspire", "DPL", "N1", "DPL Open", "Flight 1", "Flight 2", "Flight 3", "Futsal"],
 };
 
 const highSchoolSubLevels = [
