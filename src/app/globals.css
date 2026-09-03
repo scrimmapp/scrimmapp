@@ -44,6 +44,16 @@
   --radius-control: 0.625rem;
   --radius-card: 1rem;
   --radius-pill: 999px;
+
+  /* Daylight pitch: a real mowed-grass checkerboard, painted lines in solid white. */
+  --field-grass-a: #5cb35f;
+  --field-grass-b: #499a4c;
+  --field-line: rgba(255, 255, 255, 0.8);
+
+  /* A soft halo behind hero copy so muted text stays legible over the busy pitch pattern,
+     without the heavier blurred-box look. Only needed in light theme: dark theme's
+     light-on-dark text already has plenty of contrast against the darker grass. */
+  --copy-glow: rgba(246, 248, 251, 0.9);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -87,6 +97,12 @@
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
     --shadow-md: 0 4px 16px -4px rgba(0, 0, 0, 0.5);
     --shadow-lg: 0 20px 48px -12px rgba(0, 0, 0, 0.6);
+
+    /* Night pitch: darker cross-cut grass, dimmer painted lines (still catches the floodlights). */
+    --field-grass-a: #1d3a22;
+    --field-grass-b: #16301a;
+    --field-line: rgba(255, 255, 255, 0.4);
+    --copy-glow: transparent;
   }
 }
 
@@ -130,6 +146,11 @@
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-md: 0 4px 16px -4px rgba(0, 0, 0, 0.5);
   --shadow-lg: 0 20px 48px -12px rgba(0, 0, 0, 0.6);
+
+  --field-grass-a: #1d3a22;
+  --field-grass-b: #16301a;
+  --field-line: rgba(255, 255, 255, 0.4);
+  --copy-glow: transparent;
 }
 
 @theme inline {
@@ -175,6 +196,30 @@
 
   --font-display: var(--font-baloo);
   --font-sans: var(--font-public-sans);
+}
+
+/*
+ * SiteBackground renders both a day-pitch scene and a night-stadium scene at all times;
+ * only one is ever visible. Kept as a CSS-only toggle (not a useTheme() branch) so there's no
+ * hydration flash: data-theme is stamped on <html> before paint, same mechanism as every other
+ * theme-reactive color in this file.
+ */
+.site-scene-night {
+  opacity: 0;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .site-scene-day {
+    opacity: 0;
+  }
+  :root:not([data-theme="light"]) .site-scene-night {
+    opacity: 1;
+  }
+}
+:root[data-theme="dark"] .site-scene-day {
+  opacity: 0;
+}
+:root[data-theme="dark"] .site-scene-night {
+  opacity: 1;
 }
 
 * {
