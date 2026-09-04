@@ -2,6 +2,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@/db/client";
 import { emailLog } from "@/db/schema";
 import { getResendClient } from "./resend";
+import { captureServerException } from "@/lib/monitoring/posthog-server";
 
 // Never throws: a notification failing to send should never break the action that triggered
 // it (e.g. posting an inquiry still succeeds even if the owner's notification email fails).
@@ -47,6 +48,7 @@ export async function sendTemplateEmail({
     const { data, error } = await resend.emails.send({ from, to, subject, html });
     if (error) {
       await db.update(emailLog).set({ status: "failed", error: error.message }).where(eq(emailLog.id, logRow.id));
+      captureServerException(new Error(`Email send failed (${template}): ${error.message}`), { to, template });
       return;
     }
     await db
@@ -58,5 +60,6 @@ export async function sendTemplateEmail({
       .update(emailLog)
       .set({ status: "failed", error: err instanceof Error ? err.message : String(err) })
       .where(eq(emailLog.id, logRow.id));
+    captureServerException(err, { to, template });
   }
 }
