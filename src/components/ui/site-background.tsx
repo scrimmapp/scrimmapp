@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 import { PitchPattern } from "@/components/ui/pitch-pattern";
-import { BallGlyph, balls } from "@/components/ui/floating-ball";
+import { GoalPost, KickableBalls } from "@/components/ui/kickable-ball";
 
 const GRAIN =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")";
@@ -30,22 +30,10 @@ export function SiteBackground() {
       {/* the pitch itself */}
       <PitchPattern />
 
-      {/* drifting balls */}
-      {balls.map((b, i) => (
-        <motion.div
-          key={i}
-          className="absolute opacity-[0.07]"
-          style={{ top: b.top, left: b.left }}
-          animate={{
-            x: [0, 30, -20, 0],
-            y: [0, -25, 15, 0],
-            rotate: [0, 180, 320, 360],
-          }}
-          transition={{ duration: b.duration, delay: b.delay, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <BallGlyph size={b.size} />
-        </motion.div>
-      ))}
+      {/* a goal at each side of the screen, and the drifting balls that can shoot on them */}
+      <GoalPost side="left" />
+      <GoalPost side="right" />
+      <KickableBalls />
 
       {/* grain */}
       <div className="absolute inset-0 opacity-[0.035] mix-blend-overlay" style={{ backgroundImage: GRAIN }} />
