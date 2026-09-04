@@ -28,7 +28,7 @@ export default function FAQPage() {
 
   return (
     <div className="mx-auto w-full max-w-2xl space-y-2 px-4 py-4">
-      <h1 className="mb-0.5 text-center font-display text-lg font-extrabold tracking-tight text-ink md:text-xl">
+      <h1 className="field-heading mb-0.5 text-center font-display text-lg font-extrabold tracking-tight md:text-xl">
         Frequently Asked Questions
       </h1>
       {faqs.map((f, i) => {
