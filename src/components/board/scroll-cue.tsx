@@ -29,7 +29,8 @@ export function ScrollCue({ targetId }: { targetId: string }) {
       aria-hidden={pastFold}
       style={{ pointerEvents: pastFold ? "none" : "auto" }}
       aria-label="Scroll to see the scrimmage board"
-      className="fixed bottom-3 left-1/2 z-30 hidden -translate-x-1/2 flex-col items-center gap-0.5 text-ink-2 transition-colors hover:text-pitch sm:flex"
+      className="fixed bottom-3 left-1/2 z-30 hidden -translate-x-1/2 flex-col items-center gap-0.5 text-[var(--field-contrast)] transition-colors hover:text-gold sm:flex"
+      style={{ textShadow: "0 1px 3px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.3)" }}
     >
       <span className="text-[9px] font-bold uppercase tracking-widest">Scroll for the board</span>
       <motion.span
