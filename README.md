@@ -86,9 +86,11 @@ with the listing.
 Not required to run the app, but recommended before real coaches are using it in production:
 
 1. Create a free project at posthog.com (100k events/month free, no card).
-2. Project Settings → Project API Key → set `NEXT_PUBLIC_POSTHOG_KEY` (client-side).
-3. Project Settings → Personal API Keys → create one, set `POSTHOG_API_KEY` (server-side).
-4. Add both, plus `NEXT_PUBLIC_POSTHOG_HOST` / `POSTHOG_HOST` (default `https://us.i.posthog.com`
+2. Project Settings → Project token → use the same value for both `NEXT_PUBLIC_POSTHOG_KEY`
+   (client-side) and `POSTHOG_API_KEY` (server-side). PostHog's SDKs authenticate event capture
+   with this one write-only project token; a personal API key is a different thing (PostHog's
+   own management REST API) and isn't needed here.
+3. Add that, plus `NEXT_PUBLIC_POSTHOG_HOST` / `POSTHOG_HOST` (default `https://us.i.posthog.com`
    unless you picked the EU region), to Secret Manager and the deploy workflow's
    `--set-secrets` list alongside the existing ones.
 
