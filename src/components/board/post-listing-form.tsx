@@ -188,6 +188,15 @@ export function PostListingForm() {
         </div>
 
         <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
+          <Field label="Home uniform color (optional)" htmlFor="homeColor">
+            <Input id="homeColor" name="homeColor" placeholder="e.g. White (light colors)" />
+          </Field>
+          <Field label="Away uniform color (optional)" htmlFor="awayColor">
+            <Input id="awayColor" name="awayColor" placeholder="e.g. Navy (dark colors)" />
+          </Field>
+        </div>
+
+        <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
           <Field label="Field # / Notes (optional)" htmlFor="notes">
             <Textarea id="notes" name="notes" rows={2} placeholder="e.g. Field 14, park in Lot 4. Match format, expectations, etc." />
           </Field>

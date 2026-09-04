@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { AuthShell } from "@/components/auth/auth-shell";
 import { useAuthStatus } from "@/components/auth/use-auth-status";
 import { Field } from "@/components/ui/field";
@@ -60,6 +61,11 @@ export default function LoginPage() {
       <Field label="Password" htmlFor="login-password">
         <PasswordInput id="login-password" name="password" placeholder="••••••••" required />
       </Field>
+      <div className="text-right">
+        <Link href="/forgot-password" className="text-[12px] font-bold text-pitch hover:underline">
+          Forgot password?
+        </Link>
+      </div>
     </AuthShell>
   );
 }
