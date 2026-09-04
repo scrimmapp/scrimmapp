@@ -48,8 +48,8 @@ export default async function PostsPage() {
   return (
     <div className="mx-auto w-full max-w-3xl space-y-3 px-4 py-4">
       <div className="border-b border-rule pb-2">
-        <h1 className="font-display text-lg font-extrabold tracking-tight text-ink md:text-xl">My Posts</h1>
-        <p className="mt-0.5 text-[13px] text-ink-2">Manage the scrimmages you&apos;ve posted, active and past.</p>
+        <h1 className="field-heading font-display text-lg font-extrabold tracking-tight md:text-xl">My Posts</h1>
+        <p className="field-caption mt-0.5 text-[13px]">Manage the scrimmages you&apos;ve posted, active and past.</p>
       </div>
       <PostsSection items={items} />
     </div>

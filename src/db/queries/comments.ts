@@ -1,4 +1,4 @@
-import { asc, eq } from "drizzle-orm";
+import { and, asc, eq } from "drizzle-orm";
 import { db } from "../client";
 import { comments } from "../schema";
 
@@ -6,6 +6,6 @@ export function listCommentsForListing(listingId: string) {
   return db
     .select()
     .from(comments)
-    .where(eq(comments.listingId, listingId))
+    .where(and(eq(comments.listingId, listingId), eq(comments.isHidden, false)))
     .orderBy(asc(comments.createdAt));
 }

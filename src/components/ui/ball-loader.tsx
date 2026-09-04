@@ -17,14 +17,15 @@ export function BallLoader({ label = "Loading" }: { label?: string }) {
             animate={{ rotate: 360 }}
             transition={{ duration: 0.9, repeat: Infinity, ease: "linear" }}
           >
-            <circle cx="24" cy="24" r="21" fill="white" stroke="#0d2544" strokeWidth="2" />
-            <g stroke="#0d2544" strokeWidth="1.6" strokeLinejoin="round" fill="#0d2544">
-              <polygon points="24,12 30,17 28,24 20,24 18,17" />
-              <polygon points="24,12 30,17 36,14" fill="none" />
-              <polygon points="18,17 12,15" fill="none" />
-              <polygon points="20,24 16,31" fill="none" />
-              <polygon points="28,24 32,31" fill="none" />
+            <circle cx="24" cy="24" r="21" fill="white" stroke="#111827" strokeWidth="1.5" />
+            <g stroke="#111827" strokeWidth="1.5" strokeLinecap="round">
+              <line x1="27.09" y1="19.75" x2="36.05" y2="7.42" />
+              <line x1="29" y1="25.63" x2="43.5" y2="30.33" />
+              <line x1="24" y1="29.26" x2="24" y2="44.5" />
+              <line x1="19" y1="25.63" x2="4.5" y2="30.33" />
+              <line x1="20.91" y1="19.75" x2="11.95" y2="7.42" />
             </g>
+            <polygon fill="#111827" points="24,17.5 30.18,21.99 27.82,29.26 20.18,29.26 17.82,21.99" />
           </motion.svg>
         </motion.div>
         <motion.div
@@ -34,7 +35,7 @@ export function BallLoader({ label = "Loading" }: { label?: string }) {
         />
       </div>
 
-      <div className="flex items-center gap-1 text-[13px] font-bold uppercase tracking-widest text-muted">
+      <div className="field-caption flex items-center gap-1 text-[13px] font-bold uppercase tracking-widest">
         <span>{label}</span>
         <span className="flex gap-0.5">
           {[0, 1, 2].map((i) => (
