@@ -15,6 +15,7 @@ import {
 } from "@/db/mappers";
 import type { Gender, Level, RefFee, TimeWindow, TravelRadius } from "@/lib/types";
 import type { cancellationReasonEnum } from "@/db/schema/enums";
+import { containsProfanity } from "@/lib/moderation/profanity-filter";
 
 export async function createListingAction(formData: FormData): Promise<{ error?: string }> {
   const supabase = await createSupabaseServerClient();
@@ -25,6 +26,11 @@ export async function createListingAction(formData: FormData): Promise<{ error?:
   const location = String(formData.get("location") || "").trim();
   const date = String(formData.get("date") || "");
   if (!teamName || !location || !date) return { error: "Team name, location, and date are required." };
+
+  const notes = String(formData.get("notes") || "").trim();
+  if (containsProfanity(teamName) || containsProfanity(notes)) {
+    return { error: "That listing contains language that isn't allowed here." };
+  }
 
   await db.insert(listings).values({
     ownerId: user.id,
@@ -44,7 +50,7 @@ export async function createListingAction(formData: FormData): Promise<{ error?:
     fieldFeeShare: formData.get("hasFieldFee") === "on",
     homeColor: String(formData.get("homeColor") || "").trim() || null,
     awayColor: String(formData.get("awayColor") || "").trim() || null,
-    notes: String(formData.get("notes") || "").trim() || null,
+    notes: notes || null,
     status: "open",
   });
 
@@ -66,6 +72,11 @@ export async function updateListingAction(id: string, formData: FormData): Promi
   const date = String(formData.get("date") || "");
   if (!teamName || !location || !date) return { error: "Team name, location, and date are required." };
 
+  const notes = String(formData.get("notes") || "").trim();
+  if (containsProfanity(teamName) || containsProfanity(notes)) {
+    return { error: "That listing contains language that isn't allowed here." };
+  }
+
   await db
     .update(listings)
     .set({
@@ -83,7 +94,7 @@ export async function updateListingAction(id: string, formData: FormData): Promi
       fieldFeeShare: formData.get("hasFieldFee") === "on",
       homeColor: String(formData.get("homeColor") || "").trim() || null,
       awayColor: String(formData.get("awayColor") || "").trim() || null,
-      notes: String(formData.get("notes") || "").trim() || null,
+      notes: notes || null,
     })
     .where(eq(listings.id, id));
 

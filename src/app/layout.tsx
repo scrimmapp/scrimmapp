@@ -7,6 +7,7 @@ import { PageTransition } from "@/components/page-transition";
 import { RouteProgress } from "@/components/route-progress";
 import { SiteBackground } from "@/components/ui/site-background";
 import { ToastProvider } from "@/components/ui/toast";
+import { PostHogProvider } from "@/components/monitoring/posthog-provider";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getProfileById, listUnreadConnectionIds } from "@/db/queries";
 import { initialsFrom } from "@/lib/format";
@@ -53,6 +54,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col bg-paper text-ink">
         <ThemeProvider attribute="data-theme" defaultTheme="dark" enableSystem={false}>
+          <PostHogProvider />
           <SiteBackground />
           <RouteProgress />
           <ToastProvider>

@@ -11,7 +11,7 @@ import { useToast } from "@/components/ui/toast";
 import { ConnectDialog } from "@/components/board/connect-dialog";
 import { EditListingDialog } from "@/components/board/edit-listing-dialog";
 import { CancelListingDialog } from "@/components/board/cancel-listing-dialog";
-import { addCommentAction, deleteCommentAction } from "@/lib/actions/comments";
+import { addCommentAction, deleteCommentAction, reportCommentAction } from "@/lib/actions/comments";
 import { useRealtimeInsert } from "@/lib/supabase/use-realtime-insert";
 import { formatDate } from "@/lib/format";
 import type { Comment, Listing } from "@/lib/types";
@@ -66,6 +66,17 @@ export function ListingDetail({
     listing ? `listing_id=eq.${listing.id}` : undefined,
     onInsert,
   );
+
+  async function handleReportComment(commentId: string) {
+    if (!listing) return;
+    const result = await reportCommentAction(commentId, listing.id);
+    if (result.error) {
+      showToast(result.error);
+      return;
+    }
+    setComments((prev) => prev.filter((c) => c.id !== commentId));
+    showToast("Comment reported and hidden");
+  }
 
   async function handleDeleteComment(commentId: string) {
     if (!listing) return;
@@ -213,7 +224,7 @@ export function ListingDetail({
                         <span className="text-[10px] font-bold text-muted">
                           {new Date(c.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                         </span>
-                        {currentUserId === c.authorId && (
+                        {currentUserId === c.authorId ? (
                           <button
                             type="button"
                             onClick={() => handleDeleteComment(c.id)}
@@ -221,6 +232,16 @@ export function ListingDetail({
                           >
                             Delete
                           </button>
+                        ) : (
+                          currentUserId && (
+                            <button
+                              type="button"
+                              onClick={() => handleReportComment(c.id)}
+                              className="text-[10px] font-bold text-muted hover:text-crit hover:underline"
+                            >
+                              Report
+                            </button>
+                          )
                         )}
                       </div>
                     </motion.div>

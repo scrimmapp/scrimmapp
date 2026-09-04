@@ -44,6 +44,35 @@
   --radius-control: 0.625rem;
   --radius-card: 1rem;
   --radius-pill: 999px;
+
+  /* Daylight pitch: a real mowed-grass checkerboard, painted lines in solid white. */
+  --field-grass-a: #468a4a;
+  --field-grass-b: #367539;
+  --field-line: rgba(255, 255, 255, 0.8);
+
+  /* A soft halo behind hero copy so muted text stays legible over the busy pitch pattern,
+     without the heavier blurred-box look. Only needed in light theme: dark theme's
+     light-on-dark text already has plenty of contrast against the darker grass. */
+  --copy-glow: rgba(246, 248, 251, 0.9);
+
+  /* Text painted directly on the grass photo (hero copy, floating scroll cue). Always white
+     with a dark shadow: unlike --pitch-contrast (a badge/button foreground that flips with
+     the solid --pitch swatch), the grass photo itself stays a mid-to-dark green in both
+     themes, so this never flips. */
+  --field-contrast: #ffffff;
+}
+
+/* Utility pair for any heading/caption that sits directly on the SiteBackground pitch pattern
+   (page headers above a Card, not text already inside an opaque Card/surface). Reuses
+   --field-contrast so it never flips per-theme like text-ink does. */
+.field-heading {
+  color: var(--field-contrast);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.55), 0 3px 10px rgba(0, 0, 0, 0.35);
+}
+.field-caption {
+  color: var(--field-contrast);
+  opacity: 0.88;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -87,6 +116,12 @@
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
     --shadow-md: 0 4px 16px -4px rgba(0, 0, 0, 0.5);
     --shadow-lg: 0 20px 48px -12px rgba(0, 0, 0, 0.6);
+
+    /* Night pitch: darker cross-cut grass, dimmer painted lines (still catches the floodlights). */
+    --field-grass-a: #1d3a22;
+    --field-grass-b: #16301a;
+    --field-line: rgba(255, 255, 255, 0.4);
+    --copy-glow: transparent;
   }
 }
 
@@ -130,6 +165,11 @@
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-md: 0 4px 16px -4px rgba(0, 0, 0, 0.5);
   --shadow-lg: 0 20px 48px -12px rgba(0, 0, 0, 0.6);
+
+  --field-grass-a: #1d3a22;
+  --field-grass-b: #16301a;
+  --field-line: rgba(255, 255, 255, 0.4);
+  --copy-glow: transparent;
 }
 
 @theme inline {
@@ -175,6 +215,30 @@
 
   --font-display: var(--font-baloo);
   --font-sans: var(--font-public-sans);
+}
+
+/*
+ * SiteBackground renders both a day-pitch scene and a night-stadium scene at all times;
+ * only one is ever visible. Kept as a CSS-only toggle (not a useTheme() branch) so there's no
+ * hydration flash: data-theme is stamped on <html> before paint, same mechanism as every other
+ * theme-reactive color in this file.
+ */
+.site-scene-night {
+  opacity: 0;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .site-scene-day {
+    opacity: 0;
+  }
+  :root:not([data-theme="light"]) .site-scene-night {
+    opacity: 1;
+  }
+}
+:root[data-theme="dark"] .site-scene-day {
+  opacity: 0;
+}
+:root[data-theme="dark"] .site-scene-night {
+  opacity: 1;
 }
 
 * {

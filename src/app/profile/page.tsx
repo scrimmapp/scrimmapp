@@ -24,7 +24,7 @@ export default async function ProfilePage() {
   return (
     <div className="mx-auto w-full max-w-xl space-y-2.5 px-4 py-4">
       <div className="text-center">
-        <h1 className="font-display text-lg font-extrabold tracking-tight text-ink md:text-xl">Coach Profile</h1>
+        <h1 className="field-heading font-display text-lg font-extrabold tracking-tight md:text-xl">Coach Profile</h1>
       </div>
 
       <Card className="space-y-2.5 p-3.5">

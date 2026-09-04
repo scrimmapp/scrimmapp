@@ -23,18 +23,18 @@ export default async function ThreadPage({ params }: PageProps<"/inbox/[connecti
       <MarkThreadReadOnMount connectionId={connectionId} />
 
       <div className="flex items-center gap-2 border-b border-rule pb-2">
-        <Link href="/inbox" className="rounded-control p-1 text-ink-2 hover:bg-surface-2 hover:text-ink">
+        <Link href="/inbox" className="field-caption rounded-control p-1 hover:bg-surface-2 hover:text-gold">
           <ArrowLeft size={18} />
         </Link>
         <div>
-          <h1 className="font-display text-base font-extrabold tracking-tight text-ink">
+          <h1 className="field-heading font-display text-base font-extrabold tracking-tight">
             {thread.otherProfile?.teamName ?? "Unknown team"}
           </h1>
-          <p className="text-[12px] text-ink-2">
+          <p className="field-caption text-[12px]">
             {thread.otherProfile?.coachName}
             {thread.otherProfile?.clubName ? ` · ${thread.otherProfile.clubName}` : ""}
           </p>
-          <p className="text-[12px] text-ink-2">
+          <p className="field-caption text-[12px]">
             {thread.listing ? `Re: ${thread.listing.teamName} listing` : "Listing no longer available"}
           </p>
         </div>

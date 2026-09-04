@@ -31,11 +31,15 @@ const kindLabel: Record<UnifiedEvent["kind"], string> = {
   blackout: "Blackout",
 };
 
+// Deliberately fixed, non-theme-reactive hues: a legend needs 5 colors a coach can tell apart
+// at a glance in either theme, which the semantic tokens (built for text/surfaces, not a
+// categorical palette) can't reliably provide, e.g. bg-navy-ink and bg-muted both read as
+// near-invisible grey against a white calendar cell.
 const kindDot: Record<UnifiedEvent["kind"], string> = {
   scrimmage: "bg-pitch",
-  league: "bg-navy-ink",
+  league: "bg-blue-500",
   tournament: "bg-gold",
-  practice: "bg-muted",
+  practice: "bg-violet-400",
   blackout: "bg-crit",
 };
 
