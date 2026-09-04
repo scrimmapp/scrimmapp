@@ -25,10 +25,45 @@ const publicSans = Public_Sans({
   weight: ["400", "500", "600", "700", "800", "900"],
 });
 
+const siteUrl = "https://scrimmapp.com";
+const description =
+  "The scrimmage marketplace and season planner for Rec, Club, and High School soccer programs in Southern California. Post open match windows, filter by level and travel radius, and connect directly with the opposing coach.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "ScrimmApp | Find Your Next Scrimmage",
-  description:
-    "The scrimmage marketplace and season planner for Rec, Club, and High School soccer programs.",
+  description,
+  keywords: [
+    "soccer scrimmage",
+    "youth soccer",
+    "club soccer",
+    "high school soccer",
+    "AYSO",
+    "Southern California soccer",
+    "scrimmage scheduling",
+  ],
+  openGraph: {
+    title: "ScrimmApp | Find Your Next Scrimmage",
+    description,
+    url: siteUrl,
+    siteName: "ScrimmApp",
+    images: [
+      {
+        url: "/brand/Scrimmapp_Meta.jpg",
+        width: 1672,
+        height: 941,
+        alt: "ScrimmApp: find your next scrimmage before the whistle blows",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ScrimmApp | Find Your Next Scrimmage",
+    description,
+    images: ["/brand/Scrimmapp_Meta.jpg"],
+  },
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
