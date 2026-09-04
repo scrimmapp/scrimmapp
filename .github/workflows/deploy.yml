@@ -48,7 +48,7 @@ jobs:
         run: |
           gcloud builds submit \
             --config cloudbuild.yaml \
-            --substitutions="_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }},_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" \
+            --substitutions="_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }},_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }},_POSTHOG_KEY=${{ secrets.NEXT_PUBLIC_POSTHOG_KEY }},_POSTHOG_HOST=https://us.i.posthog.com" \
             --project=$PROJECT_ID
 
       - name: Deploy to Cloud Run
@@ -61,5 +61,5 @@ jobs:
             --min-instances=0 \
             --concurrency=80 \
             --port=8080 \
-            --set-secrets=DATABASE_URL=database-url:latest,DIRECT_URL=direct-url:latest,RESEND_API_KEY=resend-api-key:latest,PLACES_API_KEY=places-api-key:latest \
+            --set-secrets=DATABASE_URL=database-url:latest,DIRECT_URL=direct-url:latest,RESEND_API_KEY=resend-api-key:latest,PLACES_API_KEY=places-api-key:latest,POSTHOG_API_KEY=posthog-api-key:latest \
             --project=$PROJECT_ID
