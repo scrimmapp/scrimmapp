@@ -1,5 +1,5 @@
 export type Gender = "Boys" | "Girls";
-export type Level = "Club" | "High School" | "Rec";
+export type Level = "Club" | "High School" | "Rec" | "Futsal";
 export type TimeWindow = "Morning" | "Afternoon" | "Evening";
 export type RefFee = "50/50 Split" | "Host Pays Ref" | "Visitor Pays";
 export type TravelRadius =

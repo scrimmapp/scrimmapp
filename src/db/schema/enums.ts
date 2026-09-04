@@ -1,6 +1,6 @@
 import { pgEnum } from "drizzle-orm/pg-core";
 
-export const programLevelEnum = pgEnum("program_level", ["rec", "club", "high_school"]);
+export const programLevelEnum = pgEnum("program_level", ["rec", "club", "high_school", "futsal"]);
 export const genderEnum = pgEnum("gender", ["boys", "girls"]);
 export const timeWindowEnum = pgEnum("time_window", ["morning", "afternoon", "evening"]);
 export const refFeeSplitEnum = pgEnum("ref_fee_split", ["split_50_50", "host_pays", "visitor_pays"]);

@@ -6,6 +6,9 @@ import type { Gender, Level } from "@/lib/types";
 const clubAndRecAgeGroups = ["U8", "U9", "U10", "U11", "U12", "U13", "U14", "U15", "U16", "U17", "U18"];
 const highSchoolAgeGroups = ["Varsity", "JV", "Frosh"];
 
+// Futsal is its own League Level (Sep 2026), not a division within Club: a coach picks Futsal
+// the same way they'd pick Club, High School, or Rec. Runs age-bracket seasons like Club/Rec
+// rather than roster tiers, so it falls into the same bucket here.
 export function ageGroupsFor(level: Level): string[] {
   return level === "High School" ? highSchoolAgeGroups : clubAndRecAgeGroups;
 }
@@ -17,11 +20,9 @@ export const ageGroups = [...clubAndRecAgeGroups, ...highSchoolAgeGroups];
 // Club pathways diverge by gender (per Javi, Aug 2026): boys and girls run separate league
 // systems, not just separate divisions within one shared list. High school (CIF-SS) divisions
 // and the rec sub-levels are the same regardless of gender.
-// "Futsal" sits alongside the outdoor sub-levels per Javi (Sep 2026), rather than as a
-// separate format field: a coach picks it the same way they'd pick Flight 1 or MLS Next.
 const clubSubLevelsByGender: Record<Gender, string[]> = {
-  Boys: ["MLS Next", "ECNL", "MLS Next 2", "ECRL", "EA", "EA2", "N1", "Flight 1", "Flight 2", "Flight 3", "Futsal"],
-  Girls: ["ECNL", "GA", "ECRL", "GA Aspire", "DPL", "N1", "DPL Open", "Flight 1", "Flight 2", "Flight 3", "Futsal"],
+  Boys: ["MLS Next", "ECNL", "MLS Next 2", "ECRL", "EA", "EA2", "N1", "Flight 1", "Flight 2", "Flight 3"],
+  Girls: ["ECNL", "GA", "ECRL", "GA Aspire", "DPL", "N1", "DPL Open", "Flight 1", "Flight 2", "Flight 3"],
 };
 
 const highSchoolSubLevels = [
@@ -40,6 +41,7 @@ const recSubLevels = ["AYSO Select", "AYSO Extra", "Signature League"];
 export function subLevelsFor(level: Level, gender: Gender): string[] {
   if (level === "Club") return clubSubLevelsByGender[gender];
   if (level === "High School") return highSchoolSubLevels;
+  // Futsal reuses Rec's sub-levels: no Futsal-specific division list has been provided yet.
   return recSubLevels;
 }
 
