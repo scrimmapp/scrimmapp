@@ -119,6 +119,7 @@ export function TeamsManager({ teams }: { teams: TeamRow[] }) {
                 <option value="Club">Club</option>
                 <option value="High School">High School</option>
                 <option value="Rec">Rec</option>
+                <option value="Futsal">Futsal</option>
               </Select>
             </Field>
             <Field label="Competition level" htmlFor="team-subLevel">

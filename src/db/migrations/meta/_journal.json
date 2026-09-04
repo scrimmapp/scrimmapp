@@ -64,6 +64,13 @@
       "when": 1788033600000,
       "tag": "0008_listing_uniform_colors",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1788595200000,
+      "tag": "0009_futsal_league_level",
+      "breakpoints": true
     }
   ]
 }

@@ -94,6 +94,7 @@ export function BoardSection({
             <option value="Club">Club</option>
             <option value="High School">High School</option>
             <option value="Rec">Rec</option>
+            <option value="Futsal">Futsal</option>
           </Select>
           <Select
             value={filters.radius}

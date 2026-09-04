@@ -70,6 +70,7 @@ export function EditProfileDialog({
               <option value="Club">Club Soccer</option>
               <option value="High School">High School Program</option>
               <option value="Rec">Recreational / AYSO</option>
+              <option value="Futsal">Futsal</option>
             </Select>
           </Field>
         </div>
