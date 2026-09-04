@@ -46,14 +46,20 @@
   --radius-pill: 999px;
 
   /* Daylight pitch: a real mowed-grass checkerboard, painted lines in solid white. */
-  --field-grass-a: #5cb35f;
-  --field-grass-b: #499a4c;
+  --field-grass-a: #4f9d53;
+  --field-grass-b: #3d8541;
   --field-line: rgba(255, 255, 255, 0.8);
 
   /* A soft halo behind hero copy so muted text stays legible over the busy pitch pattern,
      without the heavier blurred-box look. Only needed in light theme: dark theme's
      light-on-dark text already has plenty of contrast against the darker grass. */
   --copy-glow: rgba(246, 248, 251, 0.9);
+
+  /* Text painted directly on the grass photo (hero copy, floating scroll cue). Always white
+     with a dark shadow: unlike --pitch-contrast (a badge/button foreground that flips with
+     the solid --pitch swatch), the grass photo itself stays a mid-to-dark green in both
+     themes, so this never flips. */
+  --field-contrast: #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {

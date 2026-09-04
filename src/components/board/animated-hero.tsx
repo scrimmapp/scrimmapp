@@ -19,14 +19,20 @@ export function AnimatedHero() {
         Southern California · Rec, Club & High School
       </motion.span>
       <h1
-        className="mt-3 font-display text-xl font-extrabold leading-[1.2] tracking-tight text-ink sm:text-2xl"
-        style={{ textShadow: "0 0 10px var(--copy-glow), 0 0 10px var(--copy-glow)" }}
+        className="mt-3 font-display text-xl font-extrabold leading-[1.2] tracking-tight text-[var(--field-contrast)] sm:text-2xl"
+        style={{
+          textShadow:
+            "0 1px 0 rgba(0, 0, 0, 0.55), 0 1px 4px rgba(0, 0, 0, 0.6), 0 4px 14px rgba(0, 0, 0, 0.4)",
+        }}
       >
         Find your next scrimmage before the whistle blows.
       </h1>
       <p
-        className="mt-2 mx-auto max-w-lg text-[13px] text-ink-2 sm:text-sm"
-        style={{ textShadow: "0 0 8px var(--copy-glow), 0 0 8px var(--copy-glow)" }}
+        className="mt-2 mx-auto max-w-lg text-[13px] text-[var(--field-contrast)]/90 sm:text-sm"
+        style={{
+          textShadow:
+            "0 1px 0 rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.55), 0 3px 10px rgba(0, 0, 0, 0.35)",
+        }}
       >
         A classifieds marketplace for pre-season friendlies. Post an open match window, filter by
         level and travel radius, and connect directly with the opposing coach.
