@@ -30,7 +30,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   return [
-    { url: siteUrl, lastModified: new Date(), changeFrequency: "hourly", priority: 1 },
+    // No separate entry for the bare domain: it renders the same content as /board and
+    // declares /board as its canonical, so listing both here would just be duplicate URLs.
     ...staticRoutes.map((r) => ({
       url: `${siteUrl}${r.path}`,
       lastModified: new Date(),

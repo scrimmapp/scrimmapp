@@ -1,8 +1,18 @@
-import { redirect } from "next/navigation";
+import type { Metadata } from "next";
+import { BoardPageContent } from "./board/page";
+import { pageMetadata } from "@/lib/seo";
 
-// The public landing page is the board: the post-a-scrimmage form front and center for both
-// visitors and signed-in coaches, per Javi's Sep 2026 request. It used to bounce straight to
-// /login, which meant a first-time visitor never saw the product before being asked to sign up.
+// Renders the board directly instead of redirect()-ing to it: see the comment on
+// BoardPageContent in ./board/page.tsx for why the redirect was a real performance cost.
+// Canonical still points at /board (the URL every nav link, the sitemap, and robots.txt treat
+// as the real one) so Google indexes one page, not two identical URLs.
+export const metadata: Metadata = pageMetadata({
+  title: "Soccer Scrimmage Board | Post & Find Matches in Southern California",
+  description:
+    "Browse open soccer scrimmages across Southern California or post your team's availability in minutes. Filter by Rec, Club, High School, or Futsal, gender, age group, and travel radius.",
+  path: "/board",
+});
+
 export default function RootPage() {
-  redirect("/board");
+  return <BoardPageContent />;
 }
