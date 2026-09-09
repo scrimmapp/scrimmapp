@@ -16,7 +16,12 @@ export const metadata: Metadata = pageMetadata({
   path: "/board",
 });
 
-export default async function BoardPage() {
+// Shared with src/app/page.tsx: the root domain renders this same content directly (no
+// redirect) rather than bouncing to /board, since Next can't emit a clean server-side 3xx for
+// redirect() here (this route tree has a global loading.tsx, which forces the streaming/
+// client-side redirect path instead), and that extra client-side hop was flagged by Lighthouse
+// as "Avoid multiple page redirects", costing a real round trip on every fresh visit.
+export async function BoardPageContent() {
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
   const rows = await listOpenListings();
@@ -40,4 +45,8 @@ export default async function BoardPage() {
       </div>
     </div>
   );
+}
+
+export default function BoardPage() {
+  return <BoardPageContent />;
 }
