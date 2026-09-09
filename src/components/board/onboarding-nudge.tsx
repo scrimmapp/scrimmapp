@@ -1,27 +1,45 @@
 "use client";
 
-import { useState } from "react";
+import { useSyncExternalStore } from "react";
 import Link from "next/link";
 import { X } from "lucide-react";
 
 const DISMISS_KEY = "scrimmapp_onboarding_nudge_dismissed";
 
+const DISMISS_EVENT = "scrimmapp:onboarding-dismissed";
+
+function subscribe(callback: () => void) {
+  window.addEventListener(DISMISS_EVENT, callback);
+  return () => window.removeEventListener(DISMISS_EVENT, callback);
+}
+
+function getSnapshot() {
+  try {
+    return sessionStorage.getItem(DISMISS_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+// The server has no sessionStorage, so it always renders as not-dismissed. useSyncExternalStore
+// (unlike reading this inside useState's initializer) reconciles that with the client's real
+// value without a hydration mismatch: React knows to use this on the server/first pass and the
+// real getSnapshot() once hydrated.
+function getServerSnapshot() {
+  return false;
+}
+
 export function OnboardingNudge() {
-  const [dismissed, setDismissed] = useState(() => {
-    if (typeof window === "undefined") return false;
-    try {
-      return sessionStorage.getItem(DISMISS_KEY) === "1";
-    } catch {
-      return false;
-    }
-  });
+  const dismissed = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   if (dismissed) return null;
 
   function handleDismiss() {
-    setDismissed(true);
     try {
       sessionStorage.setItem(DISMISS_KEY, "1");
+      // The native "storage" event only fires in *other* tabs, never the one that wrote the
+      // value, so this tab needs its own signal to make useSyncExternalStore re-read and hide.
+      window.dispatchEvent(new Event(DISMISS_EVENT));
     } catch {
       // Ignore: worst case the nudge reappears next session, not worth failing over.
     }
