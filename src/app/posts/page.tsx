@@ -1,5 +1,7 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { pageMetadata } from "@/lib/seo";
 import {
   listOwnedListings,
   listInquirersForListing,
@@ -9,6 +11,13 @@ import {
 } from "@/db/queries";
 import { listingToDisplay } from "@/db/mappers";
 import { PostsSection, type PostItem } from "@/components/posts/posts-section";
+
+export const metadata: Metadata = pageMetadata({
+  title: "My Posts | ScrimmApp",
+  description: "Manage the scrimmages you've posted.",
+  path: "/posts",
+  noIndex: true,
+});
 
 export default async function PostsPage() {
   const supabase = await createSupabaseServerClient();

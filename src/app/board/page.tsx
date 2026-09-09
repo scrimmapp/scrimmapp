@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { AnimatedHero } from "@/components/board/animated-hero";
 import { PostListingForm } from "@/components/board/post-listing-form";
 import { BoardSection } from "@/components/board/board-section";
@@ -6,6 +7,14 @@ import { OnboardingNudge } from "@/components/board/onboarding-nudge";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { listOpenListings, countTeamsForProfile } from "@/db/queries";
 import { listingToDisplay } from "@/db/mappers";
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Soccer Scrimmage Board | Post & Find Matches in Southern California",
+  description:
+    "Browse open soccer scrimmages across Southern California or post your team's availability in minutes. Filter by Rec, Club, High School, or Futsal, gender, age group, and travel radius.",
+  path: "/board",
+});
 
 export default async function BoardPage() {
   const supabase = await createSupabaseServerClient();

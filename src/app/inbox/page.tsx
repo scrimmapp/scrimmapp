@@ -5,6 +5,15 @@ import { MarkInboxReadOnMount } from "@/components/inbox/mark-inbox-read-on-moun
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { listThreadsForProfile } from "@/db/queries";
 import { formatMessageTimestamp } from "@/lib/format";
+import { pageMetadata } from "@/lib/seo";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Inbox | ScrimmApp",
+  description: "Your coach communications inbox.",
+  path: "/inbox",
+  noIndex: true,
+});
 
 export default async function InboxPage() {
   const supabase = await createSupabaseServerClient();

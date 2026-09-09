@@ -9,6 +9,15 @@ import { MarkThreadReadOnMount } from "@/components/inbox/mark-thread-read-on-mo
 import { ReplyForm } from "@/components/inbox/reply-form";
 import { RateHostButton } from "@/components/inbox/rate-host-button";
 import { cn } from "@/lib/cn";
+import { pageMetadata } from "@/lib/seo";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Conversation | ScrimmApp",
+  description: "A coach-to-coach conversation on ScrimmApp.",
+  path: "/inbox",
+  noIndex: true,
+});
 
 export default async function ThreadPage({ params }: PageProps<"/inbox/[connectionId]">) {
   const { connectionId } = await params;
