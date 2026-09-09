@@ -17,7 +17,13 @@ export function BallLoader({ label = "Loading" }: { label?: string }) {
             animate={{ rotate: [-12, 12, -12] }}
             transition={{ duration: 0.9, repeat: Infinity, ease: [0.45, 0, 0.55, 1] }}
           >
-            <Image src={ballArt} alt="" className="h-16 w-16 drop-shadow-md" priority />
+            <Image
+              src={ballArt}
+              alt=""
+              className="h-16 w-16 drop-shadow-md"
+              style={{ filter: "brightness(0) invert(1)" }}
+              priority
+            />
           </motion.div>
         </motion.div>
         <motion.div
