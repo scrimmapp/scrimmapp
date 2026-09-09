@@ -10,3 +10,4 @@ export * from "./calendar-events";
 export * from "./ratings";
 export * from "./cancellations";
 export * from "./email-log";
+export * from "./feedback";

@@ -25,7 +25,7 @@ export function AnimatedHero() {
             "0 1px 0 rgba(0, 0, 0, 0.55), 0 1px 4px rgba(0, 0, 0, 0.6), 0 4px 14px rgba(0, 0, 0, 0.4)",
         }}
       >
-        Find your next scrimmage before the whistle blows.
+        Post your team&apos;s availability.
       </h1>
       <p
         className="mt-2 mx-auto max-w-lg text-[13px] text-[var(--field-contrast)]/90 sm:text-sm"

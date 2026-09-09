@@ -31,7 +31,7 @@ const description =
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "ScrimmApp | Find Your Next Scrimmage",
+  title: "ScrimmApp | Post Your Team's Availability",
   description,
   keywords: [
     "soccer scrimmage",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     "scrimmage scheduling",
   ],
   openGraph: {
-    title: "ScrimmApp | Find Your Next Scrimmage",
+    title: "ScrimmApp | Post Your Team's Availability",
     description,
     url: siteUrl,
     siteName: "ScrimmApp",
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
         url: "/brand/Scrimmapp_Meta.jpg",
         width: 1672,
         height: 941,
-        alt: "ScrimmApp: find your next scrimmage before the whistle blows",
+        alt: "ScrimmApp: post your team's availability",
       },
     ],
     locale: "en_US",
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "ScrimmApp | Find Your Next Scrimmage",
+    title: "ScrimmApp | Post Your Team's Availability",
     description,
     images: ["/brand/Scrimmapp_Meta.jpg"],
   },

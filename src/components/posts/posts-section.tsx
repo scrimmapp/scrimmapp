@@ -63,7 +63,10 @@ function PostCard({ item }: { item: PostItem }) {
           <p className="mt-0.5 text-[12px] text-ink-2">
             {formatDate(listing.date)} · {listing.gender} {listing.age} · {listing.subLevel}
           </p>
-          <p className="text-[12px] text-muted">{listing.location}</p>
+          <p className="text-[12px] text-muted">
+            {listing.location}
+            {listing.fieldNumber && ` · ${listing.fieldNumber}`}
+          </p>
           {item.opponentTeamName && (
             <p className="mt-1 text-[12px] font-semibold text-pitch">
               {listing.status === "completed" ? "Played" : "Confirmed"} vs. {item.opponentTeamName}

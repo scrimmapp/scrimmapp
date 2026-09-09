@@ -11,6 +11,7 @@ export interface Inquirer {
   profileId: string;
   teamName: string;
   coachName: string;
+  city?: string | null;
 }
 
 export function ConfirmMatchDialog({
@@ -68,7 +69,7 @@ export function ConfirmMatchDialog({
                   onChange={() => setSelected(i.profileId)}
                   className="accent-pitch"
                 />
-                {i.teamName} <span className="text-muted">({i.coachName})</span>
+                {i.teamName} <span className="text-muted">({i.coachName}{i.city ? ` · ${i.city}` : ""})</span>
               </label>
             ))}
           </div>

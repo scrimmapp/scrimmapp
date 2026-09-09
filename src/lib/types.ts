@@ -8,6 +8,7 @@ export type TravelRadius =
   | "Up to 25 miles"
   | "Up to 50 miles"
   | "100+ miles (Willing to Travel)";
+export type CompetitivePreference = "Similar" | "Stronger" | "Developing";
 
 export interface Listing {
   id: string;
@@ -18,10 +19,12 @@ export interface Listing {
   age: string;
   level: Level;
   subLevel: string;
+  competitivePreference: CompetitivePreference;
   travelRadius: TravelRadius;
   date: string;
   time: TimeWindow;
   location: string;
+  fieldNumber?: string;
   isHosting: boolean;
   hasRef: boolean;
   refFee: RefFee;

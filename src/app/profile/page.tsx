@@ -66,6 +66,12 @@ export default async function ProfilePage() {
             <span className="font-bold text-ink">{profile.clubName}</span>
           </div>
         )}
+        {profile.city && (
+          <div className="flex items-center justify-between text-[13px]">
+            <span className="font-semibold text-ink-2">City</span>
+            <span className="font-bold text-ink">{profile.city}</span>
+          </div>
+        )}
         {profile.division && (
           <div className="flex items-center justify-between text-[13px]">
             <span className="font-semibold text-ink-2">Division</span>

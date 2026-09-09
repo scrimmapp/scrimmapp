@@ -22,3 +22,5 @@ export const cancellationReasonEnum = pgEnum("cancellation_reason", [
   "other",
 ]);
 export const emailStatusEnum = pgEnum("email_status", ["queued", "sent", "failed", "bounced"]);
+export const competitivePreferenceEnum = pgEnum("competitive_preference", ["similar", "stronger", "developing"]);
+export const feedbackCategoryEnum = pgEnum("feedback_category", ["issue", "improvement", "general"]);

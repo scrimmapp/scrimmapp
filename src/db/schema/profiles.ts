@@ -10,6 +10,10 @@ export const profiles = pgTable("profiles", {
   coachName: text("coach_name").notNull(),
   teamName: text("team_name").notNull(),
   clubName: text("club_name"),
+  // Plain city text, not tied to the Places-Autocomplete-backed listing location: this is
+  // about a coach's home base so another coach can gauge travel distance before inquiring or
+  // confirming, not a specific venue to navigate to.
+  city: text("city"),
   orgType: programLevelEnum("org_type").notNull(),
   division: text("division"),
   defaultAgeGroup: text("default_age_group"),

@@ -152,6 +152,7 @@ export function ListingDetail({
             <Stat label="Travel radius" value={listing.travelRadius} accent />
             <Stat label="Referee fee" value={listing.refFee} />
             <Stat label="Pitch status" value={listing.isHosting ? "Host pitch secured" : "Open to location"} />
+            <Stat label="Looking for" value={`${listing.competitivePreference} opponent`} />
             {listing.homeColor && <Stat label="Home uniform" value={listing.homeColor} />}
             {listing.awayColor && <Stat label="Away uniform" value={listing.awayColor} />}
           </div>
@@ -165,6 +166,9 @@ export function ListingDetail({
           <div className="space-y-1 rounded-card border border-rule bg-paper p-2.5">
             <h4 className="text-[10px] font-bold uppercase tracking-wider text-muted">Venue & navigation</h4>
             <p className="text-[13px] font-bold text-ink">{listing.location}</p>
+            {listing.fieldNumber && (
+              <p className="text-[12px] font-semibold text-pitch-ink">Field / pitch: {listing.fieldNumber}</p>
+            )}
             <a
               href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(listing.location)}`}
               target="_blank"

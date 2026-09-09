@@ -20,7 +20,7 @@ export default async function BoardPage() {
         <div className="mx-auto w-full max-w-6xl space-y-3">
           {user && teamCount === 0 && <OnboardingNudge />}
           <AnimatedHero />
-          <PostListingForm />
+          <PostListingForm isLoggedIn={!!user} />
         </div>
         <ScrollCue targetId="scrimmage-board" />
       </section>

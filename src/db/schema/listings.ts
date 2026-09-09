@@ -1,5 +1,5 @@
 import { pgTable, uuid, text, integer, boolean, date, time, timestamp } from "drizzle-orm/pg-core";
-import { programLevelEnum, genderEnum, timeWindowEnum, refFeeSplitEnum, listingStatusEnum } from "./enums";
+import { programLevelEnum, genderEnum, timeWindowEnum, refFeeSplitEnum, listingStatusEnum, competitivePreferenceEnum } from "./enums";
 import { profiles } from "./profiles";
 import { venues } from "./venues";
 
@@ -11,11 +11,19 @@ export const listings = pgTable("listings", {
   ageGroup: text("age_group").notNull(),
   level: programLevelEnum("level").notNull(),
   subLevel: text("sub_level").notNull(),
+  // How the poster wants an opponent to compare, not just what level they play at: whether
+  // they're looking for a fair test (similar), a step up (stronger), or a lower-pressure game
+  // to develop players (developing). Defaults to "similar" since that's the common case.
+  competitivePreference: competitivePreferenceEnum("competitive_preference").notNull().default("similar"),
   matchDate: date("match_date").notNull(),
   timeWindow: timeWindowEnum("time_window").notNull(),
   kickoffTime: time("kickoff_time"),
   venueId: uuid("venue_id").references(() => venues.id),
   locationText: text("location_text").notNull(),
+  // Separate from locationText: the facility/venue is resolved via Places Autocomplete, but a
+  // 10+ field sports complex needs a specific field/pitch number too, per Javi: without this,
+  // coaches and refs waste time guessing which field their match is on within a huge complex.
+  fieldNumber: text("field_number"),
   travelRadiusMiles: integer("travel_radius_miles").notNull(),
   isHosting: boolean("is_hosting").notNull().default(false),
   hasRef: boolean("has_ref").notNull().default(false),

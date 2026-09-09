@@ -4,6 +4,7 @@ import { genderToDisplay } from "./gender";
 import { levelToDisplay } from "./level";
 import { timeWindowToDisplay } from "./time-window";
 import { refFeeToDisplay } from "./ref-fee";
+import { competitivePreferenceToDisplay } from "./competitive-preference";
 import { travelRadiusToDisplay } from "./travel-radius";
 import { toDateString } from "./date";
 
@@ -19,10 +20,12 @@ export function listingToDisplay(row: ListingRow): Listing {
     age: row.ageGroup,
     level: levelToDisplay(row.level),
     subLevel: row.subLevel,
+    competitivePreference: competitivePreferenceToDisplay(row.competitivePreference),
     travelRadius: travelRadiusToDisplay(row.travelRadiusMiles),
     date: toDateString(row.matchDate),
     time: timeWindowToDisplay(row.timeWindow),
     location: row.locationText,
+    fieldNumber: row.fieldNumber ?? undefined,
     isHosting: row.isHosting,
     hasRef: row.hasRef,
     refFee: refFeeToDisplay(row.refFeeSplit),

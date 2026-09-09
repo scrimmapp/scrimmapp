@@ -7,6 +7,7 @@ import { db } from "@/db/client";
 import { profiles } from "@/db/schema";
 import { genderToDb, levelToDb } from "@/db/mappers";
 import type { Gender, Level } from "@/lib/types";
+import { containsProfanity } from "@/lib/moderation/profanity-filter";
 
 export async function updateProfileAction(formData: FormData): Promise<{ error?: string }> {
   const supabase = await createSupabaseServerClient();
@@ -21,11 +22,16 @@ export async function updateProfileAction(formData: FormData): Promise<{ error?:
   }
 
   const clubName = String(formData.get("clubName") || "").trim();
+  const city = String(formData.get("city") || "").trim();
   const division = String(formData.get("division") || "").trim();
   const defaultAgeGroup = String(formData.get("defaultAgeGroup") || "").trim();
   const defaultGenderRaw = String(formData.get("defaultGender") || "");
   const phone = String(formData.get("phone") || "").trim();
   const orgType = String(formData.get("orgType") || "Club") as Level;
+
+  if (containsProfanity(coachName) || containsProfanity(teamName) || containsProfanity(city)) {
+    return { error: "That profile contains language that isn't allowed here." };
+  }
 
   try {
     await db
@@ -34,6 +40,7 @@ export async function updateProfileAction(formData: FormData): Promise<{ error?:
         coachName,
         teamName,
         clubName: clubName || null,
+        city: city || null,
         orgType: levelToDb(orgType),
         division: division || null,
         defaultAgeGroup: defaultAgeGroup || null,

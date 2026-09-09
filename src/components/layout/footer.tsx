@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Logo } from "@/components/logo";
+import { FeedbackModal } from "@/components/layout/feedback-modal";
 
 const hiddenOn = ["/login", "/signup"];
 
@@ -27,12 +29,14 @@ const columns = [
     links: [
       { href: "/about", label: "About ScrimmApp" },
       { href: "/faq", label: "FAQ" },
+      { href: "/terms", label: "Terms & Policies" },
     ],
   },
 ];
 
 export function Footer() {
   const pathname = usePathname();
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
   if (hiddenOn.includes(pathname)) return null;
 
   return (
@@ -57,6 +61,17 @@ export function Footer() {
                     </Link>
                   </li>
                 ))}
+                {col.heading === "About" && (
+                  <li>
+                    <button
+                      type="button"
+                      onClick={() => setFeedbackOpen(true)}
+                      className="text-left transition-colors hover:text-pitch"
+                    >
+                      Feedback
+                    </button>
+                  </li>
+                )}
               </ul>
             </div>
           ))}
@@ -65,6 +80,8 @@ export function Footer() {
       <div className="border-t border-rule px-4 py-3 text-center text-[12px] text-muted">
         © {new Date().getFullYear()} ScrimmApp. Built for coaches, by coaches.
       </div>
+
+      <FeedbackModal open={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
     </footer>
   );
 }

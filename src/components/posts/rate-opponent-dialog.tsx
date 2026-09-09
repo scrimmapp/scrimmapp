@@ -12,6 +12,7 @@ const checklistItems = [
   { key: "goodCommunication", label: "Did they have good communication / quick response time?" },
   { key: "accurateFieldInfo", label: "Was the field/parking info they gave accurate?" },
   { key: "paidRefFee", label: "Did they pay their agreed referee fee share?" },
+  { key: "respectfulSidelines", label: "Were the visiting coaching staff, players, and parents respectful on the sidelines?" },
 ] as const;
 
 export function RateOpponentDialog({
@@ -32,6 +33,7 @@ export function RateOpponentDialog({
     goodCommunication: true,
     accurateFieldInfo: true,
     paidRefFee: true,
+    respectfulSidelines: true,
   });
   const [comment, setComment] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -48,6 +50,7 @@ export function RateOpponentDialog({
       goodCommunication: checks.goodCommunication,
       accurateFieldInfo: checks.accurateFieldInfo,
       paidRefFee: checks.paidRefFee,
+      respectfulSidelines: checks.respectfulSidelines,
       comment,
     });
     setSaving(false);

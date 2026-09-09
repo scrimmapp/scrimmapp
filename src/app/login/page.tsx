@@ -4,7 +4,7 @@ import Link from "next/link";
 import { AuthShell } from "@/components/auth/auth-shell";
 import { useAuthStatus } from "@/components/auth/use-auth-status";
 import { Field } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import { Input, Checkbox } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
@@ -19,8 +19,9 @@ export default function LoginPage() {
     const form = new FormData(e.currentTarget);
     const email = String(form.get("email") || "");
     const password = String(form.get("password") || "");
+    const rememberMe = form.get("rememberMe") === "on";
 
-    const supabase = createSupabaseBrowserClient();
+    const supabase = createSupabaseBrowserClient({ rememberMe });
     const { error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
@@ -61,7 +62,11 @@ export default function LoginPage() {
       <Field label="Password" htmlFor="login-password">
         <PasswordInput id="login-password" name="password" placeholder="••••••••" required />
       </Field>
-      <div className="text-right">
+      <div className="flex items-center justify-between">
+        <label className="flex cursor-pointer items-center gap-1.5 text-[12px] font-semibold text-ink-2">
+          <Checkbox name="rememberMe" defaultChecked />
+          Remember me
+        </label>
         <Link href="/forgot-password" className="text-[12px] font-bold text-pitch hover:underline">
           Forgot password?
         </Link>

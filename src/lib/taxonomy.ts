@@ -39,9 +39,10 @@ const highSchoolSubLevels = [
 const recSubLevels = ["AYSO Select", "AYSO Extra", "Signature League"];
 
 export function subLevelsFor(level: Level, gender: Gender): string[] {
-  if (level === "Club") return clubSubLevelsByGender[gender];
+  // Futsal runs the same competitive club tiers as outdoor soccer (Javi, Sep 2026): it was
+  // briefly falling through to Rec's AYSO-style list, which is the bug he flagged.
+  if (level === "Club" || level === "Futsal") return clubSubLevelsByGender[gender];
   if (level === "High School") return highSchoolSubLevels;
-  // Futsal reuses Rec's sub-levels: no Futsal-specific division list has been provided yet.
   return recSubLevels;
 }
 
@@ -54,6 +55,8 @@ export const travelRadiusOptions = [
 ] as const;
 
 export const timeWindowOptions = ["Morning", "Afternoon", "Evening"] as const;
+
+export const competitivePreferenceOptions = ["Similar", "Stronger", "Developing"] as const;
 
 export const refFeeOptions = ["50/50 Split", "Host Pays Ref", "Visitor Pays"] as const;
 

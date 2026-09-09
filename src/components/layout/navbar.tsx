@@ -12,13 +12,18 @@ import { cn } from "@/lib/cn";
 
 type Coach = { name: string; initials: string; teamName: string };
 
-const links = [
-  { href: "/board", label: "Board" },
-  { href: "/posts", label: "My Posts" },
-  { href: "/calendar", label: "Season Calendar" },
-  { href: "/venues", label: "Venues" },
-  { href: "/about", label: "About" },
-];
+// My Posts, Inbox, and Venues are hidden from logged-out visitors, per Javi's Sep 2026 nav
+// cleanup: a visitor who hasn't signed up yet has no posts, no conversations, and no reason
+// yet to browse the venue directory.
+function navLinksFor(isLoggedIn: boolean) {
+  return [
+    { href: "/board", label: "Scrimmages" },
+    ...(isLoggedIn ? [{ href: "/posts", label: "My Posts" }] : []),
+    { href: "/calendar", label: "Season Calendar" },
+    ...(isLoggedIn ? [{ href: "/venues", label: "Venues" }] : []),
+    { href: "/about", label: "About" },
+  ];
+}
 
 function NavItem({ href, label, active }: { href: string; label: string; active: boolean }) {
   return (
@@ -48,6 +53,7 @@ export function Navbar({ coach, unreadCount }: { coach: Coach | null; unreadCoun
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const isLoggedIn = coach !== null;
+  const links = navLinksFor(isLoggedIn);
 
   async function handleMobileLogout() {
     setOpen(false);
@@ -70,6 +76,7 @@ export function Navbar({ coach, unreadCount }: { coach: Coach | null; unreadCoun
               <NavItem href={link.href} label={link.label} active={pathname === link.href} />
             </span>
           ))}
+          {isLoggedIn && (
           <span className="group relative">
             <Link
               href="/inbox"
@@ -96,6 +103,7 @@ export function Navbar({ coach, unreadCount }: { coach: Coach | null; unreadCoun
               )}
             </Link>
           </span>
+          )}
         </nav>
 
         <div className="flex items-center gap-2.5">
@@ -144,7 +152,10 @@ export function Navbar({ coach, unreadCount }: { coach: Coach | null; unreadCoun
             className="overflow-hidden border-t border-rule bg-paper text-[13px] font-bold uppercase tracking-wide text-ink-2 lg:hidden"
           >
             <div className="flex flex-col gap-1 px-4 py-2">
-              {[...links, { href: "/inbox", label: "Inbox" }, { href: "/profile", label: "Profile" }].map((link) => (
+              {[
+                ...links,
+                ...(isLoggedIn ? [{ href: "/inbox", label: "Inbox" }, { href: "/profile", label: "Profile" }] : []),
+              ].map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}

@@ -8,7 +8,14 @@ import { Input, Select, Textarea, Checkbox } from "@/components/ui/input";
 import { LocationAutocomplete } from "@/components/ui/location-autocomplete";
 import { Button } from "@/components/ui/button";
 import { updateListingAction } from "@/lib/actions/listings";
-import { ageGroupsFor, refFeeOptions, subLevelsFor, timeWindowOptions, travelRadiusOptions } from "@/lib/taxonomy";
+import {
+  ageGroupsFor,
+  competitivePreferenceOptions,
+  refFeeOptions,
+  subLevelsFor,
+  timeWindowOptions,
+  travelRadiusOptions,
+} from "@/lib/taxonomy";
 import type { Gender, Level, Listing } from "@/lib/types";
 
 export function EditListingDialog({
@@ -79,6 +86,16 @@ export function EditListingDialog({
           </Field>
         </div>
 
+        <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
+          <Field label="Competitive level preference" htmlFor="edit-competitivePreference">
+            <Select id="edit-competitivePreference" name="competitivePreference" defaultValue={listing.competitivePreference}>
+              {competitivePreferenceOptions.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </Select>
+          </Field>
+        </div>
+
         <div className="grid grid-cols-1 gap-2.5 md:grid-cols-3">
           <Field label="Gender" htmlFor="edit-gender">
             <Select id="edit-gender" name="gender" value={gender} onChange={(e) => handleGenderChange(e.target.value as Gender)}>
@@ -123,9 +140,15 @@ export function EditListingDialog({
         </div>
 
         <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
-          <Field label="Pitch location / city" htmlFor="edit-location">
+          <Field label="Facility / venue" htmlFor="edit-location">
             <LocationAutocomplete name="location" defaultValue={listing.location} required />
           </Field>
+          <Field label="Field / pitch # (optional)" htmlFor="edit-fieldNumber">
+            <Input id="edit-fieldNumber" name="fieldNumber" defaultValue={listing.fieldNumber} placeholder="e.g. Stadium Pitch, Field 15" />
+          </Field>
+        </div>
+
+        <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
           <Field label="Referee fee allocation" htmlFor="edit-refFee">
             <Select id="edit-refFee" name="refFee" defaultValue={listing.refFee}>
               {refFeeOptions.map((r) => (
@@ -147,7 +170,7 @@ export function EditListingDialog({
         </div>
 
         <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
-          <Field label="Field # / Notes (optional)" htmlFor="edit-notes">
+          <Field label="Notes (optional)" htmlFor="edit-notes">
             <Textarea id="edit-notes" name="notes" rows={2} defaultValue={listing.notes} />
           </Field>
           <div className="flex flex-col justify-center gap-2 rounded-control border border-rule bg-paper p-2.5">

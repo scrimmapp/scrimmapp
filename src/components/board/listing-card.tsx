@@ -38,7 +38,10 @@ export function ListingCard({ listing, currentUserId }: { listing: Listing; curr
               </h3>
               <p className="mt-0.5 flex items-center gap-0.5 truncate text-[12px] font-semibold text-muted">
                 <MapPin size={10} className="shrink-0" strokeWidth={2.5} />
-                <span className="truncate">{listing.location}</span>
+                <span className="truncate">
+                  {listing.location}
+                  {listing.fieldNumber && ` · ${listing.fieldNumber}`}
+                </span>
               </p>
             </div>
             <Badge tone={listing.gender === "Girls" ? "gold" : "pitch"} className="shrink-0">
