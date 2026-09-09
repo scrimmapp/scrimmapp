@@ -2,6 +2,7 @@ export * from "./level";
 export * from "./gender";
 export * from "./time-window";
 export * from "./ref-fee";
+export * from "./competitive-preference";
 export * from "./travel-radius";
 export * from "./date";
 export * from "./camelize";

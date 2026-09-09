@@ -3,13 +3,21 @@
 import { useState, type FormEvent } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { CheckCircle2, AlertCircle } from "lucide-react";
+import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Field } from "@/components/ui/field";
 import { Input, Select, Textarea, Checkbox } from "@/components/ui/input";
 import { LocationAutocomplete } from "@/components/ui/location-autocomplete";
 import { Button } from "@/components/ui/button";
 import { createListingAction } from "@/lib/actions/listings";
-import { ageGroupsFor, refFeeOptions, subLevelsFor, timeWindowOptions, travelRadiusOptions } from "@/lib/taxonomy";
+import {
+  ageGroupsFor,
+  competitivePreferenceOptions,
+  refFeeOptions,
+  subLevelsFor,
+  timeWindowOptions,
+  travelRadiusOptions,
+} from "@/lib/taxonomy";
 import type { Gender, Level } from "@/lib/types";
 
 function tomorrowISO() {
@@ -18,7 +26,7 @@ function tomorrowISO() {
   return d.toISOString().split("T")[0];
 }
 
-export function PostListingForm() {
+export function PostListingForm({ isLoggedIn }: { isLoggedIn: boolean }) {
   const [level, setLevel] = useState<Level>("Club");
   const [gender, setGender] = useState<Gender>("Boys");
   const [subLevel, setSubLevel] = useState(subLevelsFor("Club", "Boys")[0]);
@@ -26,6 +34,7 @@ export function PostListingForm() {
   const [justPosted, setJustPosted] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [showAuthGate, setShowAuthGate] = useState(false);
 
   function handleLevelChange(next: Level) {
     setLevel(next);
@@ -41,6 +50,14 @@ export function PostListingForm() {
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (submitting) return;
+
+    // Anyone can fill this out, but publishing requires an account: per Javi, posting without
+    // being signed in should hit a Log In / Sign Up prompt right here rather than a vague
+    // server error after the fact.
+    if (!isLoggedIn) {
+      setShowAuthGate(true);
+      return;
+    }
 
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -115,6 +132,25 @@ export function PostListingForm() {
             {error}
           </motion.div>
         )}
+        {showAuthGate && (
+          <motion.div
+            initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+            animate={{ opacity: 1, height: "auto", marginBottom: 12 }}
+            exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+            transition={{ duration: 0.25 }}
+            className="flex flex-col gap-2 overflow-hidden rounded-control border border-gold/30 bg-gold-bg px-3 py-2 text-[13px] font-semibold text-gold-ink sm:flex-row sm:items-center sm:justify-between"
+          >
+            <span>Create a free account to publish your listing.</span>
+            <span className="flex shrink-0 gap-1.5">
+              <Link href="/login" className="rounded-control border border-gold/40 px-2.5 py-1 text-[12px] font-bold hover:bg-gold/10">
+                Log In
+              </Link>
+              <Link href="/signup" className="rounded-control bg-gold px-2.5 py-1 text-[12px] font-bold text-gold-contrast hover:brightness-105">
+                Sign Up
+              </Link>
+            </span>
+          </motion.div>
+        )}
       </AnimatePresence>
 
       <form onSubmit={handleSubmit} className="space-y-2.5">
@@ -128,6 +164,16 @@ export function PostListingForm() {
               <option value="High School">High School Program</option>
               <option value="Rec">Recreational / AYSO</option>
               <option value="Futsal">Futsal</option>
+            </Select>
+          </Field>
+        </div>
+
+        <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
+          <Field label="Competitive level preference" htmlFor="competitivePreference">
+            <Select id="competitivePreference" name="competitivePreference" defaultValue="Similar">
+              {competitivePreferenceOptions.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
             </Select>
           </Field>
         </div>
@@ -176,9 +222,15 @@ export function PostListingForm() {
         </div>
 
         <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
-          <Field label="Pitch location / city" htmlFor="location">
+          <Field label="Facility / venue" htmlFor="location">
             <LocationAutocomplete name="location" placeholder="Start typing an address, e.g. Great Park, Irvine CA" required />
           </Field>
+          <Field label="Field / pitch # (optional)" htmlFor="fieldNumber">
+            <Input id="fieldNumber" name="fieldNumber" placeholder="e.g. Stadium Pitch, Field 15" />
+          </Field>
+        </div>
+
+        <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
           <Field label="Referee fee allocation" htmlFor="refFee">
             <Select id="refFee" name="refFee" defaultValue="50/50 Split">
               {refFeeOptions.map((r) => (
@@ -198,8 +250,8 @@ export function PostListingForm() {
         </div>
 
         <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
-          <Field label="Field # / Notes (optional)" htmlFor="notes">
-            <Textarea id="notes" name="notes" rows={2} placeholder="e.g. Field 14, park in Lot 4. Match format, expectations, etc." />
+          <Field label="Notes (optional)" htmlFor="notes">
+            <Textarea id="notes" name="notes" rows={2} placeholder="Match format, expectations, anything else worth flagging." />
           </Field>
           <div className="flex flex-col justify-center gap-2 rounded-control border border-rule bg-paper p-2.5">
             <label className="flex cursor-pointer items-center gap-2 text-[12px] font-semibold text-ink-2">
@@ -213,7 +265,21 @@ export function PostListingForm() {
           </div>
         </div>
 
-        <Button type="submit" variant="accent" size="lg" className="w-full" disabled={submitting}>
+        <Button
+          type="submit"
+          variant="accent"
+          size="lg"
+          className="w-full"
+          disabled={submitting}
+          onClick={(e) => {
+            // Runs before the browser's native required-field validation, which would
+            // otherwise block the submit event (and this gate) on an incomplete form.
+            if (!isLoggedIn) {
+              e.preventDefault();
+              setShowAuthGate(true);
+            }
+          }}
+        >
           {submitting ? "Publishing…" : "Publish Marketplace Listing"}
         </Button>
       </form>

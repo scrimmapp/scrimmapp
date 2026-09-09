@@ -2,11 +2,12 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { getThreadForProfile } from "@/db/queries";
+import { getThreadForProfile, getRatingByConnectionAndRater } from "@/db/queries";
 import { formatMessageTimestamp } from "@/lib/format";
 import { genderToDisplay, levelToDisplay } from "@/db/mappers";
 import { MarkThreadReadOnMount } from "@/components/inbox/mark-thread-read-on-mount";
 import { ReplyForm } from "@/components/inbox/reply-form";
+import { RateHostButton } from "@/components/inbox/rate-host-button";
 import { cn } from "@/lib/cn";
 
 export default async function ThreadPage({ params }: PageProps<"/inbox/[connectionId]">) {
@@ -18,6 +19,12 @@ export default async function ThreadPage({ params }: PageProps<"/inbox/[connecti
   const thread = await getThreadForProfile(connectionId, user.id);
   if (!thread) notFound();
 
+  // Coach A (the listing owner) rates from /posts. This is the visiting/matched opponent's
+  // symmetric counterpart, per Javi's two-way rating request: prompted here once the match is
+  // marked completed, since the thread is the natural shared surface for the non-owner side.
+  const isMatchedOpponent = thread.listing?.status === "completed" && thread.listing.matchedProfileId === user.id;
+  const alreadyRatedHost = isMatchedOpponent ? Boolean(await getRatingByConnectionAndRater(connectionId, user.id)) : false;
+
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col px-4 py-4" style={{ minHeight: "calc(100dvh - 2.75rem)" }}>
       <MarkThreadReadOnMount connectionId={connectionId} />
@@ -26,18 +33,26 @@ export default async function ThreadPage({ params }: PageProps<"/inbox/[connecti
         <Link href="/inbox" className="field-caption rounded-control p-1 hover:bg-surface-2 hover:text-gold">
           <ArrowLeft size={18} />
         </Link>
-        <div>
+        <div className="flex-1">
           <h1 className="field-heading font-display text-base font-extrabold tracking-tight">
             {thread.otherProfile?.teamName ?? "Unknown team"}
           </h1>
           <p className="field-caption text-[12px]">
             {thread.otherProfile?.coachName}
             {thread.otherProfile?.clubName ? ` · ${thread.otherProfile.clubName}` : ""}
+            {thread.otherProfile?.city ? ` · ${thread.otherProfile.city}` : ""}
           </p>
           <p className="field-caption text-[12px]">
             {thread.listing ? `Re: ${thread.listing.teamName} listing` : "Listing no longer available"}
           </p>
         </div>
+        {isMatchedOpponent && (
+          alreadyRatedHost ? (
+            <span className="text-[12px] font-semibold text-good">Rated ✓</span>
+          ) : (
+            <RateHostButton connectionId={connectionId} hostTeamName={thread.otherProfile?.teamName ?? "the host"} />
+          )
+        )}
       </div>
 
       {thread.otherTeams.length > 0 && (

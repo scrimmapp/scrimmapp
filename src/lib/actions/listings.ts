@@ -12,8 +12,9 @@ import {
   refFeeToDb,
   timeWindowToDb,
   travelRadiusToDb,
+  competitivePreferenceToDb,
 } from "@/db/mappers";
-import type { Gender, Level, RefFee, TimeWindow, TravelRadius } from "@/lib/types";
+import type { CompetitivePreference, Gender, Level, RefFee, TimeWindow, TravelRadius } from "@/lib/types";
 import type { cancellationReasonEnum } from "@/db/schema/enums";
 import { containsProfanity } from "@/lib/moderation/profanity-filter";
 
@@ -27,8 +28,9 @@ export async function createListingAction(formData: FormData): Promise<{ error?:
   const date = String(formData.get("date") || "");
   if (!teamName || !location || !date) return { error: "Team name, location, and date are required." };
 
+  const fieldNumber = String(formData.get("fieldNumber") || "").trim();
   const notes = String(formData.get("notes") || "").trim();
-  if (containsProfanity(teamName) || containsProfanity(notes)) {
+  if (containsProfanity(teamName) || containsProfanity(notes) || containsProfanity(fieldNumber)) {
     return { error: "That listing contains language that isn't allowed here." };
   }
 
@@ -39,10 +41,12 @@ export async function createListingAction(formData: FormData): Promise<{ error?:
     ageGroup: String(formData.get("age")),
     level: levelToDb(formData.get("level") as Level),
     subLevel: String(formData.get("subLevel")),
+    competitivePreference: competitivePreferenceToDb(formData.get("competitivePreference") as CompetitivePreference),
     matchDate: date,
     timeWindow: timeWindowToDb(formData.get("time") as TimeWindow),
     venueId: null,
     locationText: location,
+    fieldNumber: fieldNumber || null,
     travelRadiusMiles: travelRadiusToDb(formData.get("travelRadius") as TravelRadius),
     isHosting: formData.get("isHosting") === "on",
     hasRef: true,
@@ -72,8 +76,9 @@ export async function updateListingAction(id: string, formData: FormData): Promi
   const date = String(formData.get("date") || "");
   if (!teamName || !location || !date) return { error: "Team name, location, and date are required." };
 
+  const fieldNumber = String(formData.get("fieldNumber") || "").trim();
   const notes = String(formData.get("notes") || "").trim();
-  if (containsProfanity(teamName) || containsProfanity(notes)) {
+  if (containsProfanity(teamName) || containsProfanity(notes) || containsProfanity(fieldNumber)) {
     return { error: "That listing contains language that isn't allowed here." };
   }
 
@@ -85,9 +90,11 @@ export async function updateListingAction(id: string, formData: FormData): Promi
       ageGroup: String(formData.get("age")),
       level: levelToDb(formData.get("level") as Level),
       subLevel: String(formData.get("subLevel")),
+      competitivePreference: competitivePreferenceToDb(formData.get("competitivePreference") as CompetitivePreference),
       matchDate: date,
       timeWindow: timeWindowToDb(formData.get("time") as TimeWindow),
       locationText: location,
+      fieldNumber: fieldNumber || null,
       travelRadiusMiles: travelRadiusToDb(formData.get("travelRadius") as TravelRadius),
       isHosting: formData.get("isHosting") === "on",
       refFeeSplit: refFeeToDb(formData.get("refFee") as RefFee),

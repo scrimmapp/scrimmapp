@@ -65,6 +65,12 @@ export function EditProfileDialog({
           <Field label="Club name (optional)" htmlFor="profile-clubName">
             <Input id="profile-clubName" name="clubName" defaultValue={profile.clubName ?? ""} placeholder="e.g. Irvine Strikers FC" />
           </Field>
+          <Field label="City (optional)" htmlFor="profile-city">
+            <Input id="profile-city" name="city" defaultValue={profile.city ?? ""} placeholder="e.g. Irvine, CA" />
+          </Field>
+        </div>
+
+        <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
           <Field label="Program level" htmlFor="profile-orgType">
             <Select id="profile-orgType" name="orgType" defaultValue={levelToDisplay(profile.orgType)}>
               <option value="Club">Club Soccer</option>

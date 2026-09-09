@@ -97,13 +97,26 @@ export async function getThreadForProfile(connectionId: string, profileId: strin
   const otherProfileId = connection.fromProfileId === profileId ? connection.toProfileId : connection.fromProfileId;
 
   const [listing] = await db
-    .select({ id: listings.id, teamName: listings.teamName, matchDate: listings.matchDate })
+    .select({
+      id: listings.id,
+      teamName: listings.teamName,
+      matchDate: listings.matchDate,
+      status: listings.status,
+      ownerId: listings.ownerId,
+      matchedProfileId: listings.matchedProfileId,
+    })
     .from(listings)
     .where(eq(listings.id, connection.listingId))
     .limit(1);
 
   const [otherProfile] = await db
-    .select({ id: profiles.id, teamName: profiles.teamName, coachName: profiles.coachName, clubName: profiles.clubName })
+    .select({
+      id: profiles.id,
+      teamName: profiles.teamName,
+      coachName: profiles.coachName,
+      clubName: profiles.clubName,
+      city: profiles.city,
+    })
     .from(profiles)
     .where(eq(profiles.id, otherProfileId))
     .limit(1);
@@ -161,6 +174,7 @@ export async function listInquirersForListing(listingId: string) {
       profileId: connections.fromProfileId,
       teamName: profiles.teamName,
       coachName: profiles.coachName,
+      city: profiles.city,
     })
     .from(connections)
     .innerJoin(profiles, eq(profiles.id, connections.fromProfileId))

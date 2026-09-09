@@ -1,6 +1,8 @@
 "use client";
 
 import { motion } from "motion/react";
+import Image from "next/image";
+import ballArt from "../../../public/brand/Ball.png";
 
 export function BallLoader({ label = "Loading" }: { label?: string }) {
   return (
@@ -11,22 +13,12 @@ export function BallLoader({ label = "Loading" }: { label?: string }) {
           animate={{ y: [0, -22, 0] }}
           transition={{ duration: 0.9, repeat: Infinity, ease: [0.45, 0, 0.55, 1] }}
         >
-          <motion.svg
-            viewBox="0 0 48 48"
-            className="h-16 w-16 drop-shadow-md"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 0.9, repeat: Infinity, ease: "linear" }}
+          <motion.div
+            animate={{ rotate: [-12, 12, -12] }}
+            transition={{ duration: 0.9, repeat: Infinity, ease: [0.45, 0, 0.55, 1] }}
           >
-            <circle cx="24" cy="24" r="21" fill="white" stroke="#111827" strokeWidth="1.5" />
-            <g stroke="#111827" strokeWidth="1.5" strokeLinecap="round">
-              <line x1="27.09" y1="19.75" x2="36.05" y2="7.42" />
-              <line x1="29" y1="25.63" x2="43.5" y2="30.33" />
-              <line x1="24" y1="29.26" x2="24" y2="44.5" />
-              <line x1="19" y1="25.63" x2="4.5" y2="30.33" />
-              <line x1="20.91" y1="19.75" x2="11.95" y2="7.42" />
-            </g>
-            <polygon fill="#111827" points="24,17.5 30.18,21.99 27.82,29.26 20.18,29.26 17.82,21.99" />
-          </motion.svg>
+            <Image src={ballArt} alt="" className="h-16 w-16 drop-shadow-md" priority />
+          </motion.div>
         </motion.div>
         <motion.div
           className="absolute -bottom-1 left-1/2 h-2 w-10 -translate-x-1/2 rounded-full bg-ink/15"
