@@ -21,8 +21,9 @@ export default async function BoardPage() {
           {user && teamCount === 0 && <OnboardingNudge />}
           <AnimatedHero />
           <PostListingForm isLoggedIn={!!user} />
+          <div id="post-form-bottom" className="h-px" />
         </div>
-        <ScrollCue targetId="scrimmage-board" />
+        <ScrollCue targetId="scrimmage-board" watchId="post-form-bottom" />
       </section>
 
       <div id="scrimmage-board" className="mx-auto w-full max-w-6xl space-y-2.5 px-4 py-4">
