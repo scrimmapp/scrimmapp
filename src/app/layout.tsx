@@ -11,6 +11,7 @@ import { PostHogProvider } from "@/components/monitoring/posthog-provider";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getProfileById, listUnreadConnectionIds } from "@/db/queries";
 import { initialsFrom } from "@/lib/format";
+import { siteUrl, siteName, defaultDescription, organizationJsonLd } from "@/lib/seo";
 import "./globals.css";
 
 const baloo = Baloo_2({
@@ -25,12 +26,12 @@ const publicSans = Public_Sans({
   weight: ["400", "500", "600", "700", "800", "900"],
 });
 
-const siteUrl = "https://scrimmapp.com";
-const description =
-  "The scrimmage marketplace and season planner for Rec, Club, and High School soccer programs in Southern California. Post open match windows, filter by level and travel radius, and connect directly with the opposing coach.";
+const description = defaultDescription;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
+  // Only used as a fallback for a route with no metadata of its own; every real page below
+  // sets its own full "Foo | ScrimmApp" title via src/lib/seo.ts's pageMetadata helper.
   title: "ScrimmApp | Post Your Team's Availability",
   description,
   keywords: [
@@ -38,15 +39,18 @@ export const metadata: Metadata = {
     "youth soccer",
     "club soccer",
     "high school soccer",
+    "futsal",
     "AYSO",
     "Southern California soccer",
     "scrimmage scheduling",
+    "post soccer scrimmage",
+    "find soccer scrimmage",
   ],
   openGraph: {
     title: "ScrimmApp | Post Your Team's Availability",
     description,
     url: siteUrl,
-    siteName: "ScrimmApp",
+    siteName,
     images: [
       {
         url: "/brand/Scrimmapp_Meta.jpg",
@@ -88,6 +92,10 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       className={`${baloo.variable} ${publicSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-paper text-ink">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }}
+        />
         <ThemeProvider attribute="data-theme" defaultTheme="dark" enableSystem={false}>
           <PostHogProvider />
           <SiteBackground />

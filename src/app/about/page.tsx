@@ -1,7 +1,16 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
+import { pageMetadata } from "@/lib/seo";
 import brandLogo from "../../../public/brand/scrimmapp-logo-source.jpeg";
+
+export const metadata: Metadata = pageMetadata({
+  title: "About ScrimmApp | Built by Coaches, for Coaches",
+  description:
+    "ScrimmApp replaces the endless text threads and Facebook groups coaches use to schedule pre-season friendlies with one dedicated scrimmage marketplace for Southern California soccer.",
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (

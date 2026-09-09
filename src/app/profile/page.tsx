@@ -8,6 +8,15 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getProfileById, countListingsForProfile, listTeamsForProfile } from "@/db/queries";
 import { genderToDisplay, levelToDisplay } from "@/db/mappers";
 import { initialsFrom } from "@/lib/format";
+import { pageMetadata } from "@/lib/seo";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Coach Profile | ScrimmApp",
+  description: "Manage your coach profile and teams.",
+  path: "/profile",
+  noIndex: true,
+});
 
 export default async function ProfilePage() {
   const supabase = await createSupabaseServerClient();

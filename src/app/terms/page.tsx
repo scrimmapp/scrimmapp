@@ -1,4 +1,12 @@
+import type { Metadata } from "next";
 import { Card } from "@/components/ui/card";
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Terms and Policies | ScrimmApp",
+  description: "ScrimmApp's terms of use, liability disclaimer, account conduct expectations, and privacy policy.",
+  path: "/terms",
+});
 
 const sections = [
   {

@@ -1,6 +1,15 @@
+import type { Metadata } from "next";
 import { VenuesGrid } from "@/components/venues/venues-grid";
 import { listPublicVenues } from "@/db/queries";
 import { venueToDisplay } from "@/db/mappers";
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Soccer Venue Directory | Fields & Pitches in Southern California",
+  description:
+    "Verified Southern California soccer venues with field counts, lighting, and parking notes, so coaches know what to expect before a scrimmage.",
+  path: "/venues",
+});
 
 export default async function VenuesPage() {
   const rows = await listPublicVenues();
