@@ -1,7 +1,7 @@
 export type Gender = "Boys" | "Girls";
 export type Level = "Club" | "High School" | "Rec" | "Futsal";
 export type TimeWindow = "Morning" | "Afternoon" | "Evening";
-export type RefFee = "50/50 Split" | "Host Pays Ref" | "Visitor Pays";
+export type RefFee = "50/50 Split" | "Host Pays Ref" | "Visitor Pays" | "No Ref";
 export type TravelRadius =
   | "Host Pitch Only (0 mi)"
   | "Up to 10 miles"
@@ -29,11 +29,17 @@ export interface Listing {
   hasRef: boolean;
   refFee: RefFee;
   hasFieldFee: boolean;
+  hydrationStation: boolean;
+  canopiesForOpponent: boolean;
+  isRecorded: boolean;
   homeColor?: string;
   awayColor?: string;
   notes?: string;
   status: "open" | "matched" | "cancelled" | "completed";
   matchedProfileId?: string;
+  coachName?: string;
+  reliabilityScore?: number;
+  ratingsCount?: number;
 }
 
 export interface Comment {

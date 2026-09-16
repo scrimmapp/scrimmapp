@@ -10,7 +10,15 @@ import { toDateString } from "./date";
 
 type ListingRow = typeof listings.$inferSelect;
 
-export function listingToDisplay(row: ListingRow): Listing {
+// Populated only where the query joins profiles (the board and listing detail pages); a
+// realtime insert/update payload carries just the listings row, so this stays optional.
+export interface ListingCoachInfo {
+  coachName: string;
+  reliabilityScore: number;
+  ratingsCount: number;
+}
+
+export function listingToDisplay(row: ListingRow, coach?: ListingCoachInfo): Listing {
   return {
     id: row.id,
     ownerId: row.ownerId,
@@ -30,11 +38,17 @@ export function listingToDisplay(row: ListingRow): Listing {
     hasRef: row.hasRef,
     refFee: refFeeToDisplay(row.refFeeSplit),
     hasFieldFee: row.fieldFeeShare,
+    hydrationStation: row.hydrationStation,
+    canopiesForOpponent: row.canopiesForOpponent,
+    isRecorded: row.isRecorded,
     homeColor: row.homeColor ?? undefined,
     awayColor: row.awayColor ?? undefined,
     notes: row.notes ?? undefined,
     // DB status values are already the lowercase strings the frontend type uses directly.
     status: row.status,
     matchedProfileId: row.matchedProfileId ?? undefined,
+    coachName: coach?.coachName,
+    reliabilityScore: coach?.reliabilityScore,
+    ratingsCount: coach?.ratingsCount,
   };
 }

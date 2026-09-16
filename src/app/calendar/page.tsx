@@ -26,7 +26,7 @@ export default async function CalendarPage() {
   return (
     <CalendarView
       initialEvents={eventRows.map(calendarEventToDisplay)}
-      initialListings={listingRows.map(listingToDisplay)}
+      initialListings={listingRows.map((row) => listingToDisplay(row))}
     />
   );
 }

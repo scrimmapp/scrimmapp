@@ -3,6 +3,7 @@
 import { useCallback, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
+import { Star } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -134,7 +135,12 @@ export function ListingDetail({
               <h1 className="mt-1 font-display text-xl font-extrabold tracking-tight text-ink md:text-2xl">
                 {listing.teamName}
               </h1>
-              <p className="mt-0.5 text-[12px] text-muted">Posted on the ScrimmApp board</p>
+              <p className="mt-0.5 flex items-center gap-1.5 text-[12px] text-muted">
+                {listing.coachName ? `Posted by ${listing.coachName}` : "Posted on the ScrimmApp board"}
+                {listing.coachName && (
+                  <CoachStars reliabilityScore={listing.reliabilityScore ?? 0} ratingsCount={listing.ratingsCount ?? 0} />
+                )}
+              </p>
             </div>
             <button
               type="button"
@@ -156,6 +162,14 @@ export function ListingDetail({
             {listing.homeColor && <Stat label="Home uniform" value={listing.homeColor} />}
             {listing.awayColor && <Stat label="Away uniform" value={listing.awayColor} />}
           </div>
+
+          {(listing.hydrationStation || listing.canopiesForOpponent || listing.isRecorded) && (
+            <div className="flex flex-wrap gap-1.5">
+              {listing.hydrationStation && <Badge tone="muted">Hydration station</Badge>}
+              {listing.canopiesForOpponent && <Badge tone="muted">Canopies for opponent</Badge>}
+              {listing.isRecorded && <Badge tone="muted">Game recorded</Badge>}
+            </div>
+          )}
 
           {listing.notes && (
             <div className="rounded-control border border-rule bg-paper p-2.5 text-[13px] text-ink-2">
@@ -277,6 +291,27 @@ export function ListingDetail({
         </>
       )}
     </div>
+  );
+}
+
+// Blank/unfilled stars when a coach has no ratings yet, rather than hiding the rating row
+// entirely, per Javi Sep 2026.
+function CoachStars({ reliabilityScore, ratingsCount }: { reliabilityScore: number; ratingsCount: number }) {
+  const hasRatings = ratingsCount > 0;
+  return (
+    <span className="flex shrink-0 items-center gap-1">
+      <span className="flex items-center gap-px">
+        {[0, 1, 2, 3, 4].map((i) => (
+          <Star
+            key={i}
+            size={9}
+            strokeWidth={hasRatings ? 0 : 1.5}
+            className={hasRatings ? "fill-gold text-gold" : "text-rule-2"}
+          />
+        ))}
+      </span>
+      {hasRatings && <span className="font-bold text-ink-2">{reliabilityScore.toFixed(1)}</span>}
+    </span>
   );
 }
 
