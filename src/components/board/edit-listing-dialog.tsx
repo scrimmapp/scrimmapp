@@ -153,7 +153,13 @@ export function EditListingDialog({
             <Select id="edit-refFee" name="refFee" defaultValue={listing.refFee}>
               {refFeeOptions.map((r) => (
                 <option key={r} value={r}>
-                  {r === "Host Pays Ref" ? "Host Pays Official" : r === "Visitor Pays" ? "Visitor Pays Official" : r}
+                  {r === "Host Pays Ref"
+                    ? "Host Pays Official"
+                    : r === "Visitor Pays"
+                      ? "Visitor Pays Official"
+                      : r === "No Ref"
+                        ? "No Referee (Self-Officiated)"
+                        : r}
                 </option>
               ))}
             </Select>
@@ -181,6 +187,18 @@ export function EditListingDialog({
             <label className="flex cursor-pointer items-center gap-2 text-[12px] font-semibold text-ink-2">
               <Checkbox name="hasFieldFee" defaultChecked={listing.hasFieldFee} />
               Requires field rental fee share
+            </label>
+            <label className="flex cursor-pointer items-center gap-2 text-[12px] font-semibold text-ink-2">
+              <Checkbox name="hydrationStation" defaultChecked={listing.hydrationStation} />
+              Hydration station
+            </label>
+            <label className="flex cursor-pointer items-center gap-2 text-[12px] font-semibold text-ink-2">
+              <Checkbox name="canopiesForOpponent" defaultChecked={listing.canopiesForOpponent} />
+              Canopies included for opponent
+            </label>
+            <label className="flex cursor-pointer items-center gap-2 text-[12px] font-semibold text-ink-2">
+              <Checkbox name="isRecorded" defaultChecked={listing.isRecorded} />
+              Game is recorded
             </label>
           </div>
         </div>

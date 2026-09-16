@@ -234,7 +234,15 @@ export function PostListingForm({ isLoggedIn }: { isLoggedIn: boolean }) {
           <Field label="Referee fee allocation" htmlFor="refFee">
             <Select id="refFee" name="refFee" defaultValue="50/50 Split">
               {refFeeOptions.map((r) => (
-                <option key={r} value={r}>{r === "Host Pays Ref" ? "Host Pays Official" : r === "Visitor Pays" ? "Visitor Pays Official" : r}</option>
+                <option key={r} value={r}>
+                  {r === "Host Pays Ref"
+                    ? "Host Pays Official"
+                    : r === "Visitor Pays"
+                      ? "Visitor Pays Official"
+                      : r === "No Ref"
+                        ? "No Referee (Self-Officiated)"
+                        : r}
+                </option>
               ))}
             </Select>
           </Field>
@@ -261,6 +269,18 @@ export function PostListingForm({ isLoggedIn }: { isLoggedIn: boolean }) {
             <label className="flex cursor-pointer items-center gap-2 text-[12px] font-semibold text-ink-2">
               <Checkbox name="hasFieldFee" />
               Requires field rental fee share
+            </label>
+            <label className="flex cursor-pointer items-center gap-2 text-[12px] font-semibold text-ink-2">
+              <Checkbox name="hydrationStation" />
+              Hydration station
+            </label>
+            <label className="flex cursor-pointer items-center gap-2 text-[12px] font-semibold text-ink-2">
+              <Checkbox name="canopiesForOpponent" />
+              Canopies included for opponent
+            </label>
+            <label className="flex cursor-pointer items-center gap-2 text-[12px] font-semibold text-ink-2">
+              <Checkbox name="isRecorded" />
+              Game is recorded
             </label>
           </div>
         </div>

@@ -5,7 +5,7 @@ import { BoardSection } from "@/components/board/board-section";
 import { ScrollCue } from "@/components/board/scroll-cue";
 import { OnboardingNudge } from "@/components/board/onboarding-nudge";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { listOpenListings, countTeamsForProfile } from "@/db/queries";
+import { listOpenListingsWithCoach, countTeamsForProfile } from "@/db/queries";
 import { listingToDisplay } from "@/db/mappers";
 import { pageMetadata } from "@/lib/seo";
 
@@ -24,8 +24,8 @@ export const metadata: Metadata = pageMetadata({
 export async function BoardPageContent() {
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
-  const rows = await listOpenListings();
-  const initialListings = rows.map(listingToDisplay);
+  const rows = await listOpenListingsWithCoach();
+  const initialListings = rows.map((r) => listingToDisplay(r.listing, r));
   const teamCount = user ? await countTeamsForProfile(user.id) : 0;
 
   return (

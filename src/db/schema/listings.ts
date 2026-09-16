@@ -29,6 +29,9 @@ export const listings = pgTable("listings", {
   hasRef: boolean("has_ref").notNull().default(false),
   refFeeSplit: refFeeSplitEnum("ref_fee_split").notNull(),
   fieldFeeShare: boolean("field_fee_share").notNull().default(false),
+  hydrationStation: boolean("hydration_station").notNull().default(false),
+  canopiesForOpponent: boolean("canopies_for_opponent").notNull().default(false),
+  isRecorded: boolean("is_recorded").notNull().default(false),
   matchFormat: text("match_format"),
   // Simple free-text rather than a color picker/enum, per Javi: "Home (light colors) / Away
   // (dark colors)" is meant as a quick heads-up so two teams don't both show up in white, not

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ListingDetail } from "@/components/board/listing-detail";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { getListingById, listCommentsForListing } from "@/db/queries";
+import { getListingById, getListingWithCoachById, listCommentsForListing } from "@/db/queries";
 import { listingToDisplay } from "@/db/mappers";
 import { pageMetadata, siteUrl } from "@/lib/seo";
 import type { Comment } from "@/lib/types";
@@ -30,8 +30,8 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
   const { id } = await params;
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
-  const row = await getListingById(id);
-  const listing = row ? listingToDisplay(row) : null;
+  const row = await getListingWithCoachById(id);
+  const listing = row ? listingToDisplay(row.listing, row) : null;
 
   const commentRows = listing ? await listCommentsForListing(id) : [];
   const comments: Comment[] = commentRows.map((c) => ({

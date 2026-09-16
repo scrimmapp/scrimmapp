@@ -58,7 +58,7 @@ export const timeWindowOptions = ["Morning", "Afternoon", "Evening"] as const;
 
 export const competitivePreferenceOptions = ["Similar", "Stronger", "Developing"] as const;
 
-export const refFeeOptions = ["50/50 Split", "Host Pays Ref", "Visitor Pays"] as const;
+export const refFeeOptions = ["50/50 Split", "Host Pays Ref", "Visitor Pays", "No Ref"] as const;
 
 export const cancellationReasonOptions: { value: string; label: string }[] = [
   { value: "field_revoked", label: "Field access revoked" },

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { MapPin } from "lucide-react";
+import { MapPin, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ConnectDialog } from "@/components/board/connect-dialog";
@@ -49,12 +49,22 @@ export function ListingCard({ listing, currentUserId }: { listing: Listing; curr
             </Badge>
           </div>
 
+          {listing.coachName && (
+            <div className="mb-2 flex items-center justify-between gap-2 text-[11px] font-semibold text-muted">
+              <span className="truncate">Posted by {listing.coachName}</span>
+              <CoachStars reliabilityScore={listing.reliabilityScore ?? 0} ratingsCount={listing.ratingsCount ?? 0} />
+            </div>
+          )}
+
           <div className="mb-2.5 flex flex-wrap gap-1">
             {isOwner && <Badge tone="good">Your listing</Badge>}
             <Badge tone="muted">
               {listing.level} · {listing.subLevel}
             </Badge>
             <Badge tone="pitch">{listing.travelRadius}</Badge>
+            {listing.hydrationStation && <Badge tone="muted">Hydration station</Badge>}
+            {listing.canopiesForOpponent && <Badge tone="muted">Canopies for opponent</Badge>}
+            {listing.isRecorded && <Badge tone="muted">Game recorded</Badge>}
           </div>
 
           <div className="space-y-1 rounded-control border border-rule bg-paper p-2 text-[12px]">
@@ -116,6 +126,27 @@ export function ListingCard({ listing, currentUserId }: { listing: Listing; curr
         </>
       )}
     </>
+  );
+}
+
+// Blank/unfilled stars when a coach has no ratings yet, rather than hiding the rating row
+// entirely, per Javi Sep 2026.
+function CoachStars({ reliabilityScore, ratingsCount }: { reliabilityScore: number; ratingsCount: number }) {
+  const hasRatings = ratingsCount > 0;
+  return (
+    <span className="flex shrink-0 items-center gap-1">
+      <span className="flex items-center gap-px">
+        {[0, 1, 2, 3, 4].map((i) => (
+          <Star
+            key={i}
+            size={9}
+            strokeWidth={hasRatings ? 0 : 1.5}
+            className={hasRatings ? "fill-gold text-gold" : "text-rule-2"}
+          />
+        ))}
+      </span>
+      {hasRatings && <span className="text-ink-2">{reliabilityScore.toFixed(1)}</span>}
+    </span>
   );
 }
 
