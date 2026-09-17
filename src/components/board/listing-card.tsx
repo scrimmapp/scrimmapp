@@ -3,12 +3,13 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { MapPin, Star } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ConnectDialog } from "@/components/board/connect-dialog";
 import { EditListingDialog } from "@/components/board/edit-listing-dialog";
 import { CancelListingDialog } from "@/components/board/cancel-listing-dialog";
+import { CoachStars } from "@/components/board/coach-stars";
 import type { Listing } from "@/lib/types";
 import { formatDate } from "@/lib/format";
 
@@ -126,27 +127,6 @@ export function ListingCard({ listing, currentUserId }: { listing: Listing; curr
         </>
       )}
     </>
-  );
-}
-
-// Blank/unfilled stars when a coach has no ratings yet, rather than hiding the rating row
-// entirely, per Javi Sep 2026.
-function CoachStars({ reliabilityScore, ratingsCount }: { reliabilityScore: number; ratingsCount: number }) {
-  const hasRatings = ratingsCount > 0;
-  return (
-    <span className="flex shrink-0 items-center gap-1">
-      <span className="flex items-center gap-px">
-        {[0, 1, 2, 3, 4].map((i) => (
-          <Star
-            key={i}
-            size={9}
-            strokeWidth={hasRatings ? 0 : 1.5}
-            className={hasRatings ? "fill-gold text-gold" : "text-rule-2"}
-          />
-        ))}
-      </span>
-      {hasRatings && <span className="text-ink-2">{reliabilityScore.toFixed(1)}</span>}
-    </span>
   );
 }
 

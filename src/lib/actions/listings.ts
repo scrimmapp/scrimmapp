@@ -5,7 +5,7 @@ import { eq } from "drizzle-orm";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { db } from "@/db/client";
 import { listings, cancellations } from "@/db/schema";
-import { getListingById } from "@/db/queries";
+import { getListingById, getProfileById, getConnectionForListingAndProfiles } from "@/db/queries";
 import {
   genderToDb,
   levelToDb,
@@ -17,6 +17,7 @@ import {
 import type { CompetitivePreference, Gender, Level, RefFee, TimeWindow, TravelRadius } from "@/lib/types";
 import type { cancellationReasonEnum } from "@/db/schema/enums";
 import { containsProfanity } from "@/lib/moderation/profanity-filter";
+import { sendRatingReminderEmail } from "@/lib/email/rating-reminder-notification";
 
 export async function createListingAction(formData: FormData): Promise<{ error?: string }> {
   const supabase = await createSupabaseServerClient();
@@ -178,8 +179,39 @@ export async function completeListingAction(id: string): Promise<{ error?: strin
 
   await db.update(listings).set({ status: "completed" }).where(eq(listings.id, id));
 
+  // Best-effort: prompts both coaches to rate the match now that it's playable-history, not
+  // just an open listing. Never blocks completion (sendRatingReminderEmail never throws).
+  if (existing.matchedProfileId) {
+    const [ownerProfile, opponentProfile, connection] = await Promise.all([
+      getProfileById(existing.ownerId),
+      getProfileById(existing.matchedProfileId),
+      getConnectionForListingAndProfiles(id, existing.ownerId, existing.matchedProfileId),
+    ]);
+    if (ownerProfile && opponentProfile && connection) {
+      await Promise.all([
+        sendRatingReminderEmail({
+          to: ownerProfile.contactEmail,
+          recipientCoachName: ownerProfile.coachName,
+          otherTeamName: opponentProfile.teamName,
+          listingTeamName: existing.teamName,
+          connectionId: connection.id,
+          actionPath: "/posts",
+        }),
+        sendRatingReminderEmail({
+          to: opponentProfile.contactEmail,
+          recipientCoachName: opponentProfile.coachName,
+          otherTeamName: ownerProfile.teamName,
+          listingTeamName: existing.teamName,
+          connectionId: connection.id,
+          actionPath: `/inbox/${connection.id}`,
+        }),
+      ]);
+    }
+  }
+
   revalidatePath("/board");
   revalidatePath("/posts");
+  revalidatePath("/inbox");
   revalidatePath(`/listings/${id}`);
   return {};
 }

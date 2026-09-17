@@ -9,7 +9,7 @@ import { SiteBackground } from "@/components/ui/site-background";
 import { ToastProvider } from "@/components/ui/toast";
 import { PostHogProvider } from "@/components/monitoring/posthog-provider";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { getProfileById, listUnreadConnectionIds } from "@/db/queries";
+import { getProfileById, listUnreadConnectionIds, listPendingRatingsForProfile } from "@/db/queries";
 import { initialsFrom } from "@/lib/format";
 import { siteUrl, siteName, defaultDescription, organizationJsonLd } from "@/lib/seo";
 import "./globals.css";
@@ -76,13 +76,17 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
 
   let coach: { name: string; initials: string; teamName: string } | null = null;
   let unreadCount = 0;
+  let pendingRatingsCount = 0;
 
   if (user) {
     const profile = await getProfileById(user.id);
     if (profile) {
       coach = { name: profile.coachName, initials: initialsFrom(profile.coachName), teamName: profile.teamName };
     }
-    unreadCount = (await listUnreadConnectionIds(user.id)).length;
+    [unreadCount, pendingRatingsCount] = await Promise.all([
+      listUnreadConnectionIds(user.id).then((ids) => ids.length),
+      listPendingRatingsForProfile(user.id).then((rows) => rows.length),
+    ]);
   }
 
   return (
@@ -101,7 +105,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           <SiteBackground />
           <RouteProgress />
           <ToastProvider>
-            <Navbar coach={coach} unreadCount={unreadCount} />
+            <Navbar coach={coach} unreadCount={unreadCount} pendingRatingsCount={pendingRatingsCount} />
             <main className="flex-1 w-full">
               <PageTransition>{children}</PageTransition>
             </main>

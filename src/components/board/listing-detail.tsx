@@ -3,10 +3,10 @@
 import { useCallback, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
-import { Star } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { CoachStars } from "@/components/board/coach-stars";
 import { Textarea } from "@/components/ui/input";
 import { useToast } from "@/components/ui/toast";
 import { ConnectDialog } from "@/components/board/connect-dialog";
@@ -291,27 +291,6 @@ export function ListingDetail({
         </>
       )}
     </div>
-  );
-}
-
-// Blank/unfilled stars when a coach has no ratings yet, rather than hiding the rating row
-// entirely, per Javi Sep 2026.
-function CoachStars({ reliabilityScore, ratingsCount }: { reliabilityScore: number; ratingsCount: number }) {
-  const hasRatings = ratingsCount > 0;
-  return (
-    <span className="flex shrink-0 items-center gap-1">
-      <span className="flex items-center gap-px">
-        {[0, 1, 2, 3, 4].map((i) => (
-          <Star
-            key={i}
-            size={9}
-            strokeWidth={hasRatings ? 0 : 1.5}
-            className={hasRatings ? "fill-gold text-gold" : "text-rule-2"}
-          />
-        ))}
-      </span>
-      {hasRatings && <span className="font-bold text-ink-2">{reliabilityScore.toFixed(1)}</span>}
-    </span>
   );
 }
 
