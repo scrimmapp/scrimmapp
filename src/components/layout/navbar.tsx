@@ -25,12 +25,12 @@ function navLinksFor(isLoggedIn: boolean) {
   ];
 }
 
-function NavItem({ href, label, active }: { href: string; label: string; active: boolean }) {
+function NavItem({ href, label, active, badgeCount }: { href: string; label: string; active: boolean; badgeCount?: number }) {
   return (
     <Link
       href={href}
       className={cn(
-        "relative flex h-8 items-center rounded-full px-3 transition-colors",
+        "relative flex h-8 items-center gap-1.5 rounded-full px-3 transition-colors",
         active ? "text-pitch-contrast" : "text-ink-2 hover:text-ink",
       )}
     >
@@ -45,11 +45,24 @@ function NavItem({ href, label, active }: { href: string; label: string; active:
         <span className="absolute inset-0 scale-95 rounded-full bg-surface-2 opacity-0 transition-all duration-150 group-hover:scale-100 group-hover:opacity-100" />
       )}
       <span className="relative">{label}</span>
+      {!!badgeCount && (
+        <span className="relative flex h-3.5 min-w-3.5 items-center justify-center rounded-pill bg-gold px-1 text-[10px] font-black text-gold-contrast">
+          {badgeCount}
+        </span>
+      )}
     </Link>
   );
 }
 
-export function Navbar({ coach, unreadCount }: { coach: Coach | null; unreadCount: number }) {
+export function Navbar({
+  coach,
+  unreadCount,
+  pendingRatingsCount,
+}: {
+  coach: Coach | null;
+  unreadCount: number;
+  pendingRatingsCount: number;
+}) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const isLoggedIn = coach !== null;
@@ -73,7 +86,12 @@ export function Navbar({ coach, unreadCount }: { coach: Coach | null; unreadCoun
         <nav className="hidden items-center gap-1 text-[12px] font-bold uppercase tracking-wider lg:flex">
           {links.map((link) => (
             <span key={link.href} className="group relative">
-              <NavItem href={link.href} label={link.label} active={pathname === link.href} />
+              <NavItem
+                href={link.href}
+                label={link.label}
+                active={pathname === link.href}
+                badgeCount={link.href === "/posts" ? pendingRatingsCount : undefined}
+              />
             </span>
           ))}
           {isLoggedIn && (
@@ -99,6 +117,11 @@ export function Navbar({ coach, unreadCount }: { coach: Coach | null; unreadCoun
               {unreadCount > 0 && (
                 <span className="relative flex h-3.5 min-w-3.5 items-center justify-center rounded-pill bg-crit px-1 text-[10px] font-black text-white">
                   {unreadCount}
+                </span>
+              )}
+              {pendingRatingsCount > 0 && (
+                <span className="relative flex h-3.5 min-w-3.5 items-center justify-center rounded-pill bg-gold px-1 text-[10px] font-black text-gold-contrast">
+                  {pendingRatingsCount}
                 </span>
               )}
             </Link>
@@ -168,6 +191,11 @@ export function Navbar({ coach, unreadCount }: { coach: Coach | null; unreadCoun
                   {link.label}
                   {link.href === "/inbox" && unreadCount > 0 && (
                     <span className="ml-2 rounded-pill bg-crit px-1.5 py-0.5 text-[11px] text-white">{unreadCount}</span>
+                  )}
+                  {(link.href === "/posts" || link.href === "/inbox") && pendingRatingsCount > 0 && (
+                    <span className="ml-2 rounded-pill bg-gold px-1.5 py-0.5 text-[11px] text-gold-contrast">
+                      {pendingRatingsCount}
+                    </span>
                   )}
                 </Link>
               ))}
