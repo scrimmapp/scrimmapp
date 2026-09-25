@@ -10,8 +10,10 @@ import { ConnectDialog } from "@/components/board/connect-dialog";
 import { EditListingDialog } from "@/components/board/edit-listing-dialog";
 import { CancelListingDialog } from "@/components/board/cancel-listing-dialog";
 import { CoachStars } from "@/components/board/coach-stars";
+import { ShareMenu } from "@/components/board/share-menu";
 import type { Listing } from "@/lib/types";
 import { formatDate } from "@/lib/format";
+import { siteUrl } from "@/lib/seo";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 14 },
@@ -29,10 +31,17 @@ export function ListingCard({ listing, currentUserId }: { listing: Listing; curr
       <motion.div
         variants={cardVariants}
         whileHover={{ y: -3, transition: { type: "spring", stiffness: 400, damping: 24 } }}
-        className="group flex flex-col justify-between rounded-card border border-rule bg-surface p-3.5 shadow-sm transition-[border-color,box-shadow] duration-200 hover:border-pitch/35 hover:shadow-md"
+        className="group relative flex flex-col justify-between rounded-card border border-rule bg-surface p-3.5 shadow-sm transition-[border-color,box-shadow] duration-200 hover:border-pitch/35 hover:shadow-md"
       >
+        <ShareMenu
+          url={`${siteUrl}/listings/${listing.id}`}
+          title={`${listing.teamName}: ${listing.gender} ${listing.age} ${listing.level} scrimmage`}
+          iconOnly
+          className="absolute right-2.5 top-2.5 z-10"
+        />
+
         <Link href={`/listings/${listing.id}`} className="flex flex-1 flex-col">
-          <div className="mb-2 flex items-start justify-between gap-3">
+          <div className="mb-2 flex items-start justify-between gap-3 pr-8">
             <div className="min-w-0">
               <h3 className="truncate font-display text-base font-bold leading-tight text-ink transition-colors group-hover:text-pitch">
                 {listing.teamName}

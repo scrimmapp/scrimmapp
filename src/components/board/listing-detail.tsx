@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CoachStars } from "@/components/board/coach-stars";
+import { ShareMenu } from "@/components/board/share-menu";
 import { Textarea } from "@/components/ui/input";
 import { useToast } from "@/components/ui/toast";
 import { ConnectDialog } from "@/components/board/connect-dialog";
@@ -15,6 +16,7 @@ import { CancelListingDialog } from "@/components/board/cancel-listing-dialog";
 import { addCommentAction, deleteCommentAction, reportCommentAction } from "@/lib/actions/comments";
 import { useRealtimeInsert } from "@/lib/supabase/use-realtime-insert";
 import { formatDate } from "@/lib/format";
+import { siteUrl } from "@/lib/seo";
 import type { Comment, Listing } from "@/lib/types";
 
 const statusBadge: Record<Listing["status"], { label: string; tone: "good" | "warn" | "crit" } | null> = {
@@ -142,13 +144,10 @@ export function ListingDetail({
                 )}
               </p>
             </div>
-            <button
-              type="button"
-              onClick={() => navigator.clipboard?.writeText(window.location.href)}
-              className="rounded-control border border-rule-2 bg-paper px-2 py-1 text-[12px] font-bold text-ink-2 transition-colors hover:bg-surface-2"
-            >
-              Share link
-            </button>
+            <ShareMenu
+              url={`${siteUrl}/listings/${listing.id}`}
+              title={`${listing.teamName}: ${listing.gender} ${listing.age} ${listing.level} scrimmage`}
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-2 text-[12px] md:grid-cols-3">
