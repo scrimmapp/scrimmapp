@@ -6,6 +6,7 @@ export * from "./listings";
 export * from "./connections";
 export * from "./messages";
 export * from "./comments";
+export * from "./comment-reports";
 export * from "./calendar-events";
 export * from "./ratings";
 export * from "./cancellations";

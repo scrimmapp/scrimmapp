@@ -78,7 +78,7 @@ export function ListingDetail({
       return;
     }
     setComments((prev) => prev.filter((c) => c.id !== commentId));
-    showToast("Comment reported and hidden");
+    showToast("Comment reported");
   }
 
   async function handleDeleteComment(commentId: string) {
