@@ -45,23 +45,39 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
   return (
     <>
       {listing && listing.status === "open" && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "SportsEvent",
-              name: `${listing.teamName} ${listing.gender} ${listing.age} ${listing.level} Scrimmage`,
-              description: listing.notes || `${listing.level} ${listing.subLevel} scrimmage opportunity posted on ScrimmApp.`,
-              startDate: listing.date,
-              eventStatus: "https://schema.org/EventScheduled",
-              eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-              location: { "@type": "Place", name: listing.location },
-              sport: "Soccer",
-              url: `${siteUrl}/listings/${listing.id}`,
-            }),
-          }}
-        />
+        <>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "SportsEvent",
+                name: `${listing.teamName} ${listing.gender} ${listing.age} ${listing.level} Scrimmage`,
+                description: listing.notes || `${listing.level} ${listing.subLevel} scrimmage opportunity posted on ScrimmApp.`,
+                startDate: listing.date,
+                eventStatus: "https://schema.org/EventScheduled",
+                eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+                location: { "@type": "Place", name: listing.location },
+                sport: "Soccer",
+                url: `${siteUrl}/listings/${listing.id}`,
+              }),
+            }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "BreadcrumbList",
+                itemListElement: [
+                  { "@type": "ListItem", position: 1, name: "ScrimmApp", item: siteUrl },
+                  { "@type": "ListItem", position: 2, name: "Scrimmage Board", item: `${siteUrl}/board` },
+                  { "@type": "ListItem", position: 3, name: listing.teamName, item: `${siteUrl}/listings/${listing.id}` },
+                ],
+              }),
+            }}
+          />
+        </>
       )}
       <ListingDetail listing={listing} comments={comments} currentUserId={user?.id ?? null} />
     </>
