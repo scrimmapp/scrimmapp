@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CoachStars } from "@/components/board/coach-stars";
 import { ShareMenu } from "@/components/board/share-menu";
+import { LOCATION_TBD_VALUE } from "@/lib/taxonomy";
 import { Textarea } from "@/components/ui/input";
 import { useToast } from "@/components/ui/toast";
 import { ConnectDialog } from "@/components/board/connect-dialog";
@@ -178,18 +179,24 @@ export function ListingDetail({
 
           <div className="space-y-1 rounded-card border border-rule bg-paper p-2.5">
             <h4 className="text-[10px] font-bold uppercase tracking-wider text-muted">Venue & navigation</h4>
-            <p className="text-[13px] font-bold text-ink">{listing.location}</p>
-            {listing.fieldNumber && (
-              <p className="text-[12px] font-semibold text-pitch-ink">Field / pitch: {listing.fieldNumber}</p>
+            {listing.location === LOCATION_TBD_VALUE ? (
+              <p className="text-[13px] font-bold text-warn">Field not secured yet, TBD</p>
+            ) : (
+              <>
+                <p className="text-[13px] font-bold text-ink">{listing.location}</p>
+                {listing.fieldNumber && (
+                  <p className="text-[12px] font-semibold text-pitch-ink">Field / pitch: {listing.fieldNumber}</p>
+                )}
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(listing.location)}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-block rounded-control bg-pitch-bg px-2 py-1 text-[12px] font-bold text-pitch-ink transition-colors hover:brightness-95"
+                >
+                  Open Google Maps navigation →
+                </a>
+              </>
             )}
-            <a
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(listing.location)}`}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-block rounded-control bg-pitch-bg px-2 py-1 text-[12px] font-bold text-pitch-ink transition-colors hover:brightness-95"
-            >
-              Open Google Maps navigation →
-            </a>
           </div>
 
           {isOwner ? (

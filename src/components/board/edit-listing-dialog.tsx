@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import posthog from "posthog-js";
 import { Dialog } from "@/components/ui/dialog";
 import { Field } from "@/components/ui/field";
 import { Input, Select, Textarea, Checkbox } from "@/components/ui/input";
@@ -11,6 +12,8 @@ import { updateListingAction } from "@/lib/actions/listings";
 import {
   ageGroupsFor,
   competitivePreferenceOptions,
+  LOCATION_TBD_VALUE,
+  OTHER_SUB_LEVEL,
   refFeeOptions,
   subLevelsFor,
   timeWindowOptions,
@@ -30,8 +33,14 @@ export function EditListingDialog({
   const router = useRouter();
   const [level, setLevel] = useState<Level>(listing.level);
   const [gender, setGender] = useState<Gender>(listing.gender);
-  const [subLevel, setSubLevel] = useState(listing.subLevel);
+  // A listing's sub-level might already be a custom value typed in last time (not one of the
+  // default options and not literally "Other"); treat that the same as picking "Other" so the
+  // dropdown and fill-in both show the real value instead of a blank, unmatched <select>.
+  const isCustomSubLevel = !subLevelsFor(listing.level, listing.gender).includes(listing.subLevel);
+  const [subLevel, setSubLevel] = useState(isCustomSubLevel ? OTHER_SUB_LEVEL : listing.subLevel);
+  const [customSubLevel, setCustomSubLevel] = useState(isCustomSubLevel ? listing.subLevel : "");
   const [age, setAge] = useState(listing.age);
+  const [locationTBD, setLocationTBD] = useState(listing.location === LOCATION_TBD_VALUE);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -49,10 +58,24 @@ export function EditListingDialog({
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (saving) return;
+
+    const formData = new FormData(e.currentTarget);
+    if (subLevel === OTHER_SUB_LEVEL) {
+      const trimmed = customSubLevel.trim();
+      if (!trimmed) {
+        setError("Enter the name of the league or division.");
+        return;
+      }
+      formData.set("subLevel", trimmed);
+      if (posthog.__loaded) {
+        posthog.capture("custom_league_entered", { value: trimmed, level, gender });
+      }
+    }
+
     setSaving(true);
     setError(null);
 
-    const result = await updateListingAction(listing.id, new FormData(e.currentTarget));
+    const result = await updateListingAction(listing.id, formData);
     setSaving(false);
 
     if (result.error) {
@@ -119,6 +142,20 @@ export function EditListingDialog({
           </Field>
         </div>
 
+        {subLevel === OTHER_SUB_LEVEL && (
+          <div className="grid grid-cols-1 gap-2.5">
+            <Field label="Name your league or division" htmlFor="edit-customSubLevel">
+              <Input
+                id="edit-customSubLevel"
+                value={customSubLevel}
+                onChange={(e) => setCustomSubLevel(e.target.value)}
+                placeholder="e.g. SoCal Premier League"
+                required
+              />
+            </Field>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 gap-2.5 md:grid-cols-3">
           <Field label="Preferred date" htmlFor="edit-date">
             <Input id="edit-date" name="date" type="date" defaultValue={listing.date} required />
@@ -141,7 +178,18 @@ export function EditListingDialog({
 
         <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
           <Field label="Facility / venue" htmlFor="edit-location">
-            <LocationAutocomplete name="location" defaultValue={listing.location} required />
+            {locationTBD ? (
+              <>
+                <Input value="Field TBD, not yet secured" disabled />
+                <input type="hidden" name="location" value={LOCATION_TBD_VALUE} />
+              </>
+            ) : (
+              <LocationAutocomplete name="location" defaultValue={listing.location} required />
+            )}
+            <label className="mt-1.5 flex cursor-pointer items-center gap-2 text-[11px] font-semibold text-ink-2">
+              <Checkbox checked={locationTBD} onChange={(e) => setLocationTBD(e.target.checked)} />
+              Field not secured yet, mark as TBD
+            </label>
           </Field>
           <Field label="Field / pitch # (optional)" htmlFor="edit-fieldNumber">
             <Input id="edit-fieldNumber" name="fieldNumber" defaultValue={listing.fieldNumber} placeholder="e.g. Stadium Pitch, Field 15" />

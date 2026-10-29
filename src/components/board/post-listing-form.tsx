@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { CheckCircle2, AlertCircle } from "lucide-react";
 import Link from "next/link";
+import posthog from "posthog-js";
 import { Card } from "@/components/ui/card";
 import { Field } from "@/components/ui/field";
 import { Input, Select, Textarea, Checkbox } from "@/components/ui/input";
@@ -13,6 +14,8 @@ import { createListingAction } from "@/lib/actions/listings";
 import {
   ageGroupsFor,
   competitivePreferenceOptions,
+  LOCATION_TBD_VALUE,
+  OTHER_SUB_LEVEL,
   refFeeOptions,
   subLevelsFor,
   timeWindowOptions,
@@ -30,7 +33,9 @@ export function PostListingForm({ isLoggedIn }: { isLoggedIn: boolean }) {
   const [level, setLevel] = useState<Level>("Club");
   const [gender, setGender] = useState<Gender>("Boys");
   const [subLevel, setSubLevel] = useState(subLevelsFor("Club", "Boys")[0]);
+  const [customSubLevel, setCustomSubLevel] = useState("");
   const [age, setAge] = useState(ageGroupsFor("Club")[6]);
+  const [locationTBD, setLocationTBD] = useState(false);
   const [justPosted, setJustPosted] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -63,6 +68,23 @@ export function PostListingForm({ isLoggedIn }: { isLoggedIn: boolean }) {
     const formData = new FormData(form);
     const teamName = String(formData.get("teamName") || "").trim();
 
+    // A coach typing their own league name here is the whole point: swap it in for the
+    // "Other" placeholder before this ever reaches the server, so it's stored and displayed
+    // exactly like any default sub-level.
+    if (subLevel === OTHER_SUB_LEVEL) {
+      const trimmed = customSubLevel.trim();
+      if (!trimmed) {
+        setError("Enter the name of the league or division.");
+        return;
+      }
+      formData.set("subLevel", trimmed);
+      // Lets Javi see which custom leagues coaches are typing in and how often, so a
+      // frequently-entered one can be promoted to a permanent dropdown option later.
+      if (posthog.__loaded) {
+        posthog.capture("custom_league_entered", { value: trimmed, level, gender });
+      }
+    }
+
     setSubmitting(true);
     setError(null);
     const result = await createListingAction(formData);
@@ -78,7 +100,9 @@ export function PostListingForm({ isLoggedIn }: { isLoggedIn: boolean }) {
     setLevel("Club");
     setGender("Boys");
     setSubLevel(subLevelsFor("Club", "Boys")[0]);
+    setCustomSubLevel("");
     setAge(ageGroupsFor("Club")[6]);
+    setLocationTBD(false);
     setTimeout(() => setJustPosted(null), 5000);
   }
 
@@ -201,6 +225,20 @@ export function PostListingForm({ isLoggedIn }: { isLoggedIn: boolean }) {
           </Field>
         </div>
 
+        {subLevel === OTHER_SUB_LEVEL && (
+          <div className="grid grid-cols-1 gap-2.5">
+            <Field label="Name your league or division" htmlFor="customSubLevel">
+              <Input
+                id="customSubLevel"
+                value={customSubLevel}
+                onChange={(e) => setCustomSubLevel(e.target.value)}
+                placeholder="e.g. SoCal Premier League"
+                required
+              />
+            </Field>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 gap-2.5 md:grid-cols-3">
           <Field label="Preferred date" htmlFor="date">
             <Input id="date" name="date" type="date" defaultValue={tomorrowISO()} required />
@@ -223,7 +261,18 @@ export function PostListingForm({ isLoggedIn }: { isLoggedIn: boolean }) {
 
         <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
           <Field label="Facility / venue" htmlFor="location">
-            <LocationAutocomplete name="location" placeholder="Start typing an address, e.g. Great Park, Irvine CA" required />
+            {locationTBD ? (
+              <>
+                <Input value="Field TBD, not yet secured" disabled />
+                <input type="hidden" name="location" value={LOCATION_TBD_VALUE} />
+              </>
+            ) : (
+              <LocationAutocomplete name="location" placeholder="Start typing an address, e.g. Great Park, Irvine CA" required />
+            )}
+            <label className="mt-1.5 flex cursor-pointer items-center gap-2 text-[11px] font-semibold text-ink-2">
+              <Checkbox checked={locationTBD} onChange={(e) => setLocationTBD(e.target.checked)} />
+              Field not secured yet, mark as TBD
+            </label>
           </Field>
           <Field label="Field / pitch # (optional)" htmlFor="fieldNumber">
             <Input id="fieldNumber" name="fieldNumber" placeholder="e.g. Stadium Pitch, Field 15" />

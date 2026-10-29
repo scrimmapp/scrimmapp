@@ -14,6 +14,7 @@ import { ShareMenu } from "@/components/board/share-menu";
 import type { Listing } from "@/lib/types";
 import { formatDate } from "@/lib/format";
 import { siteUrl } from "@/lib/seo";
+import { LOCATION_TBD_VALUE } from "@/lib/taxonomy";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 14 },
@@ -49,7 +50,7 @@ export function ListingCard({ listing, currentUserId }: { listing: Listing; curr
               <p className="mt-0.5 flex items-center gap-0.5 truncate text-[12px] font-semibold text-muted">
                 <MapPin size={10} className="shrink-0" strokeWidth={2.5} />
                 <span className="truncate">
-                  {listing.location}
+                  {listing.location === LOCATION_TBD_VALUE ? "Field TBD" : listing.location}
                   {listing.fieldNumber && ` · ${listing.fieldNumber}`}
                 </span>
               </p>

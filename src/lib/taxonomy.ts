@@ -20,9 +20,15 @@ export const ageGroups = [...clubAndRecAgeGroups, ...highSchoolAgeGroups];
 // Club pathways diverge by gender (per Javi, Aug 2026): boys and girls run separate league
 // systems, not just separate divisions within one shared list. High school (CIF-SS) divisions
 // and the rec sub-levels are the same regardless of gender.
+// "Other" is appended to every list below (Javi, Oct 2026): as ScrimmApp expands into new
+// areas, coaches run into local leagues that aren't on the default list yet. Picking it opens
+// a free-text fill-in instead (see postListingForm / editListingDialog's customSubLevel state).
+export const OTHER_SUB_LEVEL = "Other";
+const OTHER_OPTION = OTHER_SUB_LEVEL;
+
 const clubSubLevelsByGender: Record<Gender, string[]> = {
-  Boys: ["MLS Next", "ECNL", "MLS Next 2", "ECRL", "EA", "EA2", "N1", "Flight 1", "Flight 2", "Flight 3"],
-  Girls: ["ECNL", "GA", "ECRL", "GA Aspire", "DPL", "N1", "DPL Open", "Flight 1", "Flight 2", "Flight 3"],
+  Boys: ["MLS Next", "ECNL", "MLS Next 2", "ECRL", "EA", "EA2", "N1", "Flight 1", "Flight 2", "Flight 3", OTHER_OPTION],
+  Girls: ["ECNL", "GA", "ECRL", "GA Aspire", "DPL", "N1", "DPL Open", "Flight 1", "Flight 2", "Flight 3", OTHER_OPTION],
 };
 
 const highSchoolSubLevels = [
@@ -34,9 +40,10 @@ const highSchoolSubLevels = [
   "Division 5",
   "Division 6",
   "Division 7",
+  OTHER_OPTION,
 ];
 
-const recSubLevels = ["AYSO Select", "AYSO Extra", "Signature League"];
+const recSubLevels = ["AYSO Select", "AYSO Extra", "Signature League", OTHER_OPTION];
 
 export function subLevelsFor(level: Level, gender: Gender): string[] {
   // Futsal runs the same competitive club tiers as outdoor soccer (Javi, Sep 2026): it was
@@ -59,6 +66,11 @@ export const timeWindowOptions = ["Morning", "Afternoon", "Evening"] as const;
 export const competitivePreferenceOptions = ["Similar", "Stronger", "Developing"] as const;
 
 export const refFeeOptions = ["50/50 Split", "Host Pays Ref", "Visitor Pays", "No Ref"] as const;
+
+// Stored verbatim as listings.location_text when a coach posts without a secured field yet
+// (Javi, Oct 2026). Shared so every place that reads/writes it (the post/edit forms, the
+// board card, the listing detail page) stays in sync on the exact sentinel string.
+export const LOCATION_TBD_VALUE = "TBD";
 
 export const cancellationReasonOptions: { value: string; label: string }[] = [
   { value: "field_revoked", label: "Field access revoked" },
