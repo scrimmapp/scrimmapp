@@ -3,7 +3,8 @@ import { ListingDetail } from "@/components/board/listing-detail";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getListingById, getListingWithCoachById, listCommentsForListing } from "@/db/queries";
 import { listingToDisplay } from "@/db/mappers";
-import { pageMetadata, siteUrl } from "@/lib/seo";
+import { jsonLdString, pageMetadata, siteUrl } from "@/lib/seo";
+import { LOCATION_TBD_VALUE } from "@/lib/taxonomy";
 import type { Comment } from "@/lib/types";
 
 export async function generateMetadata({ params }: PageProps<"/listings/[id]">): Promise<Metadata> {
@@ -21,7 +22,8 @@ export async function generateMetadata({ params }: PageProps<"/listings/[id]">):
 
   const listing = listingToDisplay(row);
   const title = `${listing.teamName}: ${listing.gender} ${listing.age} ${listing.level} Scrimmage | ScrimmApp`;
-  const description = `${listing.teamName} is looking for a ${listing.gender} ${listing.age} ${listing.level} scrimmage near ${listing.location} on ${listing.date}. Connect through ScrimmApp to book the match.`;
+  const where = listing.location === LOCATION_TBD_VALUE ? "in Southern California (field TBD)" : `near ${listing.location}`;
+  const description = `${listing.teamName} is looking for a ${listing.gender} ${listing.age} ${listing.level} scrimmage ${where} on ${listing.date}. Connect through ScrimmApp to book the match.`;
 
   return pageMetadata({ title, description, path: `/listings/${id}` });
 }
@@ -49,7 +51,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
+              __html: jsonLdString({
                 "@context": "https://schema.org",
                 "@type": "SportsEvent",
                 name: `${listing.teamName} ${listing.gender} ${listing.age} ${listing.level} Scrimmage`,
@@ -57,7 +59,10 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
                 startDate: listing.date,
                 eventStatus: "https://schema.org/EventScheduled",
                 eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-                location: { "@type": "Place", name: listing.location },
+                location: {
+                  "@type": "Place",
+                  name: listing.location === LOCATION_TBD_VALUE ? "Southern California (field TBD)" : listing.location,
+                },
                 sport: "Soccer",
                 url: `${siteUrl}/listings/${listing.id}`,
               }),
@@ -66,7 +71,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
+              __html: jsonLdString({
                 "@context": "https://schema.org",
                 "@type": "BreadcrumbList",
                 itemListElement: [

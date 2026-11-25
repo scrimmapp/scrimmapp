@@ -49,6 +49,12 @@ export function pageMetadata({
   };
 }
 
+// JSON.stringify leaves "<" as-is, so user text like "</script>" in a listing's notes would
+// close the JSON-LD tag early and let the rest run as HTML/JS. Escaping it keeps the JSON valid.
+export function jsonLdString(data: unknown): string {
+  return JSON.stringify(data).replace(/</g, "\\u003c");
+}
+
 /**
  * Organization plus WebSite structured data for the root layout. Gives Google an explicit
  * name, logo, and social profile to attach to the brand rather than guessing from page text.
