@@ -8,6 +8,7 @@ import { profiles } from "@/db/schema";
 import { genderToDb, levelToDb } from "@/db/mappers";
 import type { Gender, Level } from "@/lib/types";
 import { containsProfanity } from "@/lib/moderation/profanity-filter";
+import { MAX_LEN, tooLong } from "@/lib/limits";
 
 export async function updateProfileAction(formData: FormData): Promise<{ error?: string }> {
   const supabase = await createSupabaseServerClient();
@@ -29,7 +30,22 @@ export async function updateProfileAction(formData: FormData): Promise<{ error?:
   const phone = String(formData.get("phone") || "").trim();
   const orgType = String(formData.get("orgType") || "Club") as Level;
 
-  if (containsProfanity(coachName) || containsProfanity(teamName) || containsProfanity(city)) {
+  if (
+    tooLong([
+      [coachName, MAX_LEN.name],
+      [teamName, MAX_LEN.name],
+      [clubName, MAX_LEN.name],
+      [city, MAX_LEN.short],
+      [division, MAX_LEN.short],
+      [defaultAgeGroup, MAX_LEN.short],
+      [contactEmail, MAX_LEN.email],
+      [phone, MAX_LEN.phone],
+    ])
+  ) {
+    return { error: "One of the fields is too long. Please shorten it and try again." };
+  }
+
+  if ([coachName, teamName, clubName, city, division].some(containsProfanity)) {
     return { error: "That profile contains language that isn't allowed here." };
   }
 

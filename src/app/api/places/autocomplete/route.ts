@@ -1,10 +1,16 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 // Server-side proxy so the Places API key never reaches the browser. Uses the new Places API
 // (autocomplete), not the legacy JS SDK, since we only need text suggestions, not a map.
 export async function GET(request: NextRequest) {
+  // Every call is billed to the Places key, and only the signed-in post/edit listing forms use it.
+  const supabase = await createSupabaseServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ suggestions: [] }, { status: 401 });
+
   const input = request.nextUrl.searchParams.get("input")?.trim();
-  if (!input || input.length < 3) {
+  if (!input || input.length < 3 || input.length > 200) {
     return NextResponse.json({ suggestions: [] });
   }
 

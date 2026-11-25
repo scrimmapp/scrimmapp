@@ -5,6 +5,7 @@ import { db } from "@/db/client";
 import { feedback } from "@/db/schema";
 import { containsProfanity } from "@/lib/moderation/profanity-filter";
 import { sendFeedbackNotificationEmail } from "@/lib/email/feedback-notification";
+import { isRateLimited, MAX_LEN, tooLong } from "@/lib/limits";
 import type { feedbackCategoryEnum } from "@/db/schema/enums";
 
 type FeedbackCategory = (typeof feedbackCategoryEnum.enumValues)[number];
@@ -18,6 +19,12 @@ export async function submitFeedbackAction(
 ): Promise<{ error?: string }> {
   const trimmedMessage = message.trim();
   if (!trimmedMessage) return { error: "Please add a message before submitting." };
+  if (tooLong([[trimmedMessage, MAX_LEN.feedback], [contactEmail.trim(), MAX_LEN.email]])) {
+    return { error: "That message is too long. Please shorten it and try again." };
+  }
+  if (await isRateLimited("feedback", 5, 10 * 60_000)) {
+    return { error: "You've sent a few messages already. Please wait a few minutes and try again." };
+  }
   if (containsProfanity(trimmedMessage) || containsProfanity(contactEmail)) {
     return { error: "That message contains language that isn't allowed here." };
   }

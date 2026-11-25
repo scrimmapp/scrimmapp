@@ -7,6 +7,7 @@ import { db } from "@/db/client";
 import { calendarEvents } from "@/db/schema";
 import { timeWindowToDb } from "@/db/mappers";
 import type { CalendarEvent, TimeWindow } from "@/lib/types";
+import { MAX_LEN, tooLong } from "@/lib/limits";
 
 export async function createCalendarEventAction(formData: FormData): Promise<{ error?: string }> {
   const supabase = await createSupabaseServerClient();
@@ -16,6 +17,9 @@ export async function createCalendarEventAction(formData: FormData): Promise<{ e
   const title = String(formData.get("title") || "").trim();
   const date = String(formData.get("date") || "");
   if (!title || !date) return { error: "Title and date are required." };
+  if (tooLong([[title, MAX_LEN.name], [String(formData.get("location") || "").trim(), MAX_LEN.location]])) {
+    return { error: "One of the fields is too long. Please shorten it and try again." };
+  }
 
   await db.insert(calendarEvents).values({
     profileId: user.id,
@@ -51,6 +55,9 @@ export async function updateCalendarEventAction(id: string, formData: FormData):
   const title = String(formData.get("title") || "").trim();
   const date = String(formData.get("date") || "");
   if (!title || !date) return { error: "Title and date are required." };
+  if (tooLong([[title, MAX_LEN.name], [String(formData.get("location") || "").trim(), MAX_LEN.location]])) {
+    return { error: "One of the fields is too long. Please shorten it and try again." };
+  }
 
   await db
     .update(calendarEvents)

@@ -5,6 +5,7 @@ import { eq, sql } from "drizzle-orm";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { db } from "@/db/client";
 import { connections, listings, profiles, ratings } from "@/db/schema";
+import { MAX_LEN } from "@/lib/limits";
 
 // Shared setup for both rating directions: resolve who the rater is rating, and confirm the
 // match is actually completed and the two of them are the confirmed owner/opponent pair for it.
@@ -56,7 +57,8 @@ async function insertRating(
   }>,
   comment: string | undefined,
 ): Promise<{ error?: string }> {
-  if (stars < 1 || stars > 5) return { error: "Star rating must be between 1 and 5." };
+  if (!Number.isInteger(stars) || stars < 1 || stars > 5) return { error: "Star rating must be between 1 and 5." };
+  if ((comment?.trim().length ?? 0) > MAX_LEN.comment) return { error: `Comments can be up to ${MAX_LEN.comment} characters.` };
 
   try {
     await db.insert(ratings).values({

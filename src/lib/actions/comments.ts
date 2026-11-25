@@ -6,6 +6,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { db } from "@/db/client";
 import { comments, commentReports } from "@/db/schema";
 import { containsProfanity } from "@/lib/moderation/profanity-filter";
+import { isRateLimited, MAX_LEN } from "@/lib/limits";
 
 // A single report shouldn't be able to silently censor another coach's comment, so it only
 // hides once this many distinct coaches have reported it.
@@ -14,11 +15,15 @@ const HIDE_AFTER_REPORT_COUNT = 2;
 export async function addCommentAction(listingId: string, body: string): Promise<{ error?: string }> {
   const trimmed = body.trim();
   if (!trimmed) return { error: "Comment can't be empty." };
+  if (trimmed.length > MAX_LEN.comment) return { error: `Comments can be up to ${MAX_LEN.comment} characters.` };
   if (containsProfanity(trimmed)) return { error: "That comment contains language that isn't allowed here." };
 
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: "You need to be signed in to comment." };
+  if (await isRateLimited("comment", 10, 60_000, user.id)) {
+    return { error: "You're commenting very quickly. Please wait a moment and try again." };
+  }
 
   await db.insert(comments).values({
     listingId,

@@ -8,6 +8,8 @@ import { coachTeams } from "@/db/schema";
 import { countTeamsForProfile } from "@/db/queries";
 import { genderToDb, levelToDb } from "@/db/mappers";
 import type { Gender, Level } from "@/lib/types";
+import { containsProfanity } from "@/lib/moderation/profanity-filter";
+import { MAX_LEN, tooLong } from "@/lib/limits";
 
 const MAX_TEAMS_PER_COACH = 3;
 
@@ -17,7 +19,14 @@ export async function addTeamAction(formData: FormData): Promise<{ error?: strin
   if (!user) return { error: "You need to be signed in." };
 
   const teamName = String(formData.get("teamName") || "").trim();
+  const subLevel = String(formData.get("subLevel") || "").trim();
   if (!teamName) return { error: "Team name is required." };
+  if (tooLong([[teamName, MAX_LEN.name], [subLevel, MAX_LEN.short]])) {
+    return { error: "That team name is too long. Please shorten it and try again." };
+  }
+  if (containsProfanity(teamName) || containsProfanity(subLevel)) {
+    return { error: "That team name contains language that isn't allowed here." };
+  }
 
   const existingCount = await countTeamsForProfile(user.id);
   if (existingCount >= MAX_TEAMS_PER_COACH) {
@@ -30,7 +39,7 @@ export async function addTeamAction(formData: FormData): Promise<{ error?: strin
     gender: genderToDb(formData.get("gender") as Gender),
     ageGroup: String(formData.get("ageGroup")),
     level: levelToDb(formData.get("level") as Level),
-    subLevel: String(formData.get("subLevel")),
+    subLevel,
   });
 
   revalidatePath("/profile");

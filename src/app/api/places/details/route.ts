@@ -1,10 +1,15 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 // Resolves a placeId (from the autocomplete route) into a full formatted address, so the
 // listing stores the exact, verified address rather than the ambiguous typed text.
 export async function GET(request: NextRequest) {
+  const supabase = await createSupabaseServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Sign in required." }, { status: 401 });
+
   const placeId = request.nextUrl.searchParams.get("placeId")?.trim();
-  if (!placeId) {
+  if (!placeId || placeId.length > 300) {
     return NextResponse.json({ error: "placeId is required" }, { status: 400 });
   }
 

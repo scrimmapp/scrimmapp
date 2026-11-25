@@ -8,13 +8,18 @@ import { connections, messages } from "@/db/schema";
 import { getListingById, getProfileById } from "@/db/queries";
 import { sendInquiryNotificationEmail } from "@/lib/email/inquiry-notification";
 import { sendReplyNotificationEmail } from "@/lib/email/reply-notification";
+import { isRateLimited, MAX_LEN } from "@/lib/limits";
 
 export async function sendConnectionAction(listingId: string, message: string): Promise<{ error?: string; connectionId?: string }> {
   if (!message.trim()) return { error: "Message can't be empty." };
+  if (message.trim().length > MAX_LEN.message) return { error: `Messages can be up to ${MAX_LEN.message} characters.` };
 
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: "You need to be signed in to connect with a coach." };
+  if (await isRateLimited("inquiry", 10, 60 * 60_000, user.id)) {
+    return { error: "You've sent a lot of inquiries this hour. Please try again a bit later." };
+  }
 
   const listing = await getListingById(listingId);
   if (!listing) return { error: "That listing no longer exists." };
@@ -83,6 +88,13 @@ export async function markThreadReadAction(connectionId: string): Promise<void> 
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return;
 
+  const [connection] = await db
+    .select({ id: connections.id })
+    .from(connections)
+    .where(and(eq(connections.id, connectionId), or(eq(connections.toProfileId, user.id), eq(connections.fromProfileId, user.id))))
+    .limit(1);
+  if (!connection) return;
+
   await db
     .update(messages)
     .set({ readAt: new Date() })
@@ -91,10 +103,14 @@ export async function markThreadReadAction(connectionId: string): Promise<void> 
 
 export async function sendReplyAction(connectionId: string, body: string): Promise<{ error?: string }> {
   if (!body.trim()) return { error: "Message can't be empty." };
+  if (body.trim().length > MAX_LEN.message) return { error: `Messages can be up to ${MAX_LEN.message} characters.` };
 
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: "You need to be signed in to reply." };
+  if (await isRateLimited("reply", 30, 60_000, user.id)) {
+    return { error: "You're sending messages very quickly. Please wait a moment and try again." };
+  }
 
   const [connection] = await db
     .select({ fromProfileId: connections.fromProfileId, toProfileId: connections.toProfileId, listingId: connections.listingId })
